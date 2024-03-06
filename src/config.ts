@@ -49,6 +49,7 @@ export async function getConfig() {
 		count?: number;
 		style?: string;
 		minChars?: number;
+		ids?: string[];
 	}
 
 	let blocks: { type: string; config: any }[] = [];
@@ -65,7 +66,11 @@ export async function getConfig() {
 		}
 		const value = meta.getAttribute('content');
 		const options = value ? value.split('-') : [];
-		const config: Config = {};
+
+		const config: Config = {
+			ids: []
+		};
+
 		if (options.length > 0 && !isNaN(Number(options[0]))) {
 			config.count = parseInt(options[0], 10);
 			options.shift();
@@ -80,6 +85,9 @@ export async function getConfig() {
 		options.forEach((opt) => {
 			if (opt.startsWith('m') && !isNaN(Number(opt.substring(1)))) {
 				config.minChars = parseInt(opt.substring(1), 10);
+			}
+			if (opt.startsWith('i')) {
+				config.ids.push(opt.substring(1));
 			}
 		});
 		blocks.push({

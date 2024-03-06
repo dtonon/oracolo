@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { type NostrEvent } from '@nostr/tools/core';
 	import { uniqueEventsStore } from './stores/uniqueEventsStore';
 	import { filterEvents } from './blockUtils.js';
@@ -9,10 +10,17 @@
 	export let count = 2;
 	export let style = 'list';
 	export let minChars = 0;
+	export let ids: string[] = [];
 	const kinds = [30023];
 
+	onMount(() => {
+		if (ids.length > 0) {
+			style = 'highlight';
+		}
+	});
+
 	// Reactive statement to filter events
-	$: filteredItems = filterEvents(events, kinds, minChars, count, false).map(getEventData);
+	$: filteredItems = filterEvents(events, kinds, minChars, count, false, ids).map(getEventData);
 </script>
 
 <div class="articles-container">
@@ -28,7 +36,12 @@
 					{#if event.summary}
 						<div class="summary">{@html event.summary}</div>
 					{/if}
-					<div class="date">{formatDate(event.created_at)}</div>
+					<div>
+						<span class="date">{formatDate(event.created_at)}</span>
+						{#if ids.length > 0}
+							<span class="pinned">- 📌 Pinned </span>
+						{/if}
+					</div>
 				</div>
 			{/each}
 		</div>
