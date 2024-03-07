@@ -108,14 +108,12 @@
 
 {#if blocks && events.length > 0}
 	{#each blocks as block}
-		<section class="block {block.type}">
-			{#if block.type === 'articles'}
-				<Articles {events} {...block.config} />
-			{:else if block.type === 'notes'}
-				<Notes {events} {...block.config} />
-			{:else if block.type === 'images'}
-				<Images {events} {...block.config} />
-			{/if}
-		</section>
+		{#if block.type === 'articles'}
+			<Articles {events} {...block.config} />
+		{:else if block.type === 'notes'}
+			<Notes {events} {...block.config} />
+		{:else if block.type === 'images'}
+			<Images {events} {...block.config} />
+		{/if}
 	{/each}
 {/if}
