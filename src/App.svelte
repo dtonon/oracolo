@@ -60,4 +60,4 @@
   {/if}
 {/if}
 
-<div class="footer">This blog is powerd by Oracolo and Nostr, <a href="https://njump.me">read more</a></div>
+<div class="footer">This blog is powerd by <a href="https://github.com/dtonon/oracolo">Oracolo</a> and Nostr, <a href="https://njump.me">read more</a></div>
