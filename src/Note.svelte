@@ -74,8 +74,10 @@
   <div class="external-link">
     Note: <a href="https://njump.me/{note1}">{note1.slice(0, 9) + "..." + note1.slice(-5)}</a>
   </div>
+  <!-- svelte-ignore a11y-invalid-attribute -->
   <a href="">
     <div class="picture-container">
+      <!-- svelte-ignore a11y-missing-attribute -->
       <img src="{picture}" />
     </div>
     <span>{name} homepage</span>
@@ -87,6 +89,7 @@
     <div class="date">{new Intl.DateTimeFormat('en-US', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }).format(new Date(note.created_at * 1000))}</div>
     <h1>{title}</h1>
     {#if image }
+      <!-- svelte-ignore a11y-missing-attribute -->
       <img class="note-banner" src="{image}" />
     {/if}
     <div class="content">

@@ -87,6 +87,7 @@
   </div>
   <h1>
     <div class="picture-container">
+      <!-- svelte-ignore a11y-missing-attribute -->
       <img src="{picture}" />
     </div>
     {name}
