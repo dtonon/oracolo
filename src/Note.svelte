@@ -1,8 +1,8 @@
 <script>
   import { onMount } from 'svelte';
-  import { publicKey, relayUrl } from './config';
+  import { publicKey, relayUrls } from './config';
   import { documentTitle } from './stores/documentTitleStore';
-  import { Relay } from 'nostr-tools/relay';
+  import { SimplePool } from 'nostr-tools/pool';
   import showdown from 'showdown';
   import * as nip19 from 'nostr-tools/nip19'
 
@@ -23,8 +23,14 @@
   export let profile;
 
   onMount(async () => {
-    const relay = await Relay.connect(relayUrl);
-    const subscription = relay.subscribe(
+    const profileContent = JSON.parse(profile.content);
+    name = profileContent.name || null;
+    picture = profileContent.picture || null;
+    note1 = nip19.noteEncode(id)
+
+    const pool = new SimplePool()
+    let subscription = pool.subscribeMany(
+      relayUrls,
       [
         {
           authors: [publicKey],
@@ -35,12 +41,6 @@
         onevent(event) {
           console.log('Received event:', event);
           note = event;
-
-          const profileContent = JSON.parse(profile.content);
-          name = profileContent.name || null;
-          picture = profileContent.picture || null;
-
-          note1 = nip19.noteEncode(event.id)
 
           title = event?.tags.find(([k]) => k === 'title')?.[1] || 'No title'
           image = event?.tags.find(([k]) => k === 'image')?.[1] || undefined

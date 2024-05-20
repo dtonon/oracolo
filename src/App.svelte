@@ -1,12 +1,12 @@
-<script>
+<script lang="ts">
   import { onMount, onDestroy } from 'svelte';
-  import { publicKey, relayUrl } from './config';
+  import { publicKey, relayUrls } from './config';
   import Home from './Home.svelte';
   import Note from './Note.svelte';
-  import { Relay } from 'nostr-tools/relay';
+  import { SimplePool } from 'nostr-tools/pool';
 
   let currentHash = '';
-  let profile;
+  let profile: import('nostr-tools').Event;
   let name = '';
   let picture = '';
 
@@ -21,8 +21,9 @@
     handleHashChange();
     window.addEventListener('hashchange', handleHashChange);
 
-    const relay = await Relay.connect(relayUrl);
-    const metadataSubscription = relay.subscribe(
+    const pool = new SimplePool()
+    let subscription = pool.subscribeMany(
+      relayUrls,
       [
         {
           kinds: [0],
@@ -38,7 +39,7 @@
           picture = parsedContent.picture || null;
         },
         oneose() {
-          metadataSubscription.close();
+          subscription.close();
         }
       }
     );
@@ -50,13 +51,11 @@
   });
 </script>
 
-{#if currentHash === ''}
-  {#if profile}
-    <Home {profile} />
-  {/if}
-{:else}
-  {#if profile}
-    <Note id={currentHash} {profile} />
+{#if profile && Object.keys(profile).length > 0}
+  {#if currentHash === ''}
+      <Home {profile} />
+  {:else}
+      <Note id={currentHash} {profile} />
   {/if}
 {/if}
 

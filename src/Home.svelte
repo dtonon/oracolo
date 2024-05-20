@@ -1,8 +1,8 @@
 <script>
   import { onMount } from 'svelte';
-  import { publicKey, relayUrl } from './config';
+  import { publicKey, relayUrls } from './config';
   import { documentTitle } from './stores/documentTitleStore';
-  import { Relay } from 'nostr-tools/relay';
+  import { SimplePool } from 'nostr-tools/pool';
   import * as nip19 from 'nostr-tools/nip19'
 
   let events = [];
@@ -28,9 +28,10 @@
     npub = nip19.npubEncode(publicKey)
 
     documentTitle.set(name + " home, powerd by Nostr");
-    const relay = await Relay.connect(relayUrl);
 
-    const subscription = relay.subscribe(
+    const pool = new SimplePool()
+    let subscription = pool.subscribeMany(
+      relayUrls,
       [
         {
           kinds: [30023],
