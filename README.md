@@ -2,6 +2,8 @@
 
 Oracle is a minimalist blog that consists of a single html file, weighing only ~140Kb. It works also without a web server; for example you can send it via email as a business card.
 
+![Oracolo preview](docs/oracolo.jpg)
+
 ## Examples
 Here you can find some generated blogs for [OpenSats](https://raw.githack.com/dtonon/oracolo/master/examples/opensats.html), [Hodlbod](https://raw.githack.com/dtonon/oracolo/master/examples/hodlbod.html) and [fiatjaf](https://raw.githack.com/dtonon/oracolo/master/examples/fiatjaf.html).
 
