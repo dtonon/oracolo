@@ -10,8 +10,8 @@ Here you can find some generated blogs for [OpenSats](https://raw.githack.com/dt
 ## How to use - Standard mode
 
 1) Replace your hex public key in src/config.ts
-2) Run `mpm install`
-3) Run `mpm run build`
+2) Run `npm install`
+3) Run `npm run build`
 4) Deploy the generated dist/index.html file
 
 ## How to use - "I hate npm" mode
