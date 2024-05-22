@@ -141,7 +141,67 @@ code {
   border-bottom: 8px solid #ebebeb;
 }
 
-.listing {
+.top-notes {
+  display: flex;
+  
+  @media only screen and (max-width: 768px) {
+    display: block;
+  }
+
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2rem;
+  width: 100%;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+
+  @media only screen and (max-width: 768px) {
+    padding-bottom: 0rem;
+  }
+
+  border-bottom: 8px solid #f5f5f5;
+
+  .note {
+    flex: 1 1 calc(50% - 2rem);
+    box-sizing: border-box;
+
+    @media only screen and (max-width: 768px) {
+      margin-bottom: 2rem;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      margin-bottom: 0.5rem;
+      border-radius: 4px;
+    }
+
+    .title {
+      display: block;
+      margin-bottom: 0.4rem;
+      font-size: 1.1rem;
+      font-weight: bolder;
+    }
+
+    .summary {
+      margin-bottom: 0.4rem;
+      font-size: 0.9rem;
+    }
+
+    .date {
+      font-size: 0.8rem;
+      color: #a9a9a9;
+    }
+
+  }
+}
+
+.listing-notes {
   ul {
     list-style-type: none;
     padding: 0;
@@ -208,6 +268,7 @@ h1 {
     display: block;
     margin: 2rem auto;
     max-width: 100%;
+    border-radius: 4px;
 
     &.note-banner {
       margin: 1rem auto 0 auto;

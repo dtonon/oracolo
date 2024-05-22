@@ -76,6 +76,6 @@
 <div class="footer">
   This blog is powerd by <a href="https://github.com/dtonon/oracolo">Oracolo</a> and Nostr, <a href="https://njump.me">read more</a><br/><br/>
   {#if setRelays }
-    This page connects to some servers (Nostr relays) to retrieve data:<br/>{setRelays.join(', ')}
+    This page connects to some servers (Nostr relays) to retrieve data: {setRelays.join(', ')}
   {/if}
 </div>

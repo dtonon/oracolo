@@ -3,8 +3,9 @@ import * as nip19 from 'nostr-tools/nip19'
 export const getConfig = () => {
   const authorMeta = document.querySelector('meta[name="author"]');
   const relaysMeta = document.querySelector('meta[name="relays"]');
+  const topNotesMeta = document.querySelector('meta[name="top-notes"]');
 
-  if (!authorMeta || !relaysMeta) {
+  if (!authorMeta || !relaysMeta || !topNotesMeta) {
     throw new Error("Missing meta tags for configuration");
   }
 
@@ -20,6 +21,7 @@ export const getConfig = () => {
     }
   }
   const relays = relaysMeta.getAttribute('value')?.split(',').map(url => url.trim());
+  const topNotes = topNotesMeta.getAttribute('value') || 0;
 
-  return { publicKey, relays };
+  return { publicKey, relays, topNotes };
 };

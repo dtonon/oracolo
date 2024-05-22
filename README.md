@@ -12,16 +12,21 @@ Here you can find some generated blogs for [OpenSats](https://raw.githack.com/dt
 ## How to use - Developer mode
 
 1) Open `index.html` and personalize the `author` meta tag with your `npub`
-2) Optional: personalize the `relays` meta tag with some custom relays
-3) Run `npm install`
-4) Run `npm run build`
-5) Deploy the generated dist/index.html file
+2) Run `npm install`
+3) Run `npm run build`
+4) Deploy the generated dist/index.html file
 
 ## How to use - "I hate npm" mode
 
 1) Open directly `dist/index.html` and personalize the `author` meta tag with your `npub`
-2) Optional: personalize the `relays` meta tag with some custom relays
-3) Save the file and deploy
+2) Save the file and deploy
+
+## Optional settings
+
+In addition to the `npub` meta in the index.html there are other optional metas to configure:
+
+`relays`: permits to set a list of custom relays;  
+`top-notes`: show N notes in a boxed format with the cover image;
 
 
 ## Why this ugly hash routing?
