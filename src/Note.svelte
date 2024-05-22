@@ -93,7 +93,7 @@
     Note: <a href="https://njump.me/{note1}">{note1.slice(0, 9) + "..." + note1.slice(-5)}</a>
   </div>
   <!-- svelte-ignore a11y-invalid-attribute -->
-  <a href="">
+  <a href="#">
     <div class="picture-container">
       <!-- svelte-ignore a11y-missing-attribute -->
       <img src="{picture}" />
