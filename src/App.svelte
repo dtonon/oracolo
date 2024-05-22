@@ -55,10 +55,11 @@
   });
 </script>
 
-{#if settedPublicKey === 'replace_with_your_hex_public_key' }
+{#if settedPublicKey === '' }
   <div class="unfinished-setup">
-    <h1>Missing config!</h1>
-    You need to personalize (at least) the publicKey meta tag updating this html file! Open it with an editor, look at the first lines and personalize them.
+    <h1>Oracolo</h1>
+    <h2>Missing config!</h2>
+    You need to set (at least) the <strong>author meta tag</strong> by updating this html file! Open it with an editor, look at the first lines and personalize them.
   </div>
 {/if}
 
