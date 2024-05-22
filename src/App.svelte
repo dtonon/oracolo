@@ -9,7 +9,8 @@
   let profile: import('nostr-tools').Event;
   let name = '';
   let picture = '';
-  let settedPublicKey;
+  let setPublicKey;
+  let setRelays;
 
   const handleHashChange = () => {
     const newHash = window.location.hash.substr(1); // Remove the leading #
@@ -20,7 +21,8 @@
 
   onMount(async () => {
     const { publicKey, relays } = getConfig();
-    settedPublicKey = publicKey
+    setPublicKey = publicKey
+    setRelays = relays
 
     handleHashChange();
     window.addEventListener('hashchange', handleHashChange);
@@ -55,7 +57,7 @@
   });
 </script>
 
-{#if settedPublicKey === '' }
+{#if setPublicKey === '' }
   <div class="unfinished-setup">
     <h1>Oracolo</h1>
     <h2>Missing config!</h2>
@@ -71,4 +73,9 @@
   {/if}
 {/if}
 
-<div class="footer">This blog is powerd by <a href="https://github.com/dtonon/oracolo">Oracolo</a> and Nostr, <a href="https://njump.me">read more</a></div>
+<div class="footer">
+  This blog is powerd by <a href="https://github.com/dtonon/oracolo">Oracolo</a> and Nostr, <a href="https://njump.me">read more</a><br/><br/>
+  {#if setRelays }
+    This page connects to some servers (Nostr relays) to retrieve data:<br/>{setRelays.join(', ')}
+  {/if}
+</div>
