@@ -1,6 +1,6 @@
 <script>
   import { onMount } from 'svelte';
-  import { publicKey, relayUrls } from './config';
+  import { getConfig } from './config';
   import { documentTitle } from './stores/documentTitleStore';
   import { SimplePool } from 'nostr-tools/pool';
   import * as nip19 from 'nostr-tools/nip19'
@@ -21,6 +21,8 @@
 
 
   onMount(async () => {
+    const { publicKey, relays } = getConfig();
+
     const parsedContent = JSON.parse(profile.content);
     name = parsedContent.name || null;
     picture = parsedContent.picture || null;
@@ -31,7 +33,7 @@
 
     const pool = new SimplePool()
     let subscription = pool.subscribeMany(
-      relayUrls,
+      relays,
       [
         {
           kinds: [30023],

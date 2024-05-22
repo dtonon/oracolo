@@ -1,2 +1,13 @@
-export const publicKey = 'replace_with_your_hex_public_key'; // Use Hodlbod as tester
-export const relayUrls = ['wss://nos.lol', 'wss://relay.damus.io', 'wss://nostr.wine'];
+export const getConfig = () => {
+  const publicKeyMeta = document.querySelector('meta[name="publicKey"]');
+  const relaysMeta = document.querySelector('meta[name="relays"]');
+
+  if (!publicKeyMeta || !relaysMeta) {
+    throw new Error("Missing meta tags for configuration");
+  }
+
+  const publicKey = publicKeyMeta.getAttribute('value');
+  const relays = relaysMeta.getAttribute('value')?.split(',').map(url => url.trim());
+
+  return { publicKey, relays };
+};

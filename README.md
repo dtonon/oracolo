@@ -11,16 +11,14 @@ Here you can find some generated blogs for [OpenSats](https://raw.githack.com/dt
 
 ## How to use - Developer mode
 
-1) Replace your hex public key in src/config.ts
+1) Open `index.html` and personalize the `publicKey` and `relays` meta tags
 2) Run `npm install`
 3) Run `npm run build`
 4) Deploy the generated dist/index.html file
 
 ## How to use - "I hate npm" mode
 
-1) Open template/index.html with a text editor
-2) Find 'replace_with_your_hex_public_key'
-3) Replace it with... your hex public key :)
+1) Open directly `dist/index.html` and personalize the `publicKey` and `relays` meta tags
 4) Save the file and deploy
 
 ## Why this ugly hash routing?

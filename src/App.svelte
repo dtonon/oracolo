@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
-  import { publicKey, relayUrls } from './config';
+  import { getConfig } from './config';
   import Home from './Home.svelte';
   import Note from './Note.svelte';
   import { SimplePool } from 'nostr-tools/pool';
@@ -9,6 +9,7 @@
   let profile: import('nostr-tools').Event;
   let name = '';
   let picture = '';
+  let settedPublicKey;
 
   const handleHashChange = () => {
     const newHash = window.location.hash.substr(1); // Remove the leading #
@@ -18,12 +19,15 @@
   };
 
   onMount(async () => {
+    const { publicKey, relays } = getConfig();
+    settedPublicKey = publicKey
+
     handleHashChange();
     window.addEventListener('hashchange', handleHashChange);
 
     const pool = new SimplePool()
     let subscription = pool.subscribeMany(
-      relayUrls,
+      relays,
       [
         {
           kinds: [0],
@@ -50,6 +54,13 @@
     window.removeEventListener('hashchange', handleHashChange);
   });
 </script>
+
+{#if settedPublicKey === 'replace_with_your_hex_public_key' }
+  <div class="unfinished-setup">
+    <h1>Missing config!</h1>
+    You need to personalize (at least) the publicKey meta tag updating this html file! Open it with an editor, look at the first lines and personalize them.
+  </div>
+{/if}
 
 {#if profile && Object.keys(profile).length > 0}
   {#if currentHash === ''}
