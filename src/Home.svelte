@@ -41,7 +41,7 @@
         {
           kinds: [30023],
           authors: [publicKey],
-          limit: 10,
+          limit: 500,
         }
       ],
       {
