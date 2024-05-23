@@ -23,7 +23,7 @@
 
 
   onMount(async () => {
-    const { publicKey, relays, topNotes } = getConfig();
+    const { publicKey, relays, topNotes, includeShort } = getConfig();
 
     const parsedContent = JSON.parse(profile.content);
     name = parsedContent.name || null;
@@ -52,10 +52,39 @@
             // If not, add the event to the events array and the event ID to the set
             events = [...events, event];
             eventIds.add(event.id);
+
+            // Sort the events array by created_at in descending order
+            events.sort((a, b) => b.created_at - a.created_at);
           }
-          
-          // Sort the events array by created_at in descending order
-          events.sort((a, b) => b.created_at - a.created_at);
+        },
+        oneose() {
+          console.log('No subscribers left. Closing subscription.');
+          subscription.close();
+        }
+      }
+    );
+
+    subscription = pool.subscribeMany(
+      relays,
+      [
+        {
+          kinds: [1],
+          authors: [publicKey],
+          limit: 500,
+        }
+      ],
+      {
+        onevent(event) {
+          console.log('Received event:', event);
+          // Check if the event ID is already in the set
+          if (!eventIds.has(event.id) && event.content.length > includeShort && isRootNote(event)) {
+            // If not, add the event to the events array and the event ID to the set
+            events = [...events, event];
+            eventIds.add(event.id);
+
+            // Sort the events array by created_at in descending order
+            events.sort((a, b) => b.created_at - a.created_at);
+          }
         },
         oneose() {
           console.log('No subscribers left. Closing subscription.');
@@ -66,13 +95,33 @@
 
   });
 
+  function isRootNote(event) {
+    // Loop through the tags and check the condition
+    for (let tag of event.tags) {
+      if (tag[0] === 'e' && (tag[3] === 'root' || tag[3] === 'reply')) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   function getEventData(event) {
+    let extractedTitle;
+    let extractedSummary;
+    if (event.kind == 30023) {
+      extractedTitle = event?.tags.find(([k]) => k === 'title')?.[1] || 'No title'
+      extractedSummary = event?.tags.find(([k]) => k === 'summary')?.[1] || undefined
+    } else {
+      extractedTitle = new Intl.DateTimeFormat('en-US', { day: '2-digit', month: 'long', year: 'numeric' }).format(new Date(event.created_at * 1000))
+      extractedSummary = event.content.slice(0, 200) + "..."
+    } 
+
     return {
       id: event.id,
       created_at: event.created_at,
-      title: event?.tags.find(([k]) => k === 'title')?.[1] || 'No title',
+      title: extractedTitle,
       image: event?.tags.find(([k]) => k === 'image')?.[1] || undefined,
-      summary: event?.tags.find(([k]) => k === 'summary')?.[1] || undefined,
+      summary: extractedSummary,
     };
   }
 
