@@ -152,8 +152,8 @@ code {
   justify-content: space-between;
   gap: 2rem;
   width: 100%;
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  padding-bottom: 2rem;
 
   @media only screen and (max-width: 768px) {
     padding-bottom: 0rem;
@@ -201,7 +201,45 @@ code {
   }
 }
 
+.short-notes {
+  border-bottom: 8px solid #f5f5f5;
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+
+  .splide__slide {
+    font-size: 0.9rem;
+    overflow-wrap: break-word;
+
+    a {
+      text-decoration: none;
+    }
+
+    .date {
+      font-size: 0.8rem;
+      color: #a9a9a9;
+      margin-bottom: 0.3rem;
+    }
+
+  }
+
+  .splide__arrow--prev {
+    left: -3em;
+  }
+  .splide__arrow--next {
+    right: -3em;
+  }
+
+  .splide__arrow {
+    background: none;
+      svg {
+        fill: #a9a9a9;
+      }
+  }
+}
+
 .listing-notes {
+  margin-top: 1rem;
+  
   ul {
     list-style-type: none;
     padding: 0;

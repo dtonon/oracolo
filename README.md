@@ -23,10 +23,11 @@ Here you can find some generated blogs for [OpenSats](https://raw.githack.com/dt
 
 ## Optional settings
 
-In addition to the `npub` meta in the index.html there are other optional metas to configure:
+In addition to the `npub` meta in the index.html there are other optional meta tags to configure:
 
-`relays`: permits to set a list of custom relays;  
-`top-notes`: show N notes in a boxed format with the cover image;
+`relays`: set a list of custom relays;  
+`top-notes`: show N notes in a boxed format with cover image, zero to disable;  
+`short-chars`: show short notes (kind:1) with more than X characters in a carousel, zero to disable;
 
 
 ## Why this ugly hash routing?

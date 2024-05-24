@@ -5,8 +5,11 @@
   import { isRootNote, getEventData } from './utils';
   import { SimplePool } from 'nostr-tools/pool';
   import * as nip19 from 'nostr-tools/nip19'
+  import { Splide, SplideSlide } from '@splidejs/svelte-splide';
+  import '@splidejs/svelte-splide/css';
 
   let events = [];
+  let shortEvents = [];
   let eventIds = new Set();
 
   let name = '';
@@ -22,6 +25,7 @@
     document.title = value;
   });
 
+  let splide;
 
   onMount(async () => {
     const { publicKey, relays, topNotes, includeShort } = getConfig();
@@ -47,7 +51,7 @@
       ],
       {
         onevent(event) {
-          console.log('Received event:', event);
+          // console.log('Received event:', event);
           // Check if the event ID is already in the set
           if (!eventIds.has(event.id)) {
             // If not, add the event to the events array and the event ID to the set
@@ -65,39 +69,44 @@
       }
     );
 
-    subscription = pool.subscribeMany(
-      relays,
-      [
-        {
-          kinds: [1],
-          authors: [publicKey],
-          limit: 500,
-        }
-      ],
-      {
-        onevent(event) {
-          console.log('Received event:', event);
-          // Check if the event ID is already in the set
-          if (!eventIds.has(event.id) && event.content.length > includeShort && isRootNote(event)) {
-            // If not, add the event to the events array and the event ID to the set
-            events = [...events, event];
-            eventIds.add(event.id);
-
-            // Sort the events array by created_at in descending order
-            events.sort((a, b) => b.created_at - a.created_at);
+    if (includeShort > 0) {
+      subscription = pool.subscribeMany(
+        relays,
+        [
+          {
+            kinds: [1],
+            authors: [publicKey],
+            limit: 500,
           }
-        },
-        oneose() {
-          console.log('No subscribers left. Closing subscription.');
-          subscription.close();
+        ],
+        {
+          onevent(event) {
+            console.log('Received event:', event);
+            // Check if the event ID is already in the set
+            if (!eventIds.has(event.id) && event.content.length > includeShort && isRootNote(event)) {
+              // If not, add the event to the shortEvents array and the event ID to the set
+              shortEvents = [...shortEvents, event];
+              eventIds.add(event.id);
+
+              // Sort the shortEvents array by created_at in descending order
+              shortEvents.sort((a, b) => b.created_at - a.created_at);
+            }
+
+          },
+          oneose() {
+            console.log('No subscribers left. Closing subscription.');
+            subscription.close();
+          }
         }
-      }
-    );
+      );
+    }
 
   });
 
   $: topEvents = topNotesCount > 0 ? events.slice(0, topNotesCount).map(getEventData) : [];
   $: listingEvents = events.slice(topNotesCount).map(getEventData);
+  $: slideEvents = shortEvents.map(getEventData);
+
 
 </script>
 
@@ -137,7 +146,32 @@
     </div>
   {/if}
 
-  {#if listingEvents}
+  {#if slideEvents.length > 0}
+  <Splide class="short-notes" options={ {
+    type: 'loop',
+    gap: '1rem',
+    pagination: false,
+    perPage: 3,
+    breakpoints: {
+      640: {
+        perPage: 2,
+      },
+    },
+    autoplay : true,
+  }}
+  >
+    {#each slideEvents as event}
+    <SplideSlide>
+        <a href={`#${event.id}`}>
+          <div class="date">{new Intl.DateTimeFormat('en-US', { day: '2-digit', month: 'long', year: 'numeric' }).format(new Date(event.created_at * 1000))}</div>
+          {event.summary}
+        </a>
+      </SplideSlide>
+    {/each}
+  </Splide>
+  {/if}
+
+  {#if listingEvents.length > 0}
     <div class="listing-notes">
         <ul>
           {#each listingEvents as event}
