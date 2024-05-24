@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import { getConfig } from './config';
   import { documentTitle } from './stores/documentTitleStore';
+  import { getEventData } from './utils';
   import { SimplePool } from 'nostr-tools/pool';
   import showdown from 'showdown';
   import * as nip19 from 'nostr-tools/nip19'
@@ -42,11 +43,8 @@
       {
         onevent(event) {
           console.log('Received event:', event);
-          note = event;
-
-          title = event?.tags.find(([k]) => k === 'title')?.[1] || 'No title'
-          image = event?.tags.find(([k]) => k === 'image')?.[1] || undefined
-          documentTitle.set(title);
+          note = getEventData(event);
+          documentTitle.set(note.title);
 
           // Strip duplicate h1 title
           let note_content = note.content.replace("# " + title, '');
@@ -105,10 +103,10 @@
 {#if Object.keys(note).length > 0}
   <div class="note_wrapper">
     <div class="date">{new Intl.DateTimeFormat('en-US', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }).format(new Date(note.created_at * 1000))}</div>
-    <h1>{title}</h1>
-    {#if image }
+    <h1>{note.title}</h1>
+    {#if note.image }
       <!-- svelte-ignore a11y-missing-attribute -->
-      <img class="note-banner" src="{image}" />
+      <img class="note-banner" src="{note.image}" />
     {/if}
     <div class="content">
       {@html renderedContent}
