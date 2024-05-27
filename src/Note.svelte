@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import { getConfig } from './config';
   import { documentTitle } from './stores/documentTitleStore';
-  import { getEventData, processUsersEntities, processEventsEntities } from './utils';
+  import { getEventData, processUsersEntities, processEventsEntities, processImageUrls, processVideoUrls } from './utils';
   import { SimplePool } from 'nostr-tools/pool';
   import showdown from 'showdown';
   import * as nip19 from 'nostr-tools/nip19'
@@ -53,6 +53,8 @@
           // Replace users entities with names
           note_content = await processUsersEntities(note_content);
           note_content = processEventsEntities(note_content);
+          note_content = processImageUrls(note_content)
+          note_content = processVideoUrls(note_content)
 
           // Render returns in kind:1
           if (event.kind == 1) {
