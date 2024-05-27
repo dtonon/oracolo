@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import { getConfig } from './config';
   import { documentTitle } from './stores/documentTitleStore';
-  import { isRootNote, getEventData } from './utils';
+  import { isRootNote, getEventData, processUsersEntities, processEventsEntities, cleanMarkdownLinks } from './utils';
   import { SimplePool } from 'nostr-tools/pool';
   import * as nip19 from 'nostr-tools/nip19'
   import { Splide, SplideSlide } from '@splidejs/svelte-splide';
@@ -78,15 +78,19 @@
           {
             kinds: [1],
             authors: [publicKey],
-            limit: 500,
+            limit: 1000,
           }
         ],
         {
-          onevent(event) {
+          onevent: async(event) => {
             console.log('Received event:', event);
             // Check if the event ID is already in the set
             if (!eventIds.has(event.id) && event.content.length > shortChars && isRootNote(event)) {
               // If not, add the event to the shortEvents array and the event ID to the set
+              event = await processShortEvent(event);
+              if (event.content.length < shortChars) {
+                return
+              }
               shortEvents = [...shortEvents, event];
               eventIds.add(event.id);
 
@@ -105,10 +109,18 @@
 
   });
 
+  async function processShortEvent(event) {
+    let updatedEventContent;
+    updatedEventContent = await processUsersEntities(event.content);
+    updatedEventContent = processEventsEntities(updatedEventContent);
+    updatedEventContent = cleanMarkdownLinks(updatedEventContent);
+    event.content = updatedEventContent
+    return event;
+  }
+
   $: topEvents = topNotesCount > 0 ? events.slice(0, topNotesCount).map(getEventData) : [];
   $: listingEvents = events.slice(topNotesCount).map(getEventData);
   $: slideEvents = shortEvents.map(getEventData);
-
 
 </script>
 

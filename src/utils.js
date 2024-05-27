@@ -136,3 +136,13 @@ export function processEventsEntities(content) {
   });
   return content;
 }
+
+export function cleanMarkdownLinks(text) {
+  // Regular expression to match markdown links
+  const regexMarkdownLinks = /\[([^\]]+)\]\(([^)]+)\)/g;
+
+  // Replace markdown links with just the text
+  const cleanedText = text.replace(regexMarkdownLinks, (match, p1) => p1);
+
+  return cleanedText;
+}

@@ -54,6 +54,11 @@
           note_content = await processUsersEntities(note_content);
           note_content = processEventsEntities(note_content);
 
+          // Render returns in kind:1
+          if (event.kind == 1) {
+            note_content= note_content.replace(/\n/g, '\n<br/>');
+          }
+
           // Render markdown
           let converter = new showdown.Converter()
           renderedContent = converter.makeHtml(note_content);
