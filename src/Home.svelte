@@ -16,6 +16,7 @@
   let picture = '';
   let about = '';
   let npub = '';
+  let publicKey = '';
 
   let topNotesCount = 0;
 
@@ -28,13 +29,14 @@
   let splide;
 
   onMount(async () => {
-    const { publicKey, relays, topNotes, includeShort } = getConfig();
+    const { npub: configNpub, relays, topNotes, shortChars } = getConfig();
 
+    npub = configNpub
+    publicKey = profile.pubkey
     const parsedContent = JSON.parse(profile.content);
     name = parsedContent.name || null;
     picture = parsedContent.picture || null;
     about = parsedContent.about || null;
-    npub = nip19.npubEncode(publicKey)
     topNotesCount = topNotes;
 
     documentTitle.set(name + " home, powerd by Nostr");
@@ -69,7 +71,7 @@
       }
     );
 
-    if (includeShort > 0) {
+    if (shortChars > 0) {
       subscription = pool.subscribeMany(
         relays,
         [
@@ -83,7 +85,7 @@
           onevent(event) {
             console.log('Received event:', event);
             // Check if the event ID is already in the set
-            if (!eventIds.has(event.id) && event.content.length > includeShort && isRootNote(event)) {
+            if (!eventIds.has(event.id) && event.content.length > shortChars && isRootNote(event)) {
               // If not, add the event to the shortEvents array and the event ID to the set
               shortEvents = [...shortEvents, event];
               eventIds.add(event.id);

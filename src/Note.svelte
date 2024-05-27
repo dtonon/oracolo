@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import { getConfig } from './config';
   import { documentTitle } from './stores/documentTitleStore';
-  import { getEventData } from './utils';
+  import { getEventData, processUsersEntities, processEventsEntities } from './utils';
   import { SimplePool } from 'nostr-tools/pool';
   import showdown from 'showdown';
   import * as nip19 from 'nostr-tools/nip19'
@@ -24,7 +24,7 @@
   export let profile;
 
   onMount(async () => {
-    const { publicKey, relays } = getConfig();
+    const { relays } = getConfig();
 
     const profileContent = JSON.parse(profile.content);
     name = profileContent.name || null;
@@ -36,40 +36,23 @@
       relays,
       [
         {
-          authors: [publicKey],
+          authors: [profile.pubkey],
           ids: [id],
         }
       ],
       {
-        onevent(event) {
+        onevent: async(event) => {
+          let note_content
           console.log('Received event:', event);
           note = getEventData(event);
           documentTitle.set(note.title);
 
           // Strip duplicate h1 title
-          let note_content = note.content.replace("# " + title, '');
+          note_content = note.content.replace("# " + title, '');
 
-          // Prefix plain "nevent1|note1|npub1|nprofile|<alphanumeric string>" with nostr: for further processing
-          // Include also entities without prefix inside a markdown link, e.g. [text](nevent1xxxxx)
-          const regexEntities = /(^|\s|\n|\()(nevent1\w+|note1\w+|npub1\w+|nprofile1\w+)(?=\s|\n|\)|$)/gm;
-          note_content = note_content.replace(regexEntities, (match, p1, group1) => {
-            const shortenedString = group1.slice(0, 24);
-            return `${p1}nostr:${group1}`;
-          });
-
-          // Transform plain nostr:(nevent1|note1|npub1|nprofile)<alphanumeric string> in markdown links
-          const regexPrefixedEntities = /(^|\s|\n)nostr:(nevent1\w+|note1\w+|npub1\w+|nprofile1\w+)(?=\s|\n|$)/gm;
-          note_content = note_content.replace(regexPrefixedEntities, (match, p1, group1) => {
-            const shortenedString = group1.slice(0, 24);
-            return `${p1}[${shortenedString}...](nostr:${group1})`;
-          });
-
-          // Transform "nostr:<alphanumeric string>" inside a markedown link with a njump.me link
-          const regexNostrLinks = /\(nostr:([a-zA-Z0-9]+)\)/g;
-          note_content = note_content.replace(regexNostrLinks, (match, group) => {
-            // Construct the replacement string with "https://njump.me/<alphanumeric string>
-            return `(https://njump.me/${group})`;
-          });
+          // Replace users entities with names
+          note_content = await processUsersEntities(note_content);
+          note_content = processEventsEntities(note_content);
 
           // Render markdown
           let converter = new showdown.Converter()
@@ -83,6 +66,8 @@
       }
     );
   });
+
+  $: renderedHtml = renderedContent;
 
 </script>
 
@@ -109,7 +94,7 @@
       <img class="note-banner" src="{note.image}" />
     {/if}
     <div class="content">
-      {@html renderedContent}
+      {@html renderedHtml}
     </div>
   </div>
 {:else}

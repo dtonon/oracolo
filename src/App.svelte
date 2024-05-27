@@ -1,16 +1,17 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
   import { getConfig } from './config';
+  import { getProfile } from './utils';
   import Home from './Home.svelte';
   import Note from './Note.svelte';
   import { SimplePool } from 'nostr-tools/pool';
 
   let currentHash = '';
   let profile: import('nostr-tools').Event;
+  let missingConfig = false;
   let name = '';
   let picture = '';
-  let setPublicKey;
-  let setRelays;
+  let relays;
 
   const handleHashChange = () => {
     const newHash = window.location.hash.substr(1); // Remove the leading #
@@ -20,35 +21,20 @@
   };
 
   onMount(async () => {
-    const { publicKey, relays } = getConfig();
-    setPublicKey = publicKey
-    setRelays = relays
+    const { npub, relays: configRelays } = getConfig();
+    relays = configRelays;
 
     handleHashChange();
     window.addEventListener('hashchange', handleHashChange);
 
-    const pool = new SimplePool()
-    let subscription = pool.subscribeMany(
-      relays,
-      [
-        {
-          kinds: [0],
-          authors: [publicKey],
-          limit: 1,
-        }
-      ],
-      {
-        onevent(event) {
-          profile = event
-          const parsedContent = JSON.parse(profile.content);
-          name = parsedContent.name || null;
-          picture = parsedContent.picture || null;
-        },
-        oneose() {
-          subscription.close();
-        }
-      }
-    );
+    profile = await getProfile(npub);
+    if (profile) {
+      const parsedContent = JSON.parse(profile.content);
+      name = parsedContent.name || null;
+      picture = parsedContent.picture || null;
+    } else {
+      missingConfig = true
+    }
 
   });
 
@@ -57,7 +43,7 @@
   });
 </script>
 
-{#if setPublicKey === '' }
+{#if missingConfig }
   <div class="unfinished-setup">
     <h1>Oracolo</h1>
     <h2>Missing config!</h2>
@@ -75,7 +61,7 @@
 
 <div class="footer">
   This blog is powerd by <a href="https://github.com/dtonon/oracolo">Oracolo</a> and Nostr, <a href="https://njump.me">read more</a><br/><br/>
-  {#if setRelays }
-    This page connects to some servers (Nostr relays) to retrieve data: {setRelays.join(', ')}
+  {#if relays }
+    This page connects to some servers (Nostr relays) to retrieve data: {relays.join(', ')}
   {/if}
 </div>
