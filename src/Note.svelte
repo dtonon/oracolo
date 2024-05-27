@@ -62,7 +62,11 @@
           }
 
           // Render markdown
-          let converter = new showdown.Converter()
+          let converter = new showdown.Converter({
+            simplifiedAutoLink: true,
+            tables: true,
+            strikethrough: true,
+          });
           renderedContent = converter.makeHtml(note_content);
 
         },
