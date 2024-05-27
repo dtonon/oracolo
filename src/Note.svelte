@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import { getConfig } from './config';
   import { documentTitle } from './stores/documentTitleStore';
-  import { getEventData, processUsersEntities, processEventsEntities, processImageUrls, processVideoUrls } from './utils';
+  import { getEventData, processUsersEntities, processEventsEntities, processImageUrls, processVideoUrls, formatDate } from './utils';
   import { SimplePool } from 'nostr-tools/pool';
   import showdown from 'showdown';
   import * as nip19 from 'nostr-tools/nip19'
@@ -94,7 +94,7 @@
 
 {#if Object.keys(note).length > 0}
   <div class="note_wrapper">
-    <div class="date">{new Intl.DateTimeFormat('en-US', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }).format(new Date(note.created_at * 1000))}</div>
+    <div class="date">{formatDate(note.created_at)}</div>
     <h1>{note.title}</h1>
     {#if note.image }
       <!-- svelte-ignore a11y-missing-attribute -->

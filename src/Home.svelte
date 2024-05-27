@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import { getConfig } from './config';
   import { documentTitle } from './stores/documentTitleStore';
-  import { isRootNote, getEventData, processUsersEntities, processEventsEntities, cleanMarkdownLinks } from './utils';
+  import { isRootNote, getEventData, processUsersEntities, processEventsEntities, cleanMarkdownLinks, formatDate } from './utils';
   import { SimplePool } from 'nostr-tools/pool';
   import * as nip19 from 'nostr-tools/nip19'
   import { Splide, SplideSlide } from '@splidejs/svelte-splide';
@@ -154,7 +154,7 @@
             {#if event.summary }
               <div class="summary">{event.summary}</div>
             {/if}
-            <div class="date">{new Intl.DateTimeFormat('en-US', { day: '2-digit', month: 'long', year: 'numeric' }).format(new Date(event.created_at * 1000))}</div>
+            <div class="date">{formatDate(event.created_at)}</div>
           </div>
         {/each}
     </div>
@@ -177,7 +177,7 @@
     {#each slideEvents as event}
     <SplideSlide>
         <a href={`#${event.id}`}>
-          <div class="date">{new Intl.DateTimeFormat('en-US', { day: '2-digit', month: 'long', year: 'numeric' }).format(new Date(event.created_at * 1000))}</div>
+          <div class="date">{formatDate(event.created_at)}</div>
           {event.summary}
         </a>
       </SplideSlide>
@@ -194,7 +194,7 @@
               {#if event.summary }
                 <div class="summary">{event.summary}</div>
               {/if}
-              <div class="date">{new Intl.DateTimeFormat('en-US', { day: '2-digit', month: 'long', year: 'numeric' }).format(new Date(event.created_at * 1000))}</div>
+              <div class="date">{formatDate(event.created_at)}</div>
             </li>
           {/each}
         </ul>

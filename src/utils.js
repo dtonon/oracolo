@@ -170,3 +170,26 @@ export function processVideoUrls(text) {
 
   return htmlText;
 }
+
+
+export function formatDate(timestamp) {
+  // Options for Intl.DateTimeFormat to get the desired format
+  const options = { day: '2-digit', month: 'long', year: 'numeric' };
+  
+  // Create a new Date object from the timestamp (assumes timestamp is in seconds)
+  const date = new Date(timestamp * 1000);
+
+  // Format the date parts using Intl.DateTimeFormat
+  const parts = new Intl.DateTimeFormat('en-US', options).formatToParts(date);
+
+  // Extract day, month, and year from the parts
+  let day, month, year;
+  parts.forEach(part => {
+    if (part.type === 'day') day = part.value;
+    if (part.type === 'month') month = part.value;
+    if (part.type === 'year') year = part.value;
+  });
+
+  // Combine parts into the desired format: "XX Month Year"
+  return `${day} ${month} ${year}`;
+}
