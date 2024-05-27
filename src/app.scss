@@ -50,11 +50,16 @@ blockquote {
 }
 
 code {
-  overflow: scroll;
-  display: block;
-  padding: 1rem 0.5rem;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   background-color: #f6f6f6;
+}
+
+pre {
+  code {
+    overflow: scroll;
+    display: block;
+    padding: 1rem 0.5rem;
+  }
 }
 
 .unfinished-setup {
