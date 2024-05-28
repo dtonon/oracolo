@@ -29,6 +29,7 @@ In addition to the `npub` meta in the index.html there are other optional meta t
 `top-notes`: show N notes in a boxed format with cover image, zero to disable;  
 `short-chars`: show short notes (kind:1) with more than X characters in a carousel, zero to disable;
 
+https://github.com/dtonon/oracolo/assets/89577423/f71b8bc5-ecca-4a28-98fb-f3afe1d6698e
 
 ## Why this ugly hash routing?
 
