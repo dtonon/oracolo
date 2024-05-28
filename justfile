@@ -13,7 +13,7 @@ examples:
   cp blank.html index.html
   sed -i.bak "s/replace_with_your_npub/npub1jlrs53pkdfjnts29kveljul2sm0actt6n8dxrrzqcersttvcuv3qdjynqn/g" index.html && rm -f index.html.bak
   sed -i.bak 's/<meta name="top-notes" value="0" \/>/<meta name="top-notes" value="2" \/>/g' index.html && rm index.html.bak
-  sed -i.bak 's/<meta name="include-short" value="0" \/>/<meta name="include-short" value="500" \/>/g' index.html && rm index.html.bak
+  sed -i.bak 's/<meta name="short-chars" value="0" \/>/<meta name="short-chars" value="800" \/>/g' index.html && rm index.html.bak
   npm run build
   mv dist/index.html examples/hodlbod.html
   cp blank.html index.html
