@@ -5,7 +5,7 @@
     <meta name="author" value="replace_with_your_npub" />
 
     <!-- Personalize your relays list -->
-    <meta name="relays" value="wss://nos.lol, wss://relay.damus.io, wss://nostr.wine" />
+    <meta name="relays" value="wss://nos.lol, wss://relay.damus.io, wss://nostr.band, wss://nostr.wine" />
 
     <!-- Show top notes with images, use a even value, zero to disable -->
     <meta name="top-notes" value="0" />
@@ -16,12 +16,21 @@
     <!-- Enable navigation by topics (tags), empty to disable -->
     <meta name="topics" value="" />
 
+    <!-- Enable comments, 'yes' to enable -->
+    <meta name="comments" value="yes" />
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title></title>
   </head>
   <body>
     <div id="app"></div>
+    <script>
+      window.wnjParams = {
+        position: 'bottom',
+        accent: 'neutral',
+      };
+    </script>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

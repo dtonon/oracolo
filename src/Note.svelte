@@ -6,13 +6,16 @@
   import { SimplePool } from 'nostr-tools/pool';
   import showdown from 'showdown';
   import * as nip19 from 'nostr-tools/nip19'
+  import "zapthreads";
 
+  let relays;
   let note = {};
   let title = '';
   let image = '';
   let renderedContent = '';
   let note1 = '';
-  
+  let comments = false;
+
   let name = '';
   let picture = '';
 
@@ -24,12 +27,14 @@
   export let profile;
 
   onMount(async () => {
-    const { relays } = getConfig();
+    const { relays: configRelays, comments: configComments } = getConfig();
 
+    relays = configRelays;
     const profileContent = JSON.parse(profile.content);
     name = profileContent.name || null;
     picture = profileContent.picture || null;
-    note1 = nip19.noteEncode(id)
+    note1 = nip19.noteEncode(id);
+    comments = configComments;
 
     const pool = new SimplePool()
     let subscription = pool.subscribeMany(
@@ -108,6 +113,9 @@
       {@html renderedHtml}
     </div>
   </div>
+  {#if comments }
+    <zap-threads anchor="{note1}" relays="{relays}" />
+  {/if}
 {:else}
   <p>Loading...</p>
 {/if}

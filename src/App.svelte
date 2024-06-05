@@ -4,7 +4,6 @@
   import { getProfile } from './utils';
   import Home from './Home.svelte';
   import Note from './Note.svelte';
-  import { SimplePool } from 'nostr-tools/pool';
 
   let currentHash = '';
   let profile: import('nostr-tools').Event;
@@ -12,6 +11,7 @@
   let name = '';
   let picture = '';
   let relays;
+  let comments = false;
 
   const handleHashChange = () => {
     const newHash = window.location.hash.substr(1); // Remove the leading #
@@ -21,8 +21,19 @@
   };
 
   onMount(async () => {
-    const { npub, relays: configRelays } = getConfig();
+    const { npub, relays: configRelays, comments: configComments } = getConfig();
     relays = configRelays;
+    comments = configComments;
+
+    if (comments) {
+      try {
+        await import('window.nostr.js');
+        console.log('window.nostr.js has been successfully loaded');
+        // You can place any initialization code here if needed
+      } catch (error) {
+        console.error('Failed to load window.nostr.js:', error);
+      }
+    }
 
     handleHashChange();
     window.addEventListener('hashchange', handleHashChange);
