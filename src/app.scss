@@ -15,7 +15,7 @@ body {
 #app {
   box-sizing: border-box;
   width: 80%;
-  max-width: 700px;
+  max-width: 760px;
   margin: 2rem auto;
   font-family: Arial, Helvetica, sans-serif;
   color: #242424;
@@ -314,7 +314,8 @@ h1 {
   }
 }
 
-.note_wrapper {
+.note-wrapper {
+  position: relative;
   margin-top: 2rem;
   overflow-wrap: break-word;
 
@@ -350,7 +351,8 @@ h1 {
     border-radius: 4px;
 
     &.note-banner {
-      margin: 1rem auto 0 auto;
+      margin: 2.5rem auto 3.5rem auto;
+      transform: scale(1.1); /* Zoom and re-center */
     }
 
   }

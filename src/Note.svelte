@@ -102,7 +102,7 @@
 </div>
 
 {#if Object.keys(note).length > 0}
-  <div class="note_wrapper">
+  <div class="note-wrapper">
     <div class="date">{formatDate(note.created_at)}</div>
     <h1>{note.title}</h1>
     {#if note.image }
