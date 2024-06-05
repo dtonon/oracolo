@@ -17,9 +17,11 @@
   let about = '';
   let npub = '';
   let publicKey = '';
+  let topics = '';
 
   let topNotesCount = 0;
 
+  export let tag;
   export let profile;
 
   $: documentTitle.subscribe(value => {
@@ -29,7 +31,7 @@
   let splide;
 
   onMount(async () => {
-    const { npub: configNpub, relays, topNotes, shortChars } = getConfig();
+    const { npub: configNpub, relays, topNotes, shortChars, topics: configTopics } = getConfig();
 
     npub = configNpub
     publicKey = profile.pubkey
@@ -38,18 +40,29 @@
     picture = parsedContent.picture || null;
     about = parsedContent.about || null;
     topNotesCount = topNotes;
+    topics = configTopics;
 
     documentTitle.set(name + " home, powerd by Nostr");
+
+    let filter = {
+      kinds: [30023],
+      authors: [publicKey],
+      limit: 500,
+    };
+
+    if (tag) {
+      tag = tag.substring("/tags".length);
+      filter = {
+        ...filter,
+        "#t":  [tag],
+      };
+    }
 
     const pool = new SimplePool()
     let subscription = pool.subscribeMany(
       relays,
       [
-        {
-          kinds: [30023],
-          authors: [publicKey],
-          limit: 500,
-        }
+        filter
       ],
       {
         onevent(event) {
@@ -83,7 +96,7 @@
         ],
         {
           onevent: async(event) => {
-            console.log('Received event:', event);
+            // console.log('Received event:', event);
             // Check if the event ID is already in the set
             if (!eventIds.has(event.id) && event.content.length > shortChars && isRootNote(event)) {
               // If not, add the event to the shortEvents array and the event ID to the set
@@ -137,9 +150,22 @@
   </h1>
 </div>
 
-<div class="about">
-  {about}
-</div>
+{#if topics.length > 0 }
+  <div class="topic-wrapper">
+    <div><a href="#" class={tag == '' ? "selected" : ""}>Home</a></div>
+    {#each topics as topic}
+      <div><a href="#tags/{topic}" class={topic == tag ? "selected" : ""}>#{topic}</a></div>
+    {/each}
+  </div>
+{/if}
+
+{#if tag == ''}
+  <div class="about">
+    {about}
+  </div>
+{:else}
+  <div class="separator"></div>
+{/if}
 
 {#if events.length > 0}
   {#if topEvents.length > 0}
@@ -160,7 +186,7 @@
     </div>
   {/if}
 
-  {#if slideEvents.length > 0}
+  {#if (slideEvents.length > 0) && !(tag) }
   <Splide class="short-notes" options={ {
     type: 'loop',
     gap: '1rem',

@@ -52,11 +52,15 @@
 {/if}
 
 {#if profile && Object.keys(profile).length > 0}
-  {#if currentHash === ''}
-      <Home {profile} />
-  {:else}
-      <Note id={currentHash} {profile} />
-  {/if}
+  {#key  currentHash}
+    {#if currentHash === ''}
+        <Home tag='' {profile}/>
+    {:else if currentHash.startsWith("tags/")}
+        <Home tag={currentHash} {profile}/>
+    {:else}
+        <Note id={currentHash} {profile} />
+    {/if}
+  {/key}
 {/if}
 
 <div class="footer">

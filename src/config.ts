@@ -5,8 +5,9 @@ export const getConfig = () => {
   const relaysMeta = document.querySelector('meta[name="relays"]');
   const topNotesMeta = document.querySelector('meta[name="top-notes"]');
   const shortCharsMeta = document.querySelector('meta[name="short-chars"]');
+  const topicsMeta = document.querySelector('meta[name="topics"]');
 
-  if (!authorMeta || !relaysMeta || !topNotesMeta || !shortCharsMeta) {
+  if (!authorMeta || !relaysMeta || !topNotesMeta || !shortCharsMeta || !topicsMeta) {
     throw new Error("Missing meta tags for configuration");
   }
 
@@ -26,5 +27,7 @@ export const getConfig = () => {
   const charCount = shortCharsMeta.getAttribute('value');
   const shortChars = toNumber(charCount);
 
-  return { npub, relays, topNotes, shortChars };
+  const topics = topicsMeta.getAttribute('value')?.split(',').map(item => item.trim()).filter(item => item !== '');
+
+  return { npub, relays, topNotes, shortChars, topics };
 };
