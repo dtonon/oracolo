@@ -1,0 +1,51 @@
+<script>
+  // No JavaScript logic is needed for this simple loading animation
+</script>
+
+<style>
+
+.loader-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .loader {
+    display: inline-block;
+    width: 92px;
+    height: 92px;
+    opacity: 0; /* Initially invisible */
+    animation: fade-in 0.5s 0.4s forwards, loader-animation 2s linear infinite 0.4s; /* Fade-in animation and delay for loader animation */
+  }
+
+  .loader:after {
+    content: " ";
+    display: block;
+    width: 64px;
+    height: 64px;
+    margin: 8px;
+    border-radius: 50%;
+    border: 6px solid #a9a9a9;
+    border-color: #a9a9a9 transparent #a9a9a9 transparent;
+    animation: loader-animation 2s linear infinite;
+  }
+
+  @keyframes loader-animation {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes fade-in {
+    to {
+      opacity: 1;
+    }
+  }
+</style>
+
+<div class="loader-container">
+  <div class="loader"></div>
+</div>

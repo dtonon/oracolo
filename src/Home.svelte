@@ -7,6 +7,7 @@
   import * as nip19 from 'nostr-tools/nip19'
   import { Splide, SplideSlide } from '@splidejs/svelte-splide';
   import '@splidejs/svelte-splide/css';
+  import Loading from './Loading.svelte';
 
   let events = [];
   let shortEvents = [];
@@ -226,5 +227,5 @@
       </div>
     {/if}
   {:else}
-    <p>Loading...</p>
+    <Loading />
   {/if}

@@ -7,6 +7,7 @@
   import showdown from 'showdown';
   import * as nip19 from 'nostr-tools/nip19'
   import "zapthreads";
+  import Loading from './Loading.svelte';
 
   let relays;
   let note = {};
@@ -116,5 +117,5 @@
     <zap-threads anchor="{note1}" relays="{relays}" />
   {/if}
 {:else}
-  <p>Loading...</p>
+  <Loading />
 {/if}
