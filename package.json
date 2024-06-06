@@ -21,7 +21,7 @@
     "typescript": "^5.2.2",
     "vite": "^5.2.0",
     "vite-plugin-singlefile": "^2.0.1",
-    "window.nostr.js": "^0.2.2",
+    "window.nostr.js": "^0.3.0",
     "zapthreads": "^0.5.2"
   },
   "dependencies": {
