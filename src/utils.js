@@ -1,5 +1,5 @@
 import { getConfig } from './config';
-import { SimplePool } from 'nostr-tools/pool';
+import { pool } from './stores/websocket';
 import { nip19 } from 'nostr-tools';
 
 export function isRootNote(event) {
@@ -56,7 +56,6 @@ export async function getProfile(code) {
   }
 
   const { relays } = getConfig();
-  const pool = new SimplePool();
 
   return new Promise((resolve, reject) => {
     let subscription = pool.subscribeMany(

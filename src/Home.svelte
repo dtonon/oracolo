@@ -1,9 +1,9 @@
 <script>
   import { onMount } from 'svelte';
   import { getConfig } from './config';
+  import { pool } from './stores/websocket';
   import { documentTitle } from './stores/documentTitleStore';
   import { isRootNote, getEventData, processUsersEntities, processEventsEntities, cleanMarkdownLinks, formatDate } from './utils';
-  import { SimplePool } from 'nostr-tools/pool';
   import * as nip19 from 'nostr-tools/nip19'
   import { Splide, SplideSlide } from '@splidejs/svelte-splide';
   import '@splidejs/svelte-splide/css';
@@ -56,9 +56,8 @@
         ...filter,
         "#t":  [tag],
       };
-    }
+    };
 
-    const pool = new SimplePool()
     let subscription = pool.subscribeMany(
       relays,
       [

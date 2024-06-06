@@ -3,7 +3,7 @@
   import { getConfig } from './config';
   import { documentTitle } from './stores/documentTitleStore';
   import { getEventData, processUsersEntities, processEventsEntities, processImageUrls, processVideoUrls, formatDate } from './utils';
-  import { SimplePool } from 'nostr-tools/pool';
+  import { pool } from './stores/websocket';
   import showdown from 'showdown';
   import * as nip19 from 'nostr-tools/nip19'
   import "zapthreads";
@@ -36,7 +36,6 @@
     note1 = nip19.noteEncode(id);
     comments = configComments;
 
-    const pool = new SimplePool()
     let subscription = pool.subscribeMany(
       relays,
       [
