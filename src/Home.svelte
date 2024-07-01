@@ -43,7 +43,7 @@
     topNotesCount = topNotes;
     topics = configTopics;
 
-    documentTitle.set(name + " home, powerd by Nostr");
+    documentTitle.set(name + " home, powered by Nostr");
 
     let filter = {
       kinds: [30023],
