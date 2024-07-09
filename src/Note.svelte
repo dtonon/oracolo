@@ -103,7 +103,7 @@
 
 {#if Object.keys(note).length > 0}
   <div class="note-wrapper">
-    <div class="date">{formatDate(note.created_at)}</div>
+    <div class="date">{formatDate(note.created_at, true)}</div>
     <h1>{note.title}</h1>
     {#if note.image }
       <!-- svelte-ignore a11y-missing-attribute -->

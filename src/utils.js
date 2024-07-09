@@ -171,24 +171,29 @@ export function processVideoUrls(text) {
 }
 
 
-export function formatDate(timestamp) {
-  // Options for Intl.DateTimeFormat to get the desired format
-  const options = { day: '2-digit', month: 'long', year: 'numeric' };
-  
-  // Create a new Date object from the timestamp (assumes timestamp is in seconds)
+export function formatDate(timestamp, includeTime = false) {
   const date = new Date(timestamp * 1000);
 
-  // Format the date parts using Intl.DateTimeFormat
-  const parts = new Intl.DateTimeFormat('en-US', options).formatToParts(date);
+  // Set date options
+  const dateOptions = { day: '2-digit', month: 'long', year: 'numeric' };
+  const dateParts = new Intl.DateTimeFormat('en-US', dateOptions).formatToParts(date);
 
-  // Extract day, month, and year from the parts
   let day, month, year;
-  parts.forEach(part => {
+  dateParts.forEach(part => {
     if (part.type === 'day') day = part.value;
     if (part.type === 'month') month = part.value;
     if (part.type === 'year') year = part.value;
   });
 
-  // Combine parts into the desired format: "XX Month Year"
-  return `${day} ${month} ${year}`;
+  let formattedDate = `${day} ${month} ${year}`;
+
+  // If includeTime is true, add the time in 24-hour format
+  if (includeTime) {
+    const timeOptions = { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' };
+    const timeFormatter = new Intl.DateTimeFormat('en-US', timeOptions);
+    const timeString = timeFormatter.format(date);
+    formattedDate += ` - ${timeString}`;
+  }
+
+  return formattedDate;
 }
