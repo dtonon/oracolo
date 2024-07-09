@@ -170,6 +170,22 @@ export function processVideoUrls(text) {
   return htmlText;
 }
 
+export function processSmartyPants(text){
+  const replacements = [
+    { regex: /<<|»/g, replacement: '&laquo;' },
+    { regex: />>|«/g, replacement: '&raquo;' },
+    { regex: /\.\.\./g, replacement: '&hellip;' },
+    { regex: /---/g, replacement: '&mdash;' },
+    { regex: /--/g, replacement: '&mdash;' },
+  ];
+
+  replacements.forEach(({ regex, replacement }) => {
+    text = text.replace(regex, replacement);
+  });
+
+  return text;
+}
+
 
 export function formatDate(timestamp, includeTime = false) {
   const date = new Date(timestamp * 1000);
