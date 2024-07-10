@@ -4,7 +4,7 @@
 
 <style>
 
-.loader-container {
+  .loader-container {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -43,6 +43,11 @@
     to {
       opacity: 1;
     }
+  }
+
+  :global(html.dark) .loader:after {
+    border: 6px solid #373737;
+    border-color: #373737 transparent #373737 transparent;
   }
 </style>
 

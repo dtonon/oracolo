@@ -4,6 +4,7 @@
   import { getProfile } from './utils';
   import Home from './Home.svelte';
   import Note from './Note.svelte';
+  import ThemeSwitch from './ThemeSwitch.svelte';
 
   let currentHash = '';
   let profile: import('nostr-tools').Event;
@@ -80,3 +81,5 @@
     This page connects to some servers (Nostr relays) to retrieve data: {relays.join(', ')}
   {/if}
 </div>
+
+<ThemeSwitch />

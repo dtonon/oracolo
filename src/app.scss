@@ -12,6 +12,11 @@ body {
   padding: 0;
 }
 
+html.dark body {
+  background-color: #242424;
+  color: #cbcbcb;
+}
+
 #app {
   box-sizing: border-box;
   width: 80%;
@@ -27,10 +32,22 @@ body {
   }
 }
 
+html.dark #app {
+  background-color: #242424;
+  color: #ebebeb;
+}
+
 a {
   color: #242424;
   &:visited {
     color: #242424;
+  }
+}
+
+html.dark a {
+  color: #f5f5f5;
+  &:visited {
+    color: #f5f5f5;
   }
 }
 
@@ -81,6 +98,7 @@ pre {
 
     @media only screen and (max-width: 768px) {
       margin-bottom: 1rem;
+      margin-right: 2.5rem;
     }
     
     a{
@@ -128,6 +146,22 @@ pre {
 
 }
 
+html.dark .header {
+  
+  a {
+    &:visited {
+      color: #cbcbcb;
+    }
+  }
+
+  .external-link {
+    color: #747474;
+    a {
+      color: #747474;
+    }
+  }
+}
+
 .topic-wrapper {
   margin-bottom: 1.5rem;
   display: flex;
@@ -151,7 +185,25 @@ pre {
 
       &.selected {
         background-color: #242424;
-        color: #FFFFFF;
+        color: #f5f5f5;
+      }
+
+    }
+  }
+}
+
+html.dark .topic-wrapper {
+  div {
+    a {
+      background-color: #747474;
+      color: #242424;
+
+      &:hover {
+        background-color: #f5f5f5;
+      }
+
+      &.selected {
+        background-color: #cbcbcb;
       }
 
     }
@@ -176,13 +228,22 @@ pre {
   border-bottom: 8px solid #ebebeb;
 }
 
+html.dark .about {
+  border-bottom: 8px solid #373737;
+}
+
 .separator {
   margin-bottom: 2rem;
   border-bottom: 8px solid #ebebeb;
 }
 
+html.dark .separator {
+  border-bottom: 8px solid #373737;
+}
+
 .top-notes {
   display: flex;
+  color: #747474;
   
   @media only screen and (max-width: 768px) {
     display: block;
@@ -241,6 +302,11 @@ pre {
   }
 }
 
+html.dark .top-notes {
+  color: #cbcbcb;
+  border-bottom: 8px solid #373737;
+}
+
 .short-notes {
   border-bottom: 8px solid #f5f5f5;
   padding-bottom: 1rem;
@@ -286,8 +352,16 @@ pre {
   }
 }
 
+html.dark .short-notes {
+  a {
+    color: #cbcbcb;
+  }
+  border-bottom: 8px solid #373737;
+}
+
 .listing-notes {
   margin-top: 1rem;
+  color: #747474;
   
   ul {
     list-style-type: none;
@@ -311,6 +385,10 @@ pre {
       }
     }
   }
+}
+
+html.dark .listing-notes {
+  color: #cbcbcb;
 }
 
 h1 {
@@ -384,6 +462,17 @@ h1 {
 
   a {
     color: #cbcbcb;
+  }
+}
+
+html.dark .footer {
+  border-top: 8px solid #373737;
+  color: #747474;
+  a {
+    color: #747474;
+    &:visited {
+      color: #747474;
+    }
   }
 }
 
