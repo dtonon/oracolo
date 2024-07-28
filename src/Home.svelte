@@ -79,7 +79,7 @@
             // If not, add the event to the events array and the event ID to the set
 
             // Exclude kind:1 notes with size below the limit
-            if (event.kind == 1 && event.content.length < shortChars) {
+            if (event.kind == 1 && (event.content.length < shortChars || !isRootNote(event))) {
                 return
             }
 
