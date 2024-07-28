@@ -32,7 +32,7 @@
   let splide;
 
   onMount(async () => {
-    const { npub: configNpub, relays, topNotes, shortChars, topics: configTopics } = getConfig();
+    const { npub: configNpub, relays, topNotes, shortChars, shortFeed, topics: configTopics } = getConfig();
 
     npub = configNpub
     publicKey = profile.pubkey
@@ -43,10 +43,15 @@
     topNotesCount = topNotes;
     topics = configTopics;
 
+    let kindsToShow = [30023];
+    if (shortFeed) {
+      kindsToShow.push(1);
+    }
+
     documentTitle.set(name + " home, powered by Nostr");
 
     let filter = {
-      kinds: [30023],
+      kinds: kindsToShow,
       authors: [publicKey],
       limit: 500,
     };
@@ -70,6 +75,12 @@
           // Check if the event ID is already in the set
           if (!eventIds.has(event.id)) {
             // If not, add the event to the events array and the event ID to the set
+
+            // Exclude kind:1 notes with size below the limit
+            if (event.kind == 1 && event.content.length < shortChars) {
+                return
+            }
+
             events = [...events, event];
             eventIds.add(event.id);
 
@@ -84,7 +95,7 @@
       }
     );
 
-    if (shortChars > 0) {
+    if (shortChars > 0 && !shortFeed) {
       subscription = pool.subscribeMany(
         relays,
         [
