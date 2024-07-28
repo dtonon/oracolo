@@ -148,11 +148,11 @@ export function cleanMarkdownLinks(text) {
 
 export function processImageUrls(text) {
   // Regular expression to match the image URL
-  const imageUrlRegex = /\s+(https?:\/\/\S+\.(?:png|jpg|jpeg|gif|bmp))\s+/gi;
+  const imageUrlRegex = /\s*(https?:\/\/\S+\.(?:png|jpg|jpeg|gif|bmp))\s*/gi;
   
   // Replace the image URL with Markdown syntax
   const markdownText = text.replace(imageUrlRegex, (match, group) => {
-      return `![Image](${group})`; // Markdown syntax for displaying an image
+      return ` ![Image](${group}) `; // Markdown syntax for displaying an image
   });
 
   return markdownText;
@@ -160,11 +160,11 @@ export function processImageUrls(text) {
 
 export function processVideoUrls(text) {
   // Regular expression to match the video URL
-  const videoUrlRegex = /\s+(https?:\/\/\S+\.(?:mp4|webm|ogg|mov))(\s+|$)/gi;
+  const videoUrlRegex = /\s*(https?:\/\/\S+\.(?:mp4|webm|ogg|mov))(\s*|$)/gi;
   
   // Replace the video URL with HTML <video> tag
   const htmlText = text.replace(videoUrlRegex, (match, group) => {
-      return `<video controls><source src="${group}" type="video/mp4"></video>`; // HTML <video> tag
+      return ` <video controls><source src="${group}" type="video/mp4"></video> `; // HTML <video> tag
   });
 
   return htmlText;
