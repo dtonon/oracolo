@@ -136,46 +136,46 @@ export function processEventsEntities(content) {
   return content;
 }
 
-export function cleanMarkdownLinks(text) {
+export function cleanMarkdownLinks(content) {
   // Regular expression to match markdown links
   const regexMarkdownLinks = /\[([^\]]+)\]\(([^)]+)\)/g;
 
   // Replace markdown links with just the text
-  const cleanedText = text.replace(regexMarkdownLinks, (match, p1) => p1);
+  const cleanedText = content.replace(regexMarkdownLinks, (match, p1) => p1);
 
   return cleanedText;
 }
 
-export function processImageUrls(text) {
+export function processImageUrls(content) {
   // Regular expression to match the image URL
   const imageUrlRegex = /\s*(https?:\/\/\S+\.(?:png|jpg|jpeg|gif|bmp))\s*/gi;
   
   // Replace the image URL with Markdown syntax
-  const markdownText = text.replace(imageUrlRegex, (match, group) => {
+  const markdownText = content.replace(imageUrlRegex, (match, group) => {
       return ` ![Image](${group}) `; // Markdown syntax for displaying an image
   });
 
   return markdownText;
 }
 
-export function processVideoUrls(text) {
+export function processVideoUrls(content) {
   // Regular expression to match the video URL
   const videoUrlRegex = /\s*(https?:\/\/\S+\.(?:mp4|webm|ogg|mov))(\s*|$)/gi;
 
   // Replace the video URL with HTML <video> tag
-  const htmlText = text.replace(videoUrlRegex, (match, group) => {
+  const htmlText = content.replace(videoUrlRegex, (match, group) => {
       return ` <video controls><source src="${group}" type="video/mp4"></video> `;
   });
 
   return htmlText;
 }
 
-export function processAudioUrls(text) {
+export function processAudioUrls(content) {
   // Regular expression to match the audio URL
   const audioUrlRegex = /\s*(https?:\/\/\S+\.(?:mp3))(\s*|$)/gi;
 
   // Replace the audio URL with HTML <audio> tag
-  const htmlText = text.replace(audioUrlRegex, (match, group) => {
+  const htmlText = content.replace(audioUrlRegex, (match, group) => {
       return ` <audio controls src="${group}"></audio> `;
   });
 
