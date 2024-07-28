@@ -161,10 +161,22 @@ export function processImageUrls(text) {
 export function processVideoUrls(text) {
   // Regular expression to match the video URL
   const videoUrlRegex = /\s*(https?:\/\/\S+\.(?:mp4|webm|ogg|mov))(\s*|$)/gi;
-  
+
   // Replace the video URL with HTML <video> tag
   const htmlText = text.replace(videoUrlRegex, (match, group) => {
-      return ` <video controls><source src="${group}" type="video/mp4"></video> `; // HTML <video> tag
+      return ` <video controls><source src="${group}" type="video/mp4"></video> `;
+  });
+
+  return htmlText;
+}
+
+export function processAudioUrls(text) {
+  // Regular expression to match the audio URL
+  const audioUrlRegex = /\s*(https?:\/\/\S+\.(?:mp3))(\s*|$)/gi;
+
+  // Replace the audio URL with HTML <audio> tag
+  const htmlText = text.replace(audioUrlRegex, (match, group) => {
+      return ` <audio controls src="${group}"></audio> `;
   });
 
   return htmlText;

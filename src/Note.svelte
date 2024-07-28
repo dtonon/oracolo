@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import { getConfig } from './config';
   import { documentTitle } from './stores/documentTitleStore';
-  import { getEventData, processUsersEntities, processEventsEntities, processImageUrls, processVideoUrls, processSmartyPants, formatDate } from './utils';
+  import { getEventData, processUsersEntities, processEventsEntities, processImageUrls, processVideoUrls, processAudioUrls, processSmartyPants, formatDate } from './utils';
   import { pool } from './stores/websocket';
   import showdown from 'showdown';
   import * as nip19 from 'nostr-tools/nip19'
@@ -60,6 +60,7 @@
           note_content = processEventsEntities(note_content);
           note_content = processImageUrls(note_content)
           note_content = processVideoUrls(note_content)
+          note_content = processAudioUrls(note_content)
           note_content = processSmartyPants(note_content)
 
           // Render returns in kind:1
