@@ -362,6 +362,15 @@ html.dark .short-notes {
 .listing-notes {
   margin-top: 1rem;
   color: #747474;
+
+  &.short-feed-full {
+    li {
+      margin-bottom: 2rem;
+    }
+    .summary {
+      color: #242424;
+    }
+  }
   
   ul {
     list-style-type: none;
@@ -370,14 +379,41 @@ html.dark .short-notes {
 
     li {
       margin-bottom: 1rem;
-      a {
-        display: block;
-        margin-bottom: 0.4rem;
+
+      h2 {
         font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+
+        a {
+          display: block;
+          font-size: 1.1rem;
+        }
       }
       .summary {
         margin-bottom: 0.4rem;
         overflow-wrap: break-word;
+
+        p {
+          margin: 0;
+        }
+        
+        img {
+          display: block;
+          margin: 2rem auto;
+          max-width: 100%;
+          border-radius: 4px;
+        }
+
+        video {
+          width: 100%;
+          margin: 2rem auto;
+        }
+
+        audio {
+          width: 100%;
+          margin: 2rem auto;
+        }
+
       }
       .date {
         font-size: 0.8rem;
@@ -389,6 +425,11 @@ html.dark .short-notes {
 
 html.dark .listing-notes {
   color: #cbcbcb;
+  &.short-feed-full {
+    .summary {
+      color: #ffffff;
+    }
+  }
 }
 
 h1 {

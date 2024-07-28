@@ -1,6 +1,7 @@
 import { getConfig } from './config';
 import { pool } from './stores/websocket';
 import { nip19 } from 'nostr-tools';
+import showdown from 'showdown';
 
 export function isRootNote(event) {
   // Loop through the tags and check the condition
@@ -26,6 +27,7 @@ export function getEventData(event) {
 
   return {
     id: event.id,
+    kind: event.kind,
     created_at: event.created_at,
     title: extractedTitle,
     image: event?.tags.find(([k]) => k === 'image')?.[1] || undefined,
@@ -83,6 +85,9 @@ export async function getProfile(code) {
 }
 
 export async function processUsersEntities(content) {
+  if (content == undefined) {
+    return
+  }
   const regexPrefixedEntities = /nostr:(npub1\w+|nprofile1\w+)/g;
   const matches = content.match(regexPrefixedEntities) || [];
 
@@ -113,6 +118,9 @@ export async function processUsersEntities(content) {
 }
 
 export function processEventsEntities(content) {
+  if (content == undefined) {
+    return
+  }
   // Prefix plain "nevent1|note1|npub1|nprofile|<alphanumeric string>" with nostr: for further processing
   // Include also entities without prefix inside a markdown link, e.g. [text](nevent1xxxxx)
   const regexEntities = /(^|\s|\n|\()(nevent1\w+|note1\w+|npub1\w+|nprofile1\w+)(?=\s|\n|\)|$)/gm;
@@ -137,6 +145,9 @@ export function processEventsEntities(content) {
 }
 
 export function cleanMarkdownLinks(content) {
+  if (content == undefined) {
+    return
+  }
   // Regular expression to match markdown links
   const regexMarkdownLinks = /\[([^\]]+)\]\(([^)]+)\)/g;
 
@@ -147,6 +158,9 @@ export function cleanMarkdownLinks(content) {
 }
 
 export function processImageUrls(content) {
+  if (content == undefined) {
+    return
+  }
   // Regular expression to match the image URL
   const imageUrlRegex = /\s*(https?:\/\/\S+\.(?:png|jpg|jpeg|gif|bmp))\s*/gi;
   
@@ -159,6 +173,9 @@ export function processImageUrls(content) {
 }
 
 export function processVideoUrls(content) {
+  if (content == undefined) {
+    return
+  }
   // Regular expression to match the video URL
   const videoUrlRegex = /\s*(https?:\/\/\S+\.(?:mp4|webm|ogg|mov))(\s*|$)/gi;
 
@@ -182,7 +199,10 @@ export function processAudioUrls(content) {
   return htmlText;
 }
 
-export function processSmartyPants(text){
+export function processSmartyPants(content){
+  if (content == undefined) {
+    return
+  }
   const replacements = [
     { regex: /<<|»/g, replacement: '&laquo;' },
     { regex: />>|«/g, replacement: '&raquo;' },
@@ -192,10 +212,39 @@ export function processSmartyPants(text){
   ];
 
   replacements.forEach(({ regex, replacement }) => {
-    text = text.replace(regex, replacement);
+    content = content.replace(regex, replacement);
   });
 
-  return text;
+  return content;
+}
+
+export async function processAll(note){
+  let note_content = note.content
+  // Replace users entities with names
+  note_content = await processUsersEntities(note_content);
+  note_content = processEventsEntities(note_content);
+  note_content = processImageUrls(note_content)
+  note_content = processVideoUrls(note_content)
+  note_content = processAudioUrls(note_content)
+  note_content = processSmartyPants(note_content)
+
+  // Render returns in kind:1
+  if (note.kind == 1) {
+    note_content= note_content.replace(/\n/g, '\n<br/>');
+  }
+
+  // Strip duplicate h1 title
+  note_content = note_content.replace("# " + note.title, '');
+
+  // Render markdown
+  let converter = new showdown.Converter({
+    simplifiedAutoLink: true,
+    tables: true,
+    strikethrough: true,
+  });
+  note_content = converter.makeHtml(note_content);
+
+  return note_content;
 }
 
 

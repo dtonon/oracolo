@@ -6,10 +6,11 @@ export const getConfig = () => {
   const topNotesMeta = document.querySelector('meta[name="top-notes"]');
   const shortCharsMeta = document.querySelector('meta[name="short-chars"]');
   const shortFeedMeta = document.querySelector('meta[name="short-feed"]');
+  const shortFeedSummaryMeta = document.querySelector('meta[name="short-feed-summary"]');
   const topicsMeta = document.querySelector('meta[name="topics"]');
   const commentsMeta = document.querySelector('meta[name="comments"]');
 
-  if (!authorMeta || !relaysMeta || !topNotesMeta || !shortCharsMeta || !shortFeedMeta || !topicsMeta || !commentsMeta) {
+  if (!authorMeta || !relaysMeta || !topNotesMeta || !shortCharsMeta || !shortFeedMeta || !shortFeedSummaryMeta || !topicsMeta || !commentsMeta) {
     throw new Error("Missing meta tags for configuration");
   }
 
@@ -29,10 +30,11 @@ export const getConfig = () => {
   const charCount = shortCharsMeta.getAttribute('value');
   const shortChars = toNumber(charCount);
   const shortFeed = shortFeedMeta.getAttribute('value') == 'yes' ? true : false;
+  const shortFeedSummary = toNumber(shortFeedSummaryMeta.getAttribute('value'));
 
   const topics = topicsMeta.getAttribute('value')?.split(',').map(item => item.trim()).filter(item => item !== '');
 
   const comments = commentsMeta.getAttribute('value') == 'yes' ? true : false;
 
-  return { npub, relays, topNotes, shortChars, shortFeed, topics, comments };
+  return { npub, relays, topNotes, shortChars, shortFeed, shortFeedSummary, topics, comments };
 };

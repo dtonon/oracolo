@@ -2,9 +2,8 @@
   import { onMount } from 'svelte';
   import { getConfig } from './config';
   import { documentTitle } from './stores/documentTitleStore';
-  import { getEventData, processUsersEntities, processEventsEntities, processImageUrls, processVideoUrls, processAudioUrls, processSmartyPants, formatDate } from './utils';
+  import { getEventData, processAll, formatDate } from './utils';
   import { pool } from './stores/websocket';
-  import showdown from 'showdown';
   import * as nip19 from 'nostr-tools/nip19'
   import "zapthreads";
   import Loading from './Loading.svelte';
@@ -52,29 +51,7 @@
           note = getEventData(event);
           documentTitle.set(note.title);
 
-          // Strip duplicate h1 title
-          note_content = note.content.replace("# " + title, '');
-
-          // Replace users entities with names
-          note_content = await processUsersEntities(note_content);
-          note_content = processEventsEntities(note_content);
-          note_content = processImageUrls(note_content)
-          note_content = processVideoUrls(note_content)
-          note_content = processAudioUrls(note_content)
-          note_content = processSmartyPants(note_content)
-
-          // Render returns in kind:1
-          if (event.kind == 1) {
-            note_content= note_content.replace(/\n/g, '\n<br/>');
-          }
-
-          // Render markdown
-          let converter = new showdown.Converter({
-            simplifiedAutoLink: true,
-            tables: true,
-            strikethrough: true,
-          });
-          renderedContent = converter.makeHtml(note_content);
+          renderedContent = await processAll(note);
 
         },
         oneose() {

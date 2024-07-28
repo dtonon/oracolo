@@ -3,7 +3,7 @@
   import { getConfig } from './config';
   import { pool } from './stores/websocket';
   import { documentTitle } from './stores/documentTitleStore';
-  import { isRootNote, getEventData, processUsersEntities, processEventsEntities, cleanMarkdownLinks, formatDate } from './utils';
+  import { isRootNote, getEventData, processUsersEntities, processEventsEntities, processAll, cleanMarkdownLinks, formatDate } from './utils';
   import * as nip19 from 'nostr-tools/nip19'
   import { Splide, SplideSlide } from '@splidejs/svelte-splide';
   import '@splidejs/svelte-splide/css';
@@ -19,6 +19,7 @@
   let npub = '';
   let publicKey = '';
   let topics = '';
+  let shortFeedFull = false;
 
   let topNotesCount = 0;
 
@@ -32,7 +33,7 @@
   let splide;
 
   onMount(async () => {
-    const { npub: configNpub, relays, topNotes, shortChars, shortFeed, topics: configTopics } = getConfig();
+    const { npub: configNpub, relays, topNotes, shortChars, shortFeed, shortFeedSummary, topics: configTopics } = getConfig();
 
     npub = configNpub
     publicKey = profile.pubkey
@@ -42,6 +43,7 @@
     about = parsedContent.about || null;
     topNotesCount = topNotes;
     topics = configTopics;
+    shortFeedFull = shortFeedSummary == 0 ? true : false;
 
     let kindsToShow = [30023];
     if (shortFeed) {
@@ -70,7 +72,7 @@
         filter
       ],
       {
-        onevent(event) {
+        onevent: async(event) => {
           // console.log('Received event:', event);
           // Check if the event ID is already in the set
           if (!eventIds.has(event.id)) {
@@ -79,6 +81,10 @@
             // Exclude kind:1 notes with size below the limit
             if (event.kind == 1 && event.content.length < shortChars) {
                 return
+            }
+
+            if (event.kind == 1 && shortFeedFull) {
+              event.content = await processAll(event);
             }
 
             events = [...events, event];
@@ -111,7 +117,7 @@
             // Check if the event ID is already in the set
             if (!eventIds.has(event.id) && event.content.length > shortChars && isRootNote(event)) {
               // If not, add the event to the shortEvents array and the event ID to the set
-              event = await processShortEvent(event);
+              event = await processCarouselShortEvent(event);
               if (event.content.length < shortChars) {
                 return
               }
@@ -133,7 +139,7 @@
 
   });
 
-  async function processShortEvent(event) {
+  async function processCarouselShortEvent(event) {
     let updatedEventContent;
     updatedEventContent = await processUsersEntities(event.content);
     updatedEventContent = processEventsEntities(updatedEventContent);
@@ -141,6 +147,8 @@
     event.content = updatedEventContent
     return event;
   }
+
+  let asyncListingEvents = [];
 
   $: topEvents = topNotesCount > 0 ? events.slice(0, topNotesCount).map(getEventData) : [];
   $: listingEvents = events.slice(topNotesCount).map(getEventData);
@@ -189,7 +197,7 @@
               <div class="title">{event.title}</div>
             </a>
             {#if event.summary }
-              <div class="summary">{event.summary}</div>
+              <div class="summary">{@html event.summary}</div>
             {/if}
             <div class="date">{formatDate(event.created_at)}</div>
           </div>
@@ -223,15 +231,19 @@
   {/if}
 
   {#if listingEvents.length > 0}
-    <div class="listing-notes">
+    <div class="listing-notes" class:short-feed-full={shortFeedFull}>
         <ul>
           {#each listingEvents as event}
             <li>
-              <a href={`#${event.id}`}>{event.title}</a>
-              {#if event.summary }
+              <h2><a href={`#${event.id}`}>{event.title}</a></h2>
+              {#if event.kind == 1 && shortFeedFull }
+                <div class="summary full">{@html event.content}</div>
+              {:else if event.summary }
                 <div class="summary">{event.summary}</div>
               {/if}
-              <div class="date">{formatDate(event.created_at)}</div>
+              {#if !(event.kind == 1 && shortFeedFull) }
+                <div class="date">{formatDate(event.created_at)}</div>
+              {/if}
             </li>
           {/each}
         </ul>
