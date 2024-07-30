@@ -150,7 +150,7 @@
 
   let asyncListingEvents = [];
 
-  $: topEvents = topNotesCount > 0 ? events.slice(0, topNotesCount).map(getEventData) : [];
+  $: topEvents = topNotesCount > 0 ? events.filter(object => object.kind === 30023).slice(0, topNotesCount).map(getEventData) : [];
   $: listingEvents = events.slice(topNotesCount).map(getEventData);
   $: slideEvents = shortEvents.map(getEventData);
 
