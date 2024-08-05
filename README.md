@@ -28,6 +28,7 @@ In addition to the `npub` meta in the index.html there are other optional meta t
 `relays`: set a list of custom relays;  
 `top-notes`: show N notes in a boxed format with cover image, zero to disable;  
 `short-chars`: show short notes (kind:1) with more than X characters in a carousel, zero to disable;  
+`short-feed`: enable short notes in the main feed, 'yes' to enable; _short-chars_ is used as filter;  
 `topics`: let user navigate by topics, filtering articles by tags, empty to disable;  
 `comments`: enable comments at the bottom of the articles, with NIP-7 + NIP-46 login;
 
