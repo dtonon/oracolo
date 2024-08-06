@@ -33,7 +33,7 @@
   let splide;
 
   onMount(async () => {
-    const { npub: configNpub, relays, topNotes, shortChars, shortFeed, shortFeedSummary, topics: configTopics } = getConfig();
+    const { npub: configNpub, relays, topNotes, shortNotesMinChars, shortNotes, shortFeedSummaryMaxChars, topics: configTopics } = getConfig();
 
     npub = configNpub
     publicKey = profile.pubkey
@@ -43,10 +43,10 @@
     about = parsedContent.about || null;
     topNotesCount = topNotes;
     topics = configTopics;
-    shortFeedFull = shortFeedSummary == 0 ? true : false;
+    shortFeedFull = shortFeedSummaryMaxChars == 0 ? true : false;
 
     let kindsToShow = [30023];
-    if (shortFeed) {
+    if (shortNotes == 'main') {
       kindsToShow.push(1);
     }
 
@@ -55,7 +55,7 @@
     let filter = {
       kinds: kindsToShow,
       authors: [publicKey],
-      limit: 500,
+      limit: 1000,
     };
 
     if (tag) {
@@ -79,7 +79,7 @@
             // If not, add the event to the events array and the event ID to the set
 
             // Exclude kind:1 notes with size below the limit
-            if (event.kind == 1 && (event.content.length < shortChars || !isRootNote(event))) {
+            if (event.kind == 1 && (event.content.length < shortNotesMinChars || !isRootNote(event))) {
                 return
             }
 
@@ -101,7 +101,7 @@
       }
     );
 
-    if (shortChars > 0 && !shortFeed) {
+    if (shortNotes == 'carousel') {
       subscription = pool.subscribeMany(
         relays,
         [
@@ -115,10 +115,10 @@
           onevent: async(event) => {
             // console.log('Received event:', event);
             // Check if the event ID is already in the set
-            if (!eventIds.has(event.id) && event.content.length > shortChars && isRootNote(event)) {
+            if (!eventIds.has(event.id) && event.content.length > shortNotesMinChars && isRootNote(event)) {
               // If not, add the event to the shortEvents array and the event ID to the set
               event = await processCarouselShortEvent(event);
-              if (event.content.length < shortChars) {
+              if (event.content.length < shortNotesMinChars) {
                 return
               }
               shortEvents = [...shortEvents, event];
