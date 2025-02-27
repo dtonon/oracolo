@@ -1,18 +1,15 @@
 {
-  "name": "oracolo",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "check": "svelte-check --tsconfig ./tsconfig.json"
-  },
-  "devDependencies": {
+  "dependencies": {
+    "@nostr/gadgets": "npm:@jsr/nostr__gadgets@^0.0.10",
+    "@nostr/tools": "npm:@jsr/nostr__tools@^2.10.4",
+    "@splidejs/svelte-splide": "^0.2.9",
     "@sveltejs/vite-plugin-svelte": "^3.0.2",
     "@tsconfig/svelte": "^5.0.2",
     "@types/showdown": "^2.0.6",
+    "prettier": "^3.5.2",
+    "prettier-plugin-svelte": "^3.3.3",
     "sass": "^1.77.2",
     "showdown": "^2.1.0",
     "svelte": "^4.2.12",
@@ -23,9 +20,5 @@
     "vite-plugin-singlefile": "^2.0.1",
     "window.nostr.js": "^0.3.0",
     "zapthreads": "^0.5.2"
-  },
-  "dependencies": {
-    "@splidejs/svelte-splide": "^0.2.9",
-    "nostr-tools": "^2.5.2"
   }
 }

@@ -1,3 +1,7 @@
+oracolo
+*.env
+package-lock.json
+
 # Logs
 logs
 *.log

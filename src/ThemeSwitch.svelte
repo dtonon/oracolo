@@ -32,7 +32,6 @@
 </div>
 
 <style>
-
 	#theme-toggle {
 		display: none;
 	}
@@ -62,5 +61,4 @@
 		background-color: transparent;
 		box-shadow: inset -6px -6px 1px 1px #3f3f3f;
 	}
-
 </style>
