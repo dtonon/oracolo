@@ -15,7 +15,13 @@ dev:
 build:
   vite build
   templ generate
-  go build -ldflags='-s -w'
+  GOOS=linux GOARCH=amd64 CC=$(which musl-gcc) go build -ldflags="-s -w -linkmode external -extldflags '-static'"
+
+deploy target: build
+    scp oracolo {{target}}:oracolo/oracolo-new
+    ssh {{target}} 'systemctl stop oracolo'
+    ssh {{target}} 'mv oracolo/oracolo-new oracolo/oracolo'
+    ssh {{target}} 'systemctl start oracolo'
 
 examples:
   cp index.html blank.html
