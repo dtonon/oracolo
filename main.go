@@ -51,11 +51,13 @@ func main() {
 	// setup handlers
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		subdomain, found := strings.CutSuffix(r.Host, s.BaseDomain)
+		subdomain, found := strings.CutSuffix(r.Host, "."+s.BaseDomain)
 		if found {
-			handleSubdomain(subdomain[0:len(subdomain)-1], w, r)
-		} else {
+			handleSubdomain(subdomain, w, r)
+		} else if r.Host == s.BaseDomain {
 			handleHome(w, r)
+		} else {
+			handleMagicCNAME(w, r)
 		}
 	})
 
