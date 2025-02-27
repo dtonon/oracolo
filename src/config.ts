@@ -34,9 +34,6 @@ export async function getConfig() {
 		readRelays = rl.filter((r) => r.read).map((r) => r.url);
 	}
 
-	const topNotes = parseFloat(topNotesMeta?.getAttribute?.('value') || '2') || 2;
-	const shortNotesMinChars =
-		parseFloat(shortNotesMinCharsMeta?.getAttribute?.('value') || '800') || 800;
 	const shortNotes = (() => {
 		switch (shortNotesMeta?.getAttribute?.('value') || 'carousel') {
 			case 'carousel':
@@ -47,8 +44,9 @@ export async function getConfig() {
 				return '';
 		}
 	})();
-	const shortFeedSummaryMaxChars =
-		parseFloat(shortFeedSummaryMaxCharsMeta?.getAttribute?.('value') || '400') || 400;
+	const topNotes = parseNumber(topNotesMeta, 2);
+	const shortNotesMinChars = parseNumber(shortNotesMinCharsMeta, 800);
+	const shortFeedSummaryMaxChars = parseNumber(shortFeedSummaryMaxCharsMeta, 400);
 	const topics =
 		topicsMeta
 			?.getAttribute?.('value')
@@ -68,4 +66,12 @@ export async function getConfig() {
 		topics,
 		comments
 	};
+}
+
+function parseNumber(metaTag: Element | null, defaultValue: number): number {
+	const strValue = metaTag?.getAttribute?.('value');
+	if (!strValue) return defaultValue;
+	let value = parseFloat(strValue);
+	if (isNaN(value)) return defaultValue;
+	return value;
 }
