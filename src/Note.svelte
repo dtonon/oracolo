@@ -75,7 +75,7 @@
 	</a>
 </div>
 
-{#if Object.keys(note).length > 0}
+{#if note && Object.keys(note).length > 0}
 	<div class="note-wrapper">
 		<div class="date">{formatDate(note.created_at, true)}</div>
 		<h1>{note.title}</h1>
@@ -88,7 +88,7 @@
 		</div>
 	</div>
 	{#if comments}
-		<zap-threads anchor={nevent} relays="replyRelays" />
+		<zap-threads anchor={nevent} relays={replyRelays.join(',')} />
 	{/if}
 {:else}
 	<Loading />

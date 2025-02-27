@@ -16,13 +16,6 @@
 	let relays: string[];
 	let comments = false;
 
-	const handleHashChange = () => {
-		const newHash = window.location.hash.substring(1); // Remove the leading #
-		if (newHash !== currentHash) {
-			currentHash = newHash;
-		}
-	};
-
 	onMount(() => {
 		getConfig().then(async ({ npub, readRelays, writeRelays, comments: configComments }) => {
 			relays = Array.from(new Set(readRelays.concat(writeRelays)));
@@ -54,6 +47,13 @@
 	onDestroy(() => {
 		window.removeEventListener('hashchange', handleHashChange);
 	});
+
+	function handleHashChange() {
+		const newHash = window.location.hash.substring(1); // Remove the leading #
+		if (newHash !== currentHash) {
+			currentHash = newHash;
+		}
+	}
 </script>
 
 {#if missingConfig}
