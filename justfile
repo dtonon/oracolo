@@ -1,16 +1,21 @@
 export PATH := "./node_modules/.bin:" + env_var('PATH')
 
-dev: templ
-  vite build --mode development
+dev:
+  #!/usr/bin/env bash
+  for jsfile in $(fd --base-directory src --regex 'svelte|ts'); do
+    if [ "src/$jsfile" -nt dist/index.html ]; then
+      vite build --mode development
+      break
+    fi
+  done
+  templ generate
   go build
   godotenv ./oracolo
 
-build: templ
+build:
   vite build
+  templ generate
   go build -ldflags='-s -w'
-
-templ:
-    templ generate
 
 examples:
   cp index.html blank.html
