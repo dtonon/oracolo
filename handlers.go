@@ -28,7 +28,12 @@ func handleMagicCNAME(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	subdomain := cname[0 : len(cname)-len(s.BaseDomain)-1]
+	subdomain, found := strings.CutSuffix(cname, "."+s.BaseDomain)
+	if !found {
+		http.Error(w, "invalid CNAME doesn't include "+s.BaseDomain, 404)
+		return
+	}
+
 	params, err := paramsFromSubdomain(subdomain)
 	if err != nil {
 		http.Error(w, err.Error(), 400)
