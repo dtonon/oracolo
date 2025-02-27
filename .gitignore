@@ -1,6 +1,8 @@
 oracolo
 *.env
 package-lock.json
+examples
+dist
 
 # Logs
 logs
