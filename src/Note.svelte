@@ -2,15 +2,15 @@
 	import { onMount } from 'svelte';
 	import { getConfig } from './config';
 	import { documentTitle } from './stores/documentTitleStore';
-	import { getEventData, processAll, formatDate, getProfile } from './utils';
+	import { getEventData, processAll, formatDate, getProfile, type EventData } from './utils';
 	import { pool } from '@nostr/gadgets/global';
 	import { neventEncode } from '@nostr/tools/nip19';
 	import 'zapthreads';
 	import Loading from './Loading.svelte';
 	import { type NostrUser } from '@nostr/gadgets/metadata';
 
-	let relays: string[];
-	let note: ReturnType<typeof getEventData>;
+	let replyRelays: string[];
+	let note: EventData;
 	let renderedContent = '';
 	let nevent = '';
 	let comments = false;
@@ -23,8 +23,9 @@
 	export let profile: NostrUser | null;
 
 	onMount(() => {
-		getConfig().then(async ({ npub, relays: configRelays, comments: configComments }) => {
-			relays = configRelays;
+		getConfig().then(async ({ npub, writeRelays, readRelays, comments: configComments }) => {
+			replyRelays = readRelays;
+
 			profile = await getProfile(npub);
 			if (!profile) {
 				throw new Error('npub is invalid');
@@ -33,7 +34,7 @@
 			comments = configComments;
 
 			let subscription = pool.subscribeMany(
-				relays,
+				writeRelays,
 				[
 					{
 						ids: [id]
@@ -87,7 +88,7 @@
 		</div>
 	</div>
 	{#if comments}
-		<zap-threads anchor={nevent} {relays} />
+		<zap-threads anchor={nevent} relays="replyRelays" />
 	{/if}
 {:else}
 	<Loading />

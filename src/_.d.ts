@@ -1,0 +1,1 @@
+module 'window.nostr.js';

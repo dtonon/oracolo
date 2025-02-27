@@ -42,7 +42,7 @@
 		getConfig().then(
 			async ({
 				npub: configNpub,
-				relays,
+				writeRelays,
 				topNotes,
 				shortNotesMinChars,
 				shortNotes,
@@ -80,7 +80,7 @@
 					};
 				}
 
-				let subscription = pool.subscribeMany(relays, [filter], {
+				let subscription = pool.subscribeMany(writeRelays, [filter], {
 					onevent: async (event) => {
 						// console.log('Received event:', event);
 						// Check if the event ID is already in the set
@@ -114,7 +114,7 @@
 
 				if (shortNotes == 'carousel') {
 					subscription = pool.subscribeMany(
-						relays,
+						writeRelays,
 						[
 							{
 								kinds: [1],

@@ -24,19 +24,15 @@
 	};
 
 	onMount(() => {
-		getConfig().then(async ({ npub, relays: configRelays, comments: configComments }) => {
-			relays = configRelays;
+		getConfig().then(async ({ npub, readRelays, writeRelays, comments: configComments }) => {
+			relays = Array.from(new Set(readRelays.concat(writeRelays)));
 			comments = configComments;
 
 			if (comments) {
 				try {
-					let script = document.createElement('script');
-					script.src = 'https://unpkg.com/window.nostr.js/dist/window.nostr.js';
-					script.onload = () => {
-						console.log('window.nostr.js has been successfully loaded');
-						// You can place any initialization code here if needed
-					};
-					document.head.appendChild(script);
+					await import('window.nostr.js');
+					console.log('window.nostr.js has been successfully loaded');
+					// You can place any initialization code here if needed
 				} catch (error) {
 					console.error('Failed to load window.nostr.js:', error);
 				}

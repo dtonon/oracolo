@@ -18,14 +18,20 @@ export async function getConfig() {
 	}
 
 	const npub = authorMeta.getAttribute('value') as string;
-	let relays = relaysMeta
+
+	let readRelays: string[] = [];
+	let writeRelays: string[] = [];
+	const relays = relaysMeta
 		?.getAttribute?.('value')
 		?.split(',')
 		.map((url) => url.trim());
-	if (!relays || relays.length === 0) {
-		relays = (await loadRelayList(decode(npub).data as string)).items
-			.filter((r) => r.write)
-			.map((r) => r.url);
+	if (relays && relays.length > 0) {
+		readRelays = relays;
+		writeRelays = relays;
+	} else {
+		const rl = (await loadRelayList(decode(npub).data as string)).items;
+		writeRelays = rl.filter((r) => r.write).map((r) => r.url);
+		readRelays = rl.filter((r) => r.read).map((r) => r.url);
 	}
 
 	const topNotes = parseFloat(topNotesMeta?.getAttribute?.('value') || '2') || 2;
@@ -53,7 +59,8 @@ export async function getConfig() {
 
 	return {
 		npub,
-		relays,
+		readRelays,
+		writeRelays,
 		topNotes,
 		shortNotesMinChars,
 		shortNotes,

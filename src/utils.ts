@@ -13,9 +13,19 @@ export function isRootNote(event: NostrEvent) {
 	return true;
 }
 
-export function getEventData(event: NostrEvent) {
-	let extractedTitle;
-	let extractedSummary;
+export type EventData = {
+	id: string;
+	kind: number;
+	created_at: number;
+	title: string;
+	summary: string | undefined;
+	image: string | undefined;
+	content: string;
+};
+
+export function getEventData(event: NostrEvent): EventData {
+	let extractedTitle: string;
+	let extractedSummary: string | undefined;
 
 	if (event.kind == 30023) {
 		extractedTitle = event?.tags.find(([k]) => k === 'title')?.[1] || 'No title';
@@ -95,15 +105,12 @@ export async function processUsersEntities(content: string) {
 	return processedContent;
 }
 
-export function processEventsEntities(content: string | undefined) {
-	if (content == undefined) {
-		return;
-	}
+export function processEventsEntities(content: string) {
 	// Prefix plain "nevent1|note1|npub1|nprofile|<alphanumeric string>" with nostr: for further processing
 	// Include also entities without prefix inside a markdown link, e.g. [text](nevent1xxxxx)
 	const regexEntities = /(^|\s|\n|\()(nevent1\w+|note1\w+|npub1\w+|nprofile1\w+)(?=\s|\n|\)|$)/gm;
 	content = content.replace(regexEntities, (_, p1, group1) => {
-		const shortenedString = group1.slice(0, 24);
+		// const shortenedString = group1.slice(0, 24);
 		return `${p1}nostr:${group1}`;
 	});
 
@@ -124,9 +131,6 @@ export function processEventsEntities(content: string | undefined) {
 }
 
 export function cleanMarkdownLinks(content: string) {
-	if (content == undefined) {
-		return;
-	}
 	// Regular expression to match markdown links
 	const regexMarkdownLinks = /\[([^\]]+)\]\(([^)]+)\)/g;
 
@@ -137,9 +141,6 @@ export function cleanMarkdownLinks(content: string) {
 }
 
 export function processImageUrls(content: string) {
-	if (content == undefined) {
-		return;
-	}
 	// Regular expression to match the image URL
 	const imageUrlRegex = /\s*(https?:\/\/\S+\.(?:png|jpg|jpeg|gif|bmp))\s*/gi;
 
@@ -151,37 +152,31 @@ export function processImageUrls(content: string) {
 	return markdownText;
 }
 
-export function processVideoUrls(content) {
-	if (content == undefined) {
-		return;
-	}
+export function processVideoUrls(content: string) {
 	// Regular expression to match the video URL
 	const videoUrlRegex = /\s*(https?:\/\/\S+\.(?:mp4|webm|ogg|mov))(\s*|$)/gi;
 
 	// Replace the video URL with HTML <video> tag
-	const htmlText = content.replace(videoUrlRegex, (match, group) => {
+	const htmlText = content.replace(videoUrlRegex, (_, group) => {
 		return ` <video controls><source src="${group}" type="video/mp4"></video> `;
 	});
 
 	return htmlText;
 }
 
-export function processAudioUrls(content) {
+export function processAudioUrls(content: string) {
 	// Regular expression to match the audio URL
 	const audioUrlRegex = /\s*(https?:\/\/\S+\.(?:mp3))(\s*|$)/gi;
 
 	// Replace the audio URL with HTML <audio> tag
-	const htmlText = content.replace(audioUrlRegex, (match, group) => {
+	const htmlText = content.replace(audioUrlRegex, (_, group) => {
 		return ` <audio controls src="${group}"></audio> `;
 	});
 
 	return htmlText;
 }
 
-export function processSmartyPants(content) {
-	if (content == undefined) {
-		return;
-	}
+export function processSmartyPants(content: string) {
 	const replacements = [
 		{ regex: /<<|»/g, replacement: '&laquo;' },
 		{ regex: />>|«/g, replacement: '&raquo;' },
@@ -197,7 +192,7 @@ export function processSmartyPants(content) {
 	return content;
 }
 
-export async function processAll(note) {
+export async function processAll(note: EventData | NostrEvent): Promise<string> {
 	let noteContent = note.content;
 	// Replace users entities with names
 	noteContent = await processUsersEntities(noteContent);
@@ -213,7 +208,9 @@ export async function processAll(note) {
 	}
 
 	// Strip duplicate h1 title
-	noteContent = noteContent.replace('# ' + note.title, '');
+	if ('title' in note) {
+		noteContent = noteContent.replace('# ' + note.title, '');
+	}
 
 	// Render markdown
 	let converter = new showdown.Converter({
@@ -230,7 +227,11 @@ export function formatDate(timestamp: number, includeTime = false) {
 	const date = new Date(timestamp * 1000);
 
 	// Set date options
-	const dateOptions = { day: '2-digit', month: 'long', year: 'numeric' };
+	const dateOptions: Intl.DateTimeFormatOptions = {
+		day: '2-digit',
+		month: 'long',
+		year: 'numeric'
+	};
 	const dateParts = new Intl.DateTimeFormat('en-US', dateOptions).formatToParts(date);
 
 	let day, month, year;
@@ -244,7 +245,11 @@ export function formatDate(timestamp: number, includeTime = false) {
 
 	// If includeTime is true, add the time in 24-hour format
 	if (includeTime) {
-		const timeOptions = { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' };
+		const timeOptions: Intl.DateTimeFormatOptions = {
+			hour: '2-digit',
+			minute: '2-digit',
+			hourCycle: 'h23'
+		};
 		const timeFormatter = new Intl.DateTimeFormat('en-US', timeOptions);
 		const timeString = timeFormatter.format(date);
 		formattedDate += ` - ${timeString}`;
