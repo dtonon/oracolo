@@ -84,6 +84,7 @@ var (
 `)
 )
 
+// this builds the HTML from multiple parts, including raw CSS, raw JS and <meta> tags we'll inject
 func renderModifiedHTML(w io.Writer, params Params) {
 	w.Write(step1)
 	for key, value := range params {

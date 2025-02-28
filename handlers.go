@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 	"strings"
+	"time"
 )
 
 func handleHome(w http.ResponseWriter, r *http.Request) {
@@ -38,6 +39,11 @@ func handleMagicCNAME(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 400)
 		return
 	}
+
+	// cache headers for 2 hours
+	w.Header().Set("Cache-Control", "public, max-age=7200")
+	w.Header().Set("Expires", time.Now().Add(2*time.Hour).Format(http.TimeFormat))
+
 	renderModifiedHTML(w, params)
 }
 
