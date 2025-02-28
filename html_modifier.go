@@ -13,9 +13,9 @@ type Params map[string]string
 
 var metaSettings = [...]string{
 	"top-notes",
-	"short-notes",
-	"short-notes-min-chars",
 	"short-notes-summary-max-chars",
+	"short-notes-min-chars",
+	"short-notes",
 	"topics",
 	"comments",
 }
