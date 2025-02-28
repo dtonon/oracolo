@@ -1,7 +1,6 @@
 package main
 
 import (
-	"net"
 	"net/http"
 	"strings"
 )
@@ -22,8 +21,8 @@ func handleSubdomain(subdomain string, w http.ResponseWriter, r *http.Request) {
 
 // this handles requests from arbitrary external domains
 func handleMagicCNAME(w http.ResponseWriter, r *http.Request) {
-	cname, err := net.LookupCNAME(r.Host)
-	if err != nil {
+	cname := lookupCNAME(r.Host)
+	if cname == "" {
 		http.Error(w, "missing CNAME record for "+r.Host, 400)
 		return
 	}
@@ -45,8 +44,8 @@ func handleMagicCNAME(w http.ResponseWriter, r *http.Request) {
 // this is called by caddy to know if it should get a certificate for a domain or not
 func handleCaddyAsk(w http.ResponseWriter, r *http.Request) {
 	domain := r.URL.Query().Get("domain")
-	cname, err := net.LookupCNAME(domain)
-	if err != nil {
+	cname := lookupCNAME(domain)
+	if cname == "" {
 		w.WriteHeader(400)
 		return
 	}
