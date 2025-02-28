@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"context"
 	_ "embed"
 	"net/http"
@@ -20,15 +19,15 @@ type Settings struct {
 	Port       string `envconfig:"PORT" default:"45070"`
 }
 
-//go:embed dist/index.html
-var html []byte
+//go:embed dist/out.js
+var js []byte
+
+//go:embed dist/out.css
+var css []byte
 
 var (
 	s   Settings
 	log = zerolog.New(os.Stderr).Output(zerolog.ConsoleWriter{Out: os.Stdout}).With().Timestamp().Logger()
-
-	htmlPre  []byte
-	htmlPost []byte
 )
 
 func main() {
@@ -37,15 +36,6 @@ func main() {
 	if err != nil {
 		log.Fatal().Err(err).Msg("couldn't process envconfig")
 		return
-	}
-
-	// prepare the html stuff we will always be modifying
-	if htmlParts := bytes.Split(html, []byte("<!-- -=*=- -->")); len(htmlParts) != 3 {
-		log.Fatal().Msg("something is wrong with the embedded html file")
-		return
-	} else {
-		htmlPre = htmlParts[0]
-		htmlPost = htmlParts[2]
 	}
 
 	// setup handlers

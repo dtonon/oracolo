@@ -50,10 +50,48 @@ func paramsFromSubdomain(subdomain string) (Params, error) {
 	return params, nil
 }
 
+var (
+	step1 = []byte(`<!doctype html>
+<html lang="en">
+  <head>
+`)
+	step3 = []byte(`
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+
+    <style>
+`)
+	step5 = []byte(`
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script>
+      window.wnjParams = {
+        position: 'bottom',
+        accent: 'neutral',
+        startHidden: true,
+        compactMode: true,
+      };
+    </script>
+    <script>
+`)
+	step7 = []byte(`
+    </script>
+  </body>
+</html>
+`)
+)
+
 func renderModifiedHTML(w io.Writer, params Params) {
-	w.Write(htmlPre)
+	w.Write(step1)
 	for key, value := range params {
-		fmt.Fprintf(w, "<meta name=\"%s\" value=\"%s\">\n", key, value)
+		fmt.Fprintf(w, "    <meta name=\"%s\" value=\"%s\">\n", key, value)
 	}
-	w.Write(htmlPost)
+	w.Write(step3)
+	w.Write(css)
+	w.Write(step5)
+	w.Write(js)
+	w.Write(step7)
 }
