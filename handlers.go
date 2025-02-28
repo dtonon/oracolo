@@ -28,9 +28,9 @@ func handleMagicCNAME(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	subdomain, found := strings.CutSuffix(cname, "."+s.BaseDomain)
+	subdomain, found := strings.CutSuffix(cname, "."+s.BaseDomain+".")
 	if !found {
-		http.Error(w, "invalid CNAME doesn't include "+s.BaseDomain, 404)
+		http.Error(w, "invalid CNAME '"+cname+"' doesn't end with '"+s.BaseDomain+".'", 404)
 		return
 	}
 
@@ -50,7 +50,7 @@ func handleCaddyAsk(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(400)
 		return
 	}
-	if !strings.HasSuffix(cname, "."+s.BaseDomain) {
+	if !strings.HasSuffix(cname, "."+s.BaseDomain+".") {
 		w.WriteHeader(400)
 		return
 	}
