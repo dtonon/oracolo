@@ -1,5 +1,16 @@
 export PATH := "./node_modules/.bin:" + env_var('PATH')
 
+watch:
+  #!/usr/bin/env bash
+  templ generate
+  go build -tags=dev
+  godotenv ./oracolo &
+  pid1=$!
+  ./build.js watch &
+  pid2=$!
+  trap "kill $pid1 $pid2" SIGINT SIGTERM SIGQUIT EXIT
+  wait
+
 dev:
   #!/usr/bin/env bash
   for jsfile in $(fd --base-directory src --regex 'svelte|ts'); do

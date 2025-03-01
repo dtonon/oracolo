@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	_ "embed"
 	"net/http"
 	"os"
 	"os/signal"
@@ -18,12 +17,6 @@ type Settings struct {
 	BaseDomain string `envconfig:"BASE_DOMAIN" required:"true"`
 	Port       string `envconfig:"PORT" default:"45070"`
 }
-
-//go:embed dist/out.js
-var js []byte
-
-//go:embed dist/out.css
-var css []byte
 
 var (
 	s   Settings
