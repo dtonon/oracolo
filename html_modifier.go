@@ -42,6 +42,9 @@ func paramsFromSubdomain(subdomain string) (Params, error) {
 			for _, key := range metaSettings {
 				if strings.HasPrefix(part, key) {
 					value := part[len(key)+1:]
+					if key == "topics" {
+						value = strings.Replace(value, "-", ",", -1)
+					}
 					params[key] = value
 					break
 				}
