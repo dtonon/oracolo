@@ -26,7 +26,7 @@ dev:
 build:
   ./build.js prod
   templ generate
-  GOOS=linux GOARCH=amd64 CC=$(which musl-gcc) go build -ldflags="-s -w -linkmode external -extldflags '-static'"
+  CGO_ENABLED=1 GOOS=linux GOARCH=amd64 CC=$(which musl-gcc) go build -ldflags="-s -w -linkmode external -extldflags '-static'"
 
 deploy target: build
     scp oracolo {{target}}:oracolo/oracolo-new
