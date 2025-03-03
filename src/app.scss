@@ -217,6 +217,25 @@ html.dark .topic-wrapper {
 	}
 }
 
+.link-button {
+	background: none;
+	border: none;
+	text-decoration: underline;
+	cursor: pointer;
+	padding: 0;
+	font: inherit;
+	color: inherit;
+
+	&:hover {
+		text-decoration: none;
+	}
+
+	&:focus {
+		outline: none;
+	}
+
+}
+
 .about {
 	margin-bottom: 2rem;
 	padding-bottom: 1rem;

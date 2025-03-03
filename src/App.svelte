@@ -3,7 +3,7 @@
 	import { type NostrUser } from '@nostr/gadgets/metadata';
 
 	import { getConfig } from './config';
-	import { getProfile } from './utils';
+	import { getProfile, downloadHtmlApp } from './utils';
 	import Home from './Home.svelte';
 	import Note from './Note.svelte';
 	import ThemeSwitch from './ThemeSwitch.svelte';
@@ -80,6 +80,10 @@
 <div class="footer">
 	This blog is powered by <a href="https://github.com/dtonon/oracolo">Oracolo</a> and Nostr,
 	<a href="https://njump.me">read more</a><br /><br />
+
+	Would you like to host this website yourself? It's just one HTML file,
+	<button on:click={() => downloadHtmlApp()} class="link-button">download it</button>.<br /><br />
+
 	{#if relays}
 		This page connects to some servers (Nostr relays) to retrieve data: {relays.join(', ')}
 	{/if}

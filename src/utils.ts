@@ -257,3 +257,22 @@ export function formatDate(timestamp: number, includeTime = false) {
 
 	return formattedDate;
 }
+
+export async function downloadHtmlApp(): Promise<void> {
+	try {
+		const response = await fetch(window.location.href);
+		if (!response.ok) {
+			throw new Error('Network response was not ok');
+		}
+		const originalHTML = await response.text();
+		const blob = new Blob([originalHTML], { type: 'text/html' });
+		const url = URL.createObjectURL(blob);
+		const link = document.createElement('a');
+		link.href = url;
+		link.download = 'index.html';
+		link.click();
+		URL.revokeObjectURL(url);
+	} catch (error) {
+		console.error('Error downloading the original HTML:', error);
+	}
+}
