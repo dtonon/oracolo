@@ -8,8 +8,11 @@
 		darkMode = !darkMode;
 
 		// If the theme match the system, reset the preference and follow it, otherwise set the preference
-		if (localStorage.getItem('systemTheme') == 'dark' && darkMode || localStorage.getItem('systemTheme') == 'light' && !darkMode) {
-			localStorage.removeItem('theme')
+		if (
+			(localStorage.getItem('systemTheme') == 'dark' && darkMode) ||
+			(localStorage.getItem('systemTheme') == 'light' && !darkMode)
+		) {
+			localStorage.removeItem('theme');
 		} else {
 			localStorage.setItem('theme', darkMode ? 'dark' : 'light');
 		}
@@ -36,7 +39,7 @@
 		// If no explicit preference, use system preference
 		let darkSetting = window.matchMedia('(prefers-color-scheme: dark)').matches;
 		localStorage.setItem('systemTheme', darkSetting ? 'dark' : 'light');
-		return darkSetting
+		return darkSetting;
 	}
 
 	onMount(() => {

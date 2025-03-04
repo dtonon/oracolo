@@ -4,21 +4,18 @@ import { loadRelayList } from '@nostr/gadgets/lists';
 export async function getConfig() {
 	const authorMeta = document.querySelector('meta[name="author"]');
 	const relaysMeta = document.querySelector('meta[name="relays"]');
-	const topNotesMeta = document.querySelector('meta[name="top-notes"]');
-	const shortNotesMeta = document.querySelector('meta[name="short-notes"]');
-	const shortNotesMinCharsMeta = document.querySelector('meta[name="short-notes-min-chars"]');
-	const shortFeedSummaryMaxCharsMeta = document.querySelector(
-		'meta[name="short-notes-summary-max-chars"]'
-	);
 	const topicsMeta = document.querySelector('meta[name="topics"]');
 	const commentsMeta = document.querySelector('meta[name="comments"]');
 
+	// Author
+	// -------------------------------------------------------
 	if (!authorMeta) {
 		throw new Error('Missing meta tags for configuration');
 	}
-
 	const npub = authorMeta.getAttribute('value') as string;
 
+	// Relays
+	// -------------------------------------------------------
 	let readRelays: string[] = [];
 	let writeRelays: string[] = [];
 	const relays = relaysMeta
@@ -34,37 +31,70 @@ export async function getConfig() {
 		readRelays = rl.filter((r) => r.read).map((r) => r.url);
 	}
 
-	const shortNotes = (() => {
-		switch (shortNotesMeta?.getAttribute?.('value') || 'carousel') {
-			case 'carousel':
-				return 'carousel';
-			case 'main':
-				return 'main';
-			default:
-				return '';
-		}
-	})();
-	const topNotes = parseNumber(topNotesMeta, 2);
-	const shortNotesMinChars = parseNumber(shortNotesMinCharsMeta, 800);
-	const shortFeedSummaryMaxChars = parseNumber(shortFeedSummaryMaxCharsMeta, 400);
+	// Topics
+	// -------------------------------------------------------
 	const topics =
 		topicsMeta
 			?.getAttribute?.('value')
 			?.split(',')
 			.map((item) => item.trim())
 			.filter((item) => item !== '') || [];
+
+	// Comments
 	const comments = (commentsMeta?.getAttribute?.('value') || 'yes') === 'yes' ? true : false;
+
+	// Blocks
+	// -------------------------------------------------------
+	interface Config {
+		count?: number;
+		style?: string;
+		minChars?: number;
+	}
+
+	let blocks: { type: string; config: any }[] = [];
+	const metaTags = document.querySelectorAll('meta');
+	const PREFIX = 'block:';
+	metaTags.forEach((meta) => {
+		const name = meta.getAttribute('name');
+		if (!name || !name.startsWith(PREFIX)) {
+			return;
+		}
+		const type = name.substring(PREFIX.length);
+		if (!['articles', 'notes', 'images'].includes(type)) {
+			return;
+		}
+		const value = meta.getAttribute('content');
+		const options = value ? value.split('-') : [];
+		const config: Config = {};
+		if (options.length > 0 && !isNaN(Number(options[0]))) {
+			config.count = parseInt(options[0], 10);
+			options.shift();
+		}
+		const styleIndex = options.findIndex((opt) =>
+			['list', 'highlight', 'slide', 'grid'].includes(opt)
+		);
+		if (styleIndex >= 0) {
+			config.style = options[styleIndex];
+			options.splice(styleIndex, 1);
+		}
+		options.forEach((opt) => {
+			if (opt.startsWith('m') && !isNaN(Number(opt.substring(1)))) {
+				config.minChars = parseInt(opt.substring(1), 10);
+			}
+		});
+		blocks.push({
+			type,
+			config
+		});
+	});
 
 	return {
 		npub,
 		readRelays,
 		writeRelays,
-		topNotes,
-		shortNotesMinChars,
-		shortNotes,
-		shortFeedSummaryMaxChars,
 		topics,
-		comments
+		comments,
+		blocks
 	};
 }
 
