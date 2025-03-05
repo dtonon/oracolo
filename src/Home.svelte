@@ -11,6 +11,7 @@
 	import type { NostrUser } from '@nostr/gadgets/metadata';
 	import Articles from './Articles.svelte';
 	import Notes from './Notes.svelte';
+	import Images from './Images.svelte';
 	import { uniqueEventsStore } from './stores/uniqueEventsStore';
 
 	let events: NostrEvent[] = [];
@@ -113,7 +114,7 @@
 			{:else if block.type === 'notes'}
 				<Notes {events} {...block.config} />
 			{:else if block.type === 'images'}
-				Images / Todo
+				<Images {events} {...block.config} />
 			{/if}
 		</section>
 	{/each}

@@ -340,6 +340,84 @@ html.dark .block {
 	}
 }
 
+.images {
+	display: flex;
+	color: #747474;
+	padding-top: 0.5rem;
+
+	flex-wrap: wrap;
+	justify-content: space-between;
+	gap: 2rem;
+	width: 100%;
+
+	@media only screen and (max-width: 768px) {
+		display: block;
+	}
+
+	@media only screen and (max-width: 768px) {
+		padding-bottom: 0rem;
+	}
+
+	.note {
+		flex: 1 1 calc(50% - 2rem);
+		box-sizing: border-box;
+
+		@media only screen and (max-width: 768px) {
+			margin-bottom: 2rem;
+		}
+
+		a {
+			text-decoration: none;
+		}
+
+		img {
+			width: 100%;
+			height: 400px;
+			object-fit: cover;
+			margin-bottom: 0.5rem;
+			border-radius: 4px;
+		}
+
+		.title {
+			display: block;
+			margin-bottom: 0.4rem;
+			font-size: 1.1rem;
+			font-weight: bolder;
+		}
+
+		.summary {
+			margin-bottom: 0.4rem;
+			font-size: 0.9rem;
+		}
+
+		.date {
+			font-size: 0.8rem;
+			color: #a9a9a9;
+		}
+	}
+
+	&.odd {
+		.note:first-child {
+				flex: 0 0 100%;
+
+				img {
+					height: 360px;
+				}
+		}
+	}
+
+	&.single {
+		.note:first-child {
+				flex: 0 0 100%;
+
+				img {
+					height: auto;
+				}
+		}
+	}
+
+}
+
 html.dark .top-notes {
 	color: #cbcbcb;
 }

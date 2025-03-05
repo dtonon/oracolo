@@ -20,16 +20,30 @@ export type EventData = {
 	title: string;
 	summary: string | undefined;
 	image: string | undefined;
+	images: string[] | [];
 	content: string;
 };
 
 export function getEventData(event: NostrEvent): EventData {
 	let extractedTitle: string;
 	let extractedSummary: string | undefined;
+	const extractedImages: string[] = [];
+	let extractedImage: string | undefined;
 
 	if (event.kind == 30023) {
 		extractedTitle = event?.tags.find(([k]) => k === 'title')?.[1] || 'No title';
 		extractedSummary = event?.tags.find(([k]) => k === 'summary')?.[1] || undefined;
+		extractedImage = event?.tags.find(([k]) => k === 'image')?.[1] || undefined;
+	} else if (event.kind == 20) {
+		extractedTitle = event?.tags.find(([k]) => k === 'title')?.[1] || undefined;
+		extractedSummary = event.content;
+		event.tags.forEach((tag) => {
+			if (tag[0] === 'imeta') {
+				const url = tag[1].split(' ')[1];
+				extractedImages.push(url);
+			}
+		});
+		extractedImage = extractedImages[0];
 	} else {
 		extractedTitle =
 			'Note of ' +
@@ -44,7 +58,8 @@ export function getEventData(event: NostrEvent): EventData {
 		kind: event.kind,
 		created_at: event.created_at,
 		title: extractedTitle,
-		image: event?.tags.find(([k]) => k === 'image')?.[1] || undefined,
+		image: extractedImage,
+		images: extractedImages,
 		summary: extractedSummary,
 		content: event.content
 	};
