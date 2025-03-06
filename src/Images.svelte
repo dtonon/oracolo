@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { type NostrEvent } from '@nostr/tools/core';
 	import { Splide, SplideSlide } from '@splidejs/svelte-splide';
 	import '@splidejs/svelte-splide/css';
@@ -8,12 +9,19 @@
 	// Block-specific props
 	export let events: NostrEvent[] = [];
 	export let count = 10;
-	export let style = 'list';
+	export let style = 'grid';
 	export let minChars = 0;
+	export let ids: string[] = [];
 	const kinds = [20];
 
+	onMount(() => {
+		if (ids.length > 0) {
+			style = 'grid';
+		}
+	});
+
 	// Reactive statement to filter events
-	$: filteredItems = filterEvents(events, kinds, minChars, count, true).map(getEventData);
+	$: filteredItems = filterEvents(events, kinds, minChars, count, true, ids).map(getEventData);
 </script>
 
 <div class="notes-container">
@@ -35,7 +43,10 @@
 					<!-- {#if event.summary}
 						<div class="summary">{@html event.summary}</div>
 					{/if} -->
-					<div class="date">{formatDate(event.created_at)}</div>
+					<span class="date">{formatDate(event.created_at)}</span>
+					{#if ids.length > 0}
+						<span class="pinned">- 📌 Pinned</span>
+					{/if}
 				</div>
 			{/each}
 		</div>

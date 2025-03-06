@@ -327,6 +327,12 @@ html.dark .block {
 			font-size: 0.8rem;
 			color: #a9a9a9;
 		}
+
+		.pinned {
+			filter: grayscale(100%);
+			font-size: 0.8rem;
+			color: #494949;
+		}
 	}
 
 	&.odd {
@@ -393,6 +399,12 @@ html.dark .block {
 		.date {
 			font-size: 0.8rem;
 			color: #a9a9a9;
+		}
+
+		.pinned {
+			filter: grayscale(100%);
+			font-size: 0.8rem;
+			color: #494949;
 		}
 	}
 

@@ -16,12 +16,30 @@ export function filterEvents(
 	kinds: number[],
 	minChars: number,
 	count: number = 10,
-	renderContentBeforeCount: boolean
+	renderContentBeforeCount: boolean,
+	ids: string[] = []
 ): NostrEvent[] {
 	// Filter out already displayed events and match kinds
-	let filteredEvents = items
+	let filteredEvents = items;
+
+	filteredEvents = filteredEvents
 		.filter((item) => !uniqueEventsStore.hasBeenDisplayed(item.id))
 		.filter((item) => kinds.includes(item.kind));
+
+	if (ids.length > 0) {
+		let foundEvent: NostrEvent | undefined;
+		if (ids.length == 1) {
+			// Performance tweak using find
+			foundEvent = filteredEvents.find((event) => event.id.endsWith(ids[0]));
+			if (foundEvent) {
+				filteredEvents = [foundEvent];
+			}
+		} else {
+			filteredEvents = filteredEvents.filter((event) => ids.some((id) => event.id.endsWith(id)));
+		}
+	}
+
+	filteredEvents = filteredEvents.filter((item) => kinds.includes(item.kind));
 
 	// If rendering content is required, process it
 	if (renderContentBeforeCount) {
