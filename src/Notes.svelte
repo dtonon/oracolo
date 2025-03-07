@@ -24,42 +24,45 @@
 	$: filteredItems = filterEvents(events, kinds, minChars, count, true, ids).map(getEventData);
 </script>
 
-<div class="notes-container">
+<section class="block notes">
 	{#if style === 'grid'}
-		<div class="top-notes {filteredItems.length % 2 !== 0 ? 'odd' : ''}">
+		<div class="grid {filteredItems.length % 2 !== 0 ? 'odd' : ''}">
 			{#each filteredItems as event}
-				<div class="note">
+				<div class="item">
 					<a href={`#${event.id}`}>
 						<!-- svelte-ignore a11y-missing-attribute -->
 						{#if event.image}
 							<img src={event.image} />
 						{/if}
 						<div class="title">{event.title}</div>
+
+						{#if event.summary}
+							<div class="summary">{@html event.summary}</div>
+						{/if}
+						<span class="date">{formatDate(event.created_at)}</span>
+						{#if ids.length > 0}
+							<span class="pinned">- 📌 Pinned </span>
+						{/if}
 					</a>
-					{#if event.summary}
-						<div class="summary">{@html event.summary}</div>
-					{/if}
-					<span class="date">{formatDate(event.created_at)}</span>
-					{#if ids.length > 0}
-						<span class="pinned">- 📌 Pinned </span>
-					{/if}
 				</div>
 			{/each}
 		</div>
 	{:else if style === 'list'}
-		<div class="listing-notes">
+		<div class="list">
 			<ul>
 				{#each filteredItems as event}
 					<li>
-						<h2><a href={`#${event.id}`}>{event.title}</a></h2>
-						<div class="summary">{event.summary}</div>
+						<a href={`#${event.id}`}>
+							<h2>{event.title}</h2>
+							<div class="summary">{event.summary}</div>
+						</a>
 					</li>
 				{/each}
 			</ul>
 		</div>
 	{:else if style === 'slide'}
 		<Splide
-			class="short-notes"
+			class="slide"
 			options={{
 				type: 'loop',
 				gap: '1rem',
@@ -83,4 +86,4 @@
 			{/each}
 		</Splide>
 	{/if}
-</div>
+</section>
