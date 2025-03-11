@@ -43,6 +43,8 @@
 				if (!profile) {
 					throw new Error('invalid npub');
 				}
+
+				topics = configTopics;
 				blocks = configBlocks;
 
 				documentTitle.set(profile.shortName + ' home, powered by Nostr');
@@ -103,6 +105,16 @@
 			</div>
 			{profile?.shortName}
 		</h1>
+	</div>
+{/if}
+
+{#if topics.length > 0}
+	<div class="topic-wrapper">
+		<!-- svelte-ignore a11y-invalid-attribute -->
+		<div><a href="#" class={tag == '' ? 'selected' : ''}>Home</a></div>
+		{#each topics as topic}
+			<div><a href="#tags/{topic}" class={topic == tag ? 'selected' : ''}>#{topic}</a></div>
+		{/each}
 	</div>
 {/if}
 
