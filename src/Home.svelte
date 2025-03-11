@@ -95,45 +95,49 @@
 	});
 </script>
 
-{#if profile}
-	<div class="header home">
-		<div class="external-link">
-			Profile: <a href="https://njump.me/{npub}">{npub.slice(0, 9) + '...' + npub.slice(-5)}</a>
-		</div>
-		<h1>
-			<div class="picture-container">
-				<!-- svelte-ignore a11y-missing-attribute -->
-				<img src={profile?.image} />
+{#if events.length > 20 || finishedLoading}
+	{#if profile}
+		<div class="header home">
+			<div class="external-link">
+				Profile: <a href="https://njump.me/{npub}">{npub.slice(0, 9) + '...' + npub.slice(-5)}</a>
 			</div>
-			{profile?.shortName}
-		</h1>
-	</div>
-{/if}
+			<h1>
+				<div class="picture-container">
+					<!-- svelte-ignore a11y-missing-attribute -->
+					<img src={profile?.image} />
+				</div>
+				{profile?.shortName}
+			</h1>
+		</div>
+	{/if}
 
-{#if topics.length > 0}
-	<div class="topic-wrapper">
-		<!-- svelte-ignore a11y-invalid-attribute -->
-		<div><a href="#" class={tag == '' ? 'selected' : ''}>Home</a></div>
-		{#each topics as topic}
-			<div><a href="#tags/{topic}" class={topic == tag ? 'selected' : ''}>#{topic}</a></div>
+	{#if topics.length > 0}
+		<div class="topic-wrapper">
+			<!-- svelte-ignore a11y-invalid-attribute -->
+			<div><a href="#" class={tag == '' ? 'selected' : ''}>Home</a></div>
+			{#each topics as topic}
+				<div><a href="#tags/{topic}" class={topic == tag ? 'selected' : ''}>#{topic}</a></div>
+			{/each}
+		</div>
+	{/if}
+
+	{#if blocks && events.length > 0}
+		{#each blocks as block}
+			{#if block.type === 'articles'}
+				<Articles {events} {...block.config} />
+			{:else if block.type === 'notes'}
+				<Notes {events} {...block.config} />
+			{:else if block.type === 'images'}
+				<Images {events} {...block.config} />
+			{/if}
 		{/each}
-	</div>
-{/if}
+	{/if}
 
-{#if blocks && events.length > 0}
-	{#each blocks as block}
-		{#if block.type === 'articles'}
-			<Articles {events} {...block.config} />
-		{:else if block.type === 'notes'}
-			<Notes {events} {...block.config} />
-		{:else if block.type === 'images'}
-			<Images {events} {...block.config} />
-		{/if}
-	{/each}
-{/if}
-
-{#if tag.length > 0 && finishedLoading && uniqueEventsStore.getDisplayedEventsCount() < 12}
-	<Articles {events} count={40} style="grid" />
-	<Images {events} count={40} style="grid" />
-	<Notes {events} count={40} style="grid" />
+	{#if tag.length > 0 && finishedLoading && uniqueEventsStore.getDisplayedEventsCount() < 12}
+		<Articles {events} count={40} style="grid" />
+		<Images {events} count={40} style="grid" />
+		<Notes {events} count={40} style="grid" />
+	{/if}
+{:else}
+	<Loading />
 {/if}
