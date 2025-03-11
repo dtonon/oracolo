@@ -14,7 +14,7 @@
 
 	onMount(() => {
 		if (ids.length > 0) {
-			style = 'highlight';
+			style = 'grid';
 		}
 	});
 
@@ -23,7 +23,7 @@
 
 {#if filteredItems.length > 0}
 	<section class="block articles">
-		{#if style === 'highlight'}
+		{#if style === 'grid'}
 			<div class="grid {filteredItems.length % 2 !== 0 ? 'odd' : ''}">
 				{#each filteredItems as event}
 					<div class="item">

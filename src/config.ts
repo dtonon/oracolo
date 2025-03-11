@@ -75,9 +75,7 @@ export async function getConfig() {
 			config.count = parseInt(options[0], 10);
 			options.shift();
 		}
-		const styleIndex = options.findIndex((opt) =>
-			['list', 'highlight', 'slide', 'grid'].includes(opt)
-		);
+		const styleIndex = options.findIndex((opt) => ['list', 'slide', 'grid'].includes(opt));
 		if (styleIndex >= 0) {
 			config.style = options[styleIndex];
 			options.splice(styleIndex, 1);
