@@ -12,14 +12,14 @@ export async function getConfig() {
 	if (!authorMeta) {
 		throw new Error('Missing meta tags for configuration');
 	}
-	const npub = authorMeta.getAttribute('value') as string;
+	const npub = authorMeta.getAttribute('content') as string;
 
 	// Relays
 	// -------------------------------------------------------
 	let readRelays: string[] = [];
 	let writeRelays: string[] = [];
 	const relays = relaysMeta
-		?.getAttribute?.('value')
+		?.getAttribute?.('content')
 		?.split(',')
 		.map((url) => url.trim());
 	if (relays && relays.length > 0) {
@@ -35,13 +35,13 @@ export async function getConfig() {
 	// -------------------------------------------------------
 	const topics =
 		topicsMeta
-			?.getAttribute?.('value')
+			?.getAttribute?.('content')
 			?.split(',')
 			.map((item) => item.trim())
 			.filter((item) => item !== '') || [];
 
 	// Comments
-	const comments = (commentsMeta?.getAttribute?.('value') || 'yes') === 'yes' ? true : false;
+	const comments = (commentsMeta?.getAttribute?.('content') || 'yes') === 'yes' ? true : false;
 
 	// Blocks
 	// -------------------------------------------------------
@@ -107,7 +107,7 @@ export async function getConfig() {
 }
 
 function parseNumber(metaTag: Element | null, defaultValue: number): number {
-	const strValue = metaTag?.getAttribute?.('value');
+	const strValue = metaTag?.getAttribute?.('content');
 	if (!strValue) return defaultValue;
 	let value = parseFloat(strValue);
 	if (isNaN(value)) return defaultValue;
