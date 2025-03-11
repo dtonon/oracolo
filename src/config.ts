@@ -94,6 +94,16 @@ export async function getConfig() {
 		});
 	});
 
+	// Fallback if no blocks are present
+	if (blocks.length == 0) {
+		blocks.push({ type: 'articles', config: { count: 3, style: 'grid' } });
+		blocks.push({ type: 'notes', config: { count: 10, style: 'slide', minChars: 400 } });
+		blocks.push({ type: 'articles', config: { count: 5, style: 'list' } });
+		blocks.push({ type: 'images', config: { count: 10, style: 'grid' } });
+		blocks.push({ type: 'articles', config: { count: 10, style: 'grid' } });
+		blocks.push({ type: 'articles', config: { count: 40, style: 'grid' } });
+	}
+
 	return {
 		npub,
 		readRelays,
