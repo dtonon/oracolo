@@ -15,6 +15,7 @@
 	import { uniqueEventsStore } from './stores/uniqueEventsStore';
 
 	let events: NostrEvent[] = [];
+	let finishedLoading = false;
 
 	let npub = '';
 	let topics: string[] = [];
@@ -84,6 +85,7 @@
 						events = [...events, event].sort((a, b) => b.created_at - a.created_at);
 					},
 					onclose() {
+						finishedLoading = true;
 						console.log('Got', events.length, 'events');
 						console.log('Finish, subscription closed.');
 					}
@@ -128,4 +130,10 @@
 			<Images {events} {...block.config} />
 		{/if}
 	{/each}
+{/if}
+
+{#if tag.length > 0 && finishedLoading && uniqueEventsStore.getDisplayedEventsCount() < 12}
+	<Articles {events} count={40} style="grid" />
+	<Images {events} count={40} style="grid" />
+	<Notes {events} count={40} style="grid" />
 {/if}

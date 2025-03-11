@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { type NostrEvent } from '@nostr/tools/core';
-	import { uniqueEventsStore } from './stores/uniqueEventsStore';
 	import { filterEvents } from './blockUtils.js';
 	import { formatDate, getEventData } from './utils.js';
 

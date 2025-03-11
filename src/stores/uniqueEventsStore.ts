@@ -41,6 +41,14 @@ function createUniqueEventsStore() {
 
 			return isDisplayed;
 		},
+		getDisplayedEventsCount: () => {
+			let count = 0;
+			const unsubscribe = subscribe((store) => {
+				count = store.displayedEvents.length;
+			});
+			unsubscribe();
+			return count;
+		},
 		reset: () => set({ ids: new Set<string>(), displayedEvents: [] })
 	};
 }
