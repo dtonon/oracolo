@@ -345,7 +345,7 @@ html.dark .separator {
 		}
 
 		&.odd {
-			.items:first-child {
+			.item:first-child {
 				flex: 0 0 100%;
 			}
 		}
@@ -358,7 +358,7 @@ html.dark .separator {
 			}
 		}
 		&.odd {
-			img {
+			.item:first-child img {
 				height: 360px;
 			}
 		}
@@ -372,7 +372,7 @@ html.dark .separator {
 		}
 
 		&.odd {
-			img {
+			.item:first-child img {
 				height: auto;
 			}
 		}
