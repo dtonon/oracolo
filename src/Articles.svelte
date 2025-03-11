@@ -7,7 +7,7 @@
 	// Block-specific props
 	export let events: NostrEvent[] = [];
 	export let count = 2;
-	export let style = 'list';
+	export let style = 'grid';
 	export let minChars = 10;
 	export let ids: string[] = [];
 	const kinds = [30023];
