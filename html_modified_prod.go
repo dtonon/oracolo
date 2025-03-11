@@ -50,7 +50,7 @@ var (
 func renderModifiedHTML(w io.Writer, params Params) {
 	w.Write(step1)
 	for key, value := range params {
-		fmt.Fprintf(w, "    <meta name=\"%s\" value=\"%s\">\n", key, value)
+		fmt.Fprintf(w, "    <meta name=\"%s\" content=\"%s\">\n", key, value)
 	}
 	w.Write(step3)
 	w.Write(js)
