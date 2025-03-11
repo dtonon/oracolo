@@ -10,42 +10,43 @@ import (
 	"github.com/nbd-wtf/go-nostr/nip19"
 )
 
-type Params map[string]string
+type Params [][]string
 
-var metaSettings = [...]string{
-	"top-notes",
-	"short-notes-summary-max-chars",
-	"short-notes-min-chars",
-	"short-notes",
-	"topics",
-	"comments",
+var metaSettings = map[string]string{
+	"ba":       "block:articles",
+	"bn":       "block:notes",
+	"bi":       "block:images",
+	"topics":   "topics",
+	"comments": "block:comments",
 }
 
 func paramsFromSubdomain(subdomain string) (Params, error) {
-	params := make(Params, 3)
+	var params Params
 	for part := range strings.SplitSeq(subdomain, ".") {
 		if strings.HasPrefix(part, "npub1") {
 			_, _, err := nip19.Decode(part)
 			if err != nil {
 				return nil, fmt.Errorf("invalid npub '%s'", part)
 			}
-			params["author"] = part
+			params = append(params, []string{"author", part})
 		} else if strings.HasPrefix(part, "nprofile1") {
 			_, d, err := nip19.Decode(part)
 			if err != nil {
 				return nil, fmt.Errorf("invalid nprofile '%s'", part)
 			}
 			pointer := d.(nostr.ProfilePointer)
-			params["author"], _ = nip19.EncodePublicKey(pointer.PublicKey)
-			params["relays"] = strings.Join(pointer.Relays, ",")
+			var thisAuthor string
+			thisAuthor, _ = nip19.EncodePublicKey(pointer.PublicKey)
+			params = append(params, []string{"author", thisAuthor})
+			params = append(params, []string{"relays", strings.Join(pointer.Relays, ",")})
 		} else {
-			for _, key := range metaSettings {
+			for key, name := range metaSettings {
 				if strings.HasPrefix(part, key) {
 					value := part[len(key)+1:]
 					if key == "topics" {
 						value = strings.Replace(value, "-", ",", -1)
 					}
-					params[key] = value
+					params = append(params, []string{name, value})
 					break
 				}
 			}

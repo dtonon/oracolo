@@ -49,8 +49,8 @@ var (
 
 func renderModifiedHTML(w io.Writer, params Params) {
 	w.Write(step1)
-	for key, value := range params {
-		fmt.Fprintf(w, "    <meta name=\"%s\" content=\"%s\">\n", key, value)
+	for _, param := range params {
+		fmt.Fprintf(w, "    <meta name=\"%s\" content=\"%s\">\n", param[0], param[1])
 	}
 	w.Write(step3)
 	w.Write(js)
