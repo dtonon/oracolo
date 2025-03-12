@@ -44,7 +44,7 @@
 						<div class="summary">{@html event.summary}</div>
 					{/if} -->
 							<span class="date">{formatDate(event.created_at)}</span>
-							{#if ids.length > 0}
+							{#if ids.some((id) => event.id.endsWith(id))}
 								<span class="pinned">- 📌 Pinned</span>
 							{/if}
 						</a>
