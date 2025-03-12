@@ -11,6 +11,12 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		height: 80vh;
+		background-color: rgb(250, 250, 250);
+	}
+
+	:global(html.dark) .loader-container {
+		background-color: rgb(46, 46, 46);
 	}
 
 	.loader {
@@ -35,6 +41,11 @@
 		animation: loader-animation 2s linear infinite;
 	}
 
+	:global(html.dark) .loader:after {
+		border: 6px solid #373737;
+		border-color: #373737 transparent #373737 transparent;
+	}
+
 	@keyframes loader-animation {
 		0% {
 			transform: rotate(0deg);
@@ -48,10 +59,5 @@
 		to {
 			opacity: 1;
 		}
-	}
-
-	:global(html.dark) .loader:after {
-		border: 6px solid #373737;
-		border-color: #373737 transparent #373737 transparent;
 	}
 </style>
