@@ -41,7 +41,7 @@ export async function getConfig() {
 			.filter((item) => item !== '') || [];
 
 	// Comments
-	const comments = (commentsMeta?.getAttribute?.('content') || 'yes') === 'yes' ? true : false;
+	const comments = (commentsMeta?.getAttribute?.('content') || 'no') === 'yes' ? true : false;
 
 	// Blocks
 	// -------------------------------------------------------
