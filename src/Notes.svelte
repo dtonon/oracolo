@@ -12,6 +12,7 @@
 	export let style = 'list';
 	export let minChars = 0;
 	export let ids: string[] = [];
+	export let noMoreEvents = false;
 	const kinds = [1];
 
 	onMount(() => {
@@ -60,7 +61,7 @@
 					{/each}
 				</ul>
 			</div>
-		{:else if style === 'slide'}
+		{:else if style === 'slide' && noMoreEvents}
 			<Splide
 				class="slide"
 				options={{

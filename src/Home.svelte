@@ -95,22 +95,22 @@
 	});
 </script>
 
-{#if events.length > 20 || finishedLoading}
-	{#if profile}
-		<div class="header home">
-			<div class="external-link">
-				Profile: <a href="https://njump.me/{npub}">{npub.slice(0, 9) + '...' + npub.slice(-5)}</a>
-			</div>
-			<h1>
-				<div class="picture-container">
-					<!-- svelte-ignore a11y-missing-attribute -->
-					<img src={profile?.image} />
-				</div>
-				{profile?.shortName}
-			</h1>
+{#if profile}
+	<div class="header home">
+		<div class="external-link">
+			Profile: <a href="https://njump.me/{npub}">{npub.slice(0, 9) + '...' + npub.slice(-5)}</a>
 		</div>
-	{/if}
+		<h1>
+			<div class="picture-container">
+				<!-- svelte-ignore a11y-missing-attribute -->
+				<img src={profile?.image} />
+			</div>
+			{profile?.shortName}
+		</h1>
+	</div>
+{/if}
 
+{#if events.length > 20 || finishedLoading}
 	{#if topics.length > 0}
 		<div class="topic-wrapper">
 			<!-- svelte-ignore a11y-invalid-attribute -->
@@ -126,7 +126,7 @@
 			{#if block.type === 'articles'}
 				<Articles {events} {...block.config} />
 			{:else if block.type === 'notes'}
-				<Notes {events} {...block.config} />
+				<Notes {events} {...block.config} noMoreEvents={finishedLoading} />
 			{:else if block.type === 'images'}
 				<Images {events} {...block.config} />
 			{/if}

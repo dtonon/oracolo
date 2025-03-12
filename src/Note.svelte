@@ -91,5 +91,5 @@
 		<zap-threads anchor={nevent} relays={replyRelays.join(',')} />
 	{/if}
 {:else}
-	<Loading />
+	<!-- <Loading /> Temorary disabled, it creates scrolling issue -->
 {/if}

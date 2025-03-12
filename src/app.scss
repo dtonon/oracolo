@@ -146,6 +146,7 @@ pre {
 	}
 
 	&.note {
+		margin-bottom: 2rem;
 		.picture-container {
 			width: 1.5rem;
 			height: 1.5rem;
@@ -532,7 +533,6 @@ html.dark .block {
 
 .event-wrapper {
 	position: relative;
-	margin-top: 2rem;
 	overflow-wrap: break-word;
 
 	h1,
