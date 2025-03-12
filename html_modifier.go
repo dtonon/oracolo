@@ -17,7 +17,7 @@ var metaSettings = map[string]string{
 	"bn":       "block:notes",
 	"bi":       "block:images",
 	"topics":   "topics",
-	"comments": "block:comments",
+	"comments": "comments",
 }
 
 func paramsFromSubdomain(subdomain string) (Params, error) {
@@ -42,7 +42,10 @@ func paramsFromSubdomain(subdomain string) (Params, error) {
 		} else {
 			for key, name := range metaSettings {
 				if strings.HasPrefix(part, key) {
-					value := part[len(key)+1:]
+					value := "yes"
+					if key != "comments" {
+						value = part[len(key)+1:]
+					}
 					if key == "topics" {
 						value = strings.Replace(value, "-", ",", -1)
 					}
