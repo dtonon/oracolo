@@ -37,8 +37,8 @@
 							{/if}
 							<div>
 								<span class="date">{formatDate(event.created_at)}</span>
-								{#if ids.length > 0}
-									<span class="pinned">- 📌 Pinned </span>
+								{#if ids.some((id) => event.id.endsWith(id))}
+									<span class="pinned">- 📌 Pinned</span>
 								{/if}
 							</div>
 						</a>
