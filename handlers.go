@@ -1,13 +1,60 @@
 package main
 
 import (
+	_ "embed"
 	"net/http"
 	"strings"
 	"time"
 )
 
+//go:embed dist/homepage.html
+var homepageHTML []byte
+
+//go:embed dist/homepage.js
+var homepageJS []byte
+
+//go:embed dist/homepage.css
+var homepageCSS []byte
+
 func handleHome(w http.ResponseWriter, r *http.Request) {
-	homePage().Render(r.Context(), w)
+	// If requesting static files from /dist/, serve them
+	if strings.HasPrefix(r.URL.Path, "/dist/") {
+		if !isProduction() {
+			// In development, serve directly from disk
+			http.ServeFile(w, r, r.URL.Path[1:]) // Remove leading slash
+			return
+		}
+
+		// In production, serve from embedded files
+		switch r.URL.Path {
+		case "/dist/homepage.js":
+			w.Header().Set("Content-Type", "application/javascript")
+			w.Write(homepageJS)
+		case "/dist/homepage.css":
+			w.Header().Set("Content-Type", "text/css")
+			w.Write(homepageCSS)
+		default:
+			http.NotFound(w, r)
+		}
+		return
+	}
+
+	// Only serve homepage HTML for the root path
+	if r.URL.Path != "/" {
+		http.NotFound(w, r)
+		return
+	}
+
+	// Serve homepage HTML
+	w.Header().Set("Content-Type", "text/html")
+	if !isProduction() {
+		// In development, serve directly from disk
+		http.ServeFile(w, r, "dist/homepage.html")
+		return
+	}
+	// In production, serve from embedded file
+	log.Printf("homepageHTML: %s", homepageHTML)
+	w.Write(homepageHTML)
 }
 
 // this handles requests to https://npub1whatever.something-else.whatever-2.BASE_DOMAIN/
