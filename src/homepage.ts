@@ -1,4 +1,4 @@
-import './app.scss';
+import './homepage.scss';
 import Homepage from './Homepage.svelte';
 
 const app = new Homepage({
