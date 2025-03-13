@@ -17,6 +17,10 @@
 	let comments = false;
 
 	onMount(() => {
+		// Check if the URL has a download parameter
+		const urlParams = new URLSearchParams(window.location.search);
+		const shouldDownload = urlParams.get('download') === 'true';
+
 		getConfig().then(async ({ npub, readRelays, writeRelays, comments: configComments }) => {
 			relays = Array.from(new Set(readRelays.concat(writeRelays)));
 			comments = configComments;
@@ -38,6 +42,13 @@
 			if (profile) {
 				name = profile.metadata.name || profile.shortName;
 				picture = profile.image || null;
+
+				if (shouldDownload) {
+					// Short timeout to ensure the page has loaded
+					setTimeout(() => {
+						downloadHtmlApp();
+					}, 500);
+				}
 			} else {
 				missingConfig = true;
 			}
