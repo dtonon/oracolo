@@ -1017,15 +1017,7 @@
 	onMount(() => {
 		baseDomain = getBaseDomain();
 
-		blocks = [
-			{ type: 'articles', count: 3, style: 'grid' },
-			{ type: 'notes', count: 10, style: 'slide', minChars: 400 },
-			{ type: 'articles', count: 2, style: 'grid' },
-			{ type: 'images', count: 10, style: 'grid' },
-			{ type: 'articles', count: 10, style: 'list' },
-			{ type: 'articles', count: 2, style: 'grid' },
-			{ type: 'articles', count: 10, style: 'list' }
-		];
+		blocks = [];
 		updateDomainPreview();
 	});
 </script>
@@ -1152,7 +1144,56 @@
 
 			<section class="blocks-section">
 				<h2>Add content blocks</h2>
-				<p>Design your homepage structure with content blocks</p>
+
+				{#if blocks.length > 0}
+					<div class="blocks-list" role="list">
+						<h3>Your blocks <span class="blocks-hint">(drag to reorder)</span></h3>
+
+						{#each blocks as block, index}
+							<div
+								class="block-item"
+								draggable="true"
+								role="listitem"
+								on:dragstart={() => handleDragStart(index)}
+								on:dragover={(e) => handleDragOver(index, e)}
+								on:drop={handleDrop}
+								on:dragend={handleDragEnd}
+								class:dragging={draggedBlockIndex === index}
+								class:drop-target={dropTargetIndex === index && draggedBlockIndex !== index}
+							>
+								<div class="drag-handle">
+									<svg viewBox="0 0 20 20" width="20" height="20">
+										<path
+											d="M7 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 2zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 14zm6-8a2 2 0 1 0-.001-4.001A2 2 0 0 0 13 6zm0 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 14z"
+										></path>
+									</svg>
+								</div>
+								<div class="block-type">{block.type}</div>
+								<div class="block-details">
+									{#if block.isPinned}
+										<span class="pinned-badge">Pinned</span>
+										{#if block.pinnedEvents && block.pinnedEvents.length > 0}
+											• {block.pinnedEvents.length} event{block.pinnedEvents.length > 1 ? 's' : ''}
+											{#if block.pinnedEvents.length === 1}
+												<span class="event-id-preview" title={block.pinnedEvents[0]}
+													>({shortenEventId(block.pinnedEvents[0])})</span
+												>
+											{/if}
+										{/if}
+									{:else}
+										{block.count} items • {block.style} style
+										{#if block.minChars}
+											• min {block.minChars} chars
+										{/if}
+									{/if}
+								</div>
+								<button class="remove-button" on:click={() => removeBlock(index)}>×</button>
+							</div>
+						{/each}
+					</div>
+				{:else}
+					<p>Design your homepage structure with content blocks</p>
+				{/if}
 
 				<div class="add-block">
 					<h3>Add a new block</h3>
@@ -1210,6 +1251,9 @@
 												{#if pinnedPreviews[id]?.imageUrl}
 													<div class="pinned-preview-container image-preview">
 														<img src={pinnedPreviews[id].imageUrl} alt="Preview" />
+														<button class="remove-button" on:click={() => removePinnedId(id)}
+															>×</button
+														>
 													</div>
 												{:else}
 													<div
@@ -1226,16 +1270,11 @@
 																<div class="type-mismatch-indicator">Type mismatch!</div>
 															{/if}
 														</div>
+														<button class="remove-button" on:click={() => removePinnedId(id)}
+															>×</button
+														>
 													</div>
 												{/if}
-												<div class="pinned-event-details">
-													<div class="pinned-event-id" title={pinnedPreviews[id]?.entityCode || id}>
-														{shortenEventId(pinnedPreviews[id]?.entityCode || id)}
-													</div>
-													<button class="remove-button" on:click={() => removePinnedId(id)}
-														>×</button
-													>
-												</div>
 											</div>
 										{/each}
 									</div>
@@ -1288,54 +1327,6 @@
 						</button>
 					</div>
 				</div>
-
-				{#if blocks.length > 0}
-					<div class="blocks-list" role="list">
-						<h3>Your blocks <span class="blocks-hint">(drag to reorder)</span></h3>
-
-						{#each blocks as block, index}
-							<div
-								class="block-item"
-								draggable="true"
-								role="listitem"
-								on:dragstart={() => handleDragStart(index)}
-								on:dragover={(e) => handleDragOver(index, e)}
-								on:drop={handleDrop}
-								on:dragend={handleDragEnd}
-								class:dragging={draggedBlockIndex === index}
-								class:drop-target={dropTargetIndex === index && draggedBlockIndex !== index}
-							>
-								<div class="drag-handle">
-									<svg viewBox="0 0 20 20" width="20" height="20">
-										<path
-											d="M7 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 2zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 14zm6-8a2 2 0 1 0-.001-4.001A2 2 0 0 0 13 6zm0 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 14z"
-										></path>
-									</svg>
-								</div>
-								<div class="block-type">{block.type}</div>
-								<div class="block-details">
-									{#if block.isPinned}
-										<span class="pinned-badge">Pinned</span>
-										{#if block.pinnedEvents && block.pinnedEvents.length > 0}
-											• {block.pinnedEvents.length} event{block.pinnedEvents.length > 1 ? 's' : ''}
-											{#if block.pinnedEvents.length === 1}
-												<span class="event-id-preview" title={block.pinnedEvents[0]}
-													>({shortenEventId(block.pinnedEvents[0])})</span
-												>
-											{/if}
-										{/if}
-									{:else}
-										{block.count} items • {block.style} style
-										{#if block.minChars}
-											• min {block.minChars} chars
-										{/if}
-									{/if}
-								</div>
-								<button class="remove-button" on:click={() => removeBlock(index)}>×</button>
-							</div>
-						{/each}
-					</div>
-				{/if}
 			</section>
 
 			<section class="preview-section">
