@@ -52,7 +52,9 @@
 						<li>
 							<a href={`#${event.id}`}>
 								<h2>{event.title}</h2>
-								<div class="summary">{event.summary}</div>
+								{#if event.summary}
+									<div class="summary">{event.summary}</div>
+								{/if}
 							</a>
 						</li>
 					{/each}
