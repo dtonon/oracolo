@@ -1029,7 +1029,7 @@
 
 	function startBlogDownload() {
 		try {
-			const blogUrl = `https://${domainPreview}.${baseDomain}?download=true`;
+			const blogUrl = `http://${domainPreview}.${baseDomain}?download=true`;
 			window.open(blogUrl, '_blank');
 		} catch (error) {
 			console.error('Error opening blog URL:', error);
@@ -1396,7 +1396,7 @@
 
 					<div class="action-buttons">
 						<a
-							href={`https://${domainPreview}.${baseDomain}`}
+							href={`http://${domainPreview}.${baseDomain}`}
 							target="_blank"
 							class="secondary-button"
 						>
