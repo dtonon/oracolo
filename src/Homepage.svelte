@@ -1099,34 +1099,35 @@
 						/>
 						<button on:click={addTopic}>Add</button>
 					</div>
-					<p class="input-help">Example: nostr, bitcoin, programming</p>
 
 					{#if topics.length > 0}
 						<div class="topics-list" role="list">
-							<div class="topics-hint">(drag to reorder)</div>
-							{#each topics as topic, index}
-								<div
-									class="topic-tag"
-									draggable="true"
-									role="listitem"
-									on:dragstart={(e) => handleTopicDragStart(e, index)}
-									on:dragover={(e) => handleTopicDragOver(e, index)}
-									on:drop={handleTopicDrop}
-									on:dragend={handleTopicDragEnd}
-									class:dragging={draggedTopicIndex === index}
-									class:drop-target={dragOverTopicIndex === index && draggedTopicIndex !== index}
-								>
-									<div class="drag-handle">
-										<svg viewBox="0 0 20 20" width="12" height="12">
-											<path
-												d="M7 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 2zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 14zm6-8a2 2 0 1 0-.001-4.001A2 2 0 0 0 13 6zm0 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 14z"
-											></path>
-										</svg>
+							<div class="wrapper">
+								{#each topics as topic, index}
+									<div
+										class="topic-tag"
+										draggable="true"
+										role="listitem"
+										on:dragstart={(e) => handleTopicDragStart(e, index)}
+										on:dragover={(e) => handleTopicDragOver(e, index)}
+										on:drop={handleTopicDrop}
+										on:dragend={handleTopicDragEnd}
+										class:dragging={draggedTopicIndex === index}
+										class:drop-target={dragOverTopicIndex === index && draggedTopicIndex !== index}
+									>
+										<div class="drag-handle">
+											<svg viewBox="0 0 20 20" width="12" height="12">
+												<path
+													d="M7 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 2zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 14zm6-8a2 2 0 1 0-.001-4.001A2 2 0 0 0 13 6zm0 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 14z"
+												></path>
+											</svg>
+										</div>
+										<span class="topic-text">{topic}</span>
+										<button class="remove-button" on:click={() => removeTopic(topic)}>×</button>
 									</div>
-									<span class="topic-text">{topic}</span>
-									<button class="remove-button" on:click={() => removeTopic(topic)}>×</button>
-								</div>
-							{/each}
+								{/each}
+							</div>
+							<div class="topics-hint">(drag to reorder)</div>
 						</div>
 					{/if}
 				</div>
@@ -1228,12 +1229,11 @@
 										id="pinned-id"
 										type="text"
 										bind:value={newPinnedId}
-										placeholder="Enter event IDs, note1... or nevent1..."
+										placeholder="Enter event IDs, nevent1, naddr1..."
 										on:keydown={(e) => e.key === 'Enter' && addPinnedId()}
 									/>
 									<button on:click={addPinnedId}>Add</button>
 								</div>
-								<p class="input-help">Example: nevent1xyz, naddr1xyz, raw hex ID</p>
 
 								<!-- Error message area for type mismatch or invalid IDs -->
 								{#if pinnedEventError}

@@ -103,6 +103,7 @@ section {
   
   input {
     flex: 1;
+    min-width: 0;
     padding: 0.8rem 1rem;
     border: 1px solid #ddd;
     border-radius: 4px 0 0 4px;
@@ -122,6 +123,7 @@ section {
     border-radius: 0 4px 4px 0;
     cursor: pointer;
     font-weight: bold;
+    flex-shrink: 0;
     
     &:hover {
       background-color: darken(rgb(227, 42, 109), 10%);
@@ -216,7 +218,7 @@ section {
     .default-avatar {
       width: 100%;
       height: 100%;
-      background-color: #ccc;
+      background-color: #f0f0f0;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -259,18 +261,31 @@ section {
 
 .topics-list {
   display: flex;
+  justify-content: space-between;
   flex-wrap: wrap;
   gap: 0.5rem;
   margin-top: 1rem;
   position: relative;
+
+  @media (max-width: 576px) {
+    display: block;
+  }
+
+  .wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
   
   .topics-hint {
-    position: absolute;
-    top: -20px;
-    right: 0;
     font-size: 0.8rem;
     color: #777;
     font-style: italic;
+    white-space: nowrap;
+
+    @media (max-width: 576px) {
+      margin-top: 1rem;
+    }
   }
   
   .topic-tag {
@@ -349,7 +364,7 @@ section {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #ccc;
+    background-color: #f0f0f0;
     transition: .4s;
     border-radius: 34px;
     
@@ -513,8 +528,6 @@ section {
 }
 
 .add-block {
-  background-color: #f0f0f0;
-  padding: 1.5rem;
   border-radius: 8px;
   margin-top: 2rem;
   
@@ -522,6 +535,8 @@ section {
     margin-top: 0;
     margin-bottom: 1rem;
     font-size: 1.2rem;
+    border-bottom: 4px solid #f0f0f0;
+    padding-bottom: 0.5rem;
   }
   
   .block-options {
@@ -876,7 +891,6 @@ html.dark {
     }
   }
   
-  .add-block,
   .domain-preview {
     background-color: #333;
   }
@@ -921,6 +935,10 @@ html.dark {
         }
       }
     }
+  }
+
+  .add-block h3 {
+    border-bottom: 4px solid #333;
   }
   
   .block-item {
