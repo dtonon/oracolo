@@ -15,7 +15,36 @@ body {
 	padding: 0;
 	font-family: Arial, Helvetica, sans-serif;
 	color: #242424;
-	background-color: #ffffff;
+	background-color: #f1f1f1;
+}
+
+.input-group input:focus-visible,
+.add-block .block-options .option-group input:focus-visible,
+.add-block .block-options .option-group select:focus-visible,
+select:focus-visible {
+	outline: 1px;
+	border: 1px solid #242424;
+}
+
+html.dark {
+	.input-group input,
+	.add-block .block-options .option-group input,
+	.add-block .block-options .option-group select,
+	select {
+		background-color: #333;
+		border-color: #444;
+		color: #f5f5f5;
+	}
+}
+
+html.dark {
+	.input-group input:focus-visible,
+	.add-block .block-options .option-group input:focus-visible,
+	.add-block .block-options .option-group select:focus-visible,
+	select:focus-visible {
+		outline: 1px;
+		border: 1px solid #7f7f7f;
+	}
 }
 
 html.dark body {
@@ -268,7 +297,8 @@ section {
 	}
 }
 
-.options-section .option {
+.options-section .option,
+.blocks-section .option {
 	margin-bottom: 2rem;
 
 	&:last-child {
@@ -1012,13 +1042,6 @@ html.dark {
 
 	.input-note {
 		background-color: #333;
-	}
-
-	select,
-	input {
-		background-color: #333;
-		border-color: #444 !important;
-		color: #f5f5f5;
 	}
 
 	.extra-options {
