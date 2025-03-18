@@ -113,6 +113,9 @@
 		pinnedPreviews = {};
 		pinnedEventError = '';
 		updateDomainPreview();
+		setTimeout(() => {
+			npubInput.focus();
+		});
 	}
 
 	async function searchUser() {
@@ -1038,6 +1041,8 @@
 	// Initialize with default blocks
 	// ------------------------------------------------------------
 
+	let npubInput: HTMLInputElement;
+
 	onMount(() => {
 		baseDomain = getBaseDomain();
 
@@ -1052,6 +1057,10 @@
 			// Set the npub input and trigger search
 			npub = npubParam;
 			searchUser();
+		}
+
+		if (npubInput) {
+			npubInput.focus();
 		}
 	});
 </script>
@@ -1074,6 +1083,7 @@
 					<input
 						type="text"
 						bind:value={npub}
+						bind:this={npubInput}
 						placeholder="npub1..."
 						class:error
 						on:keydown={(e) => e.key === 'Enter' && searchUser()}
