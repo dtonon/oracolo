@@ -48,7 +48,7 @@ h1 {
   padding: 2rem;
   max-width: 800px;
   margin: 0 auto;
-  min-height: 100vh;
+  min-height: 80vh;
   display: flex;
   flex-direction: column;
 
@@ -172,7 +172,6 @@ section {
 
 .user-info-container {
   margin-top: 1.5rem;
-  min-height: 5.5rem; /* Total height of user-info with padding */
 }
 
 .user-info {

@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-//go:embed dist/homepage.html
+//go:embed src/homepage.html
 var homepageHTML []byte
 
 //go:embed dist/homepage.js
@@ -49,7 +49,7 @@ func handleHome(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
 	if !isProduction() {
 		// In development, serve directly from disk
-		http.ServeFile(w, r, "dist/homepage.html")
+		http.ServeFile(w, r, "src/homepage.html")
 		return
 	}
 	// In production, serve from embedded file
