@@ -2,7 +2,7 @@
 	"private": true,
 	"type": "module",
 	"dependencies": {
-		"@nostr/gadgets": "npm:@jsr/nostr__gadgets@^0.0.10",
+		"@nostr/gadgets": "npm:@jsr/nostr__gadgets@^0.0.14",
 		"@nostr/tools": "npm:@jsr/nostr__tools@^2.10.4",
 		"@splidejs/svelte-splide": "^0.2.9",
 		"@tsconfig/svelte": "^5.0.2",
