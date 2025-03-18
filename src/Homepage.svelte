@@ -1029,6 +1029,16 @@
 
 		blocks = [];
 		updateDomainPreview();
+
+		// Check for npub query parameter
+		const url = new URL(window.location.href);
+		const npubParam = url.searchParams.get('npub');
+
+		if (npubParam && isValidNpub(npubParam)) {
+			// Set the npub input and trigger search
+			npub = npubParam;
+			searchUser();
+		}
 	});
 </script>
 
