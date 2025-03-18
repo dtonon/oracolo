@@ -32,26 +32,15 @@
 			nevent = neventEncode({ id });
 			comments = configComments;
 
-			let subscription = pool.subscribeMany(
-				writeRelays,
-				[
-					{
-						ids: [id]
-					}
-				],
-				{
-					onevent: async (event) => {
-						console.log('Received event:', event);
-						note = getEventData(event);
-						documentTitle.set(note.title);
-						renderedContent = await processAll(note);
-					},
-					oneose() {
-						console.log('No subscribers left. Closing subscription.');
-						subscription.close();
-					}
-				}
-			);
+			let event = await pool.get(writeRelays, { ids: [id] });
+			if (event) {
+				console.log('Received event:', event);
+				note = getEventData(event);
+				documentTitle.set(note.title);
+				renderedContent = await processAll(note);
+			} else {
+				console.log(`Didn't get any event for ${id} query.`);
+			}
 		});
 	});
 
