@@ -4,7 +4,7 @@
 
 	import { getConfig } from './config';
 	import { getProfile, downloadHtmlApp } from './utils';
-	import Home from './Home.svelte';
+	import Home from './Blog.svelte';
 	import Note from './Note.svelte';
 	import ThemeSwitch from './ThemeSwitch.svelte';
 
