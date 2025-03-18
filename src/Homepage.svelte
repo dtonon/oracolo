@@ -102,6 +102,19 @@
 		return `${url.hostname}${url.port ? ':' + url.port : ''}`;
 	}
 
+	function resetUserSearch() {
+		userFound = false;
+		npub = '';
+		error = '';
+		blocks = [];
+		topics = [];
+		enableComments = false;
+		newpinnedEvents = [];
+		pinnedPreviews = {};
+		pinnedEventError = '';
+		updateDomainPreview();
+	}
+
 	async function searchUser() {
 		if (!isValidNpub(npub)) {
 			error = 'Please enter a valid npub';
@@ -1055,22 +1068,24 @@
 
 	<div class="wizard">
 		<section class="user-section">
-			<h2>Enter your Nostr npub</h2>
-			<div class="input-group">
-				<input
-					type="text"
-					bind:value={npub}
-					placeholder="npub1..."
-					class:error
-					on:keydown={(e) => e.key === 'Enter' && searchUser()}
-				/>
-				<button on:click={searchUser} disabled={isLoading}>
-					{isLoading ? 'Searching...' : 'Search'}
-				</button>
-			</div>
+			{#if !userFound}
+				<h2>Enter your Nostr npub</h2>
+				<div class="input-group">
+					<input
+						type="text"
+						bind:value={npub}
+						placeholder="npub1..."
+						class:error
+						on:keydown={(e) => e.key === 'Enter' && searchUser()}
+					/>
+					<button on:click={searchUser} disabled={isLoading}>
+						{isLoading ? 'Searching...' : 'Start'}
+					</button>
+				</div>
 
-			{#if error}
-				<p class="input-error">{error}</p>
+				{#if error}
+					<p class="input-error">{error}</p>
+				{/if}
 			{/if}
 
 			<div class="user-info-container">
@@ -1085,6 +1100,7 @@
 						</div>
 					</div>
 				{:else if userFound}
+					<h2>Hello {userName || 'Nostr User'}!</h2>
 					<div class="user-info">
 						<div class="user-picture">
 							{#if userPicture}
@@ -1098,6 +1114,7 @@
 							<span class="user-id">{npub}</span>
 							<span class="user-id">{userWriteRelays.join(', ')}</span>
 						</div>
+						<button class="reset-button" on:click={resetUserSearch}>×</button>
 					</div>
 				{/if}
 			</div>

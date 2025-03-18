@@ -175,11 +175,8 @@ section {
 	margin-top: 0.5rem;
 }
 
-.user-info-container {
-	margin-top: 1.5rem;
-}
-
 .user-info {
+	position: relative;
 	display: flex;
 	align-items: center;
 	padding: 1rem;
@@ -245,10 +242,38 @@ section {
 			overflow-wrap: anywhere;
 		}
 	}
+
+	.reset-button {
+		position: absolute;
+		top: 5px;
+		right: 5px;
+		background: transparent;
+		border: none;
+		color: #333;
+		font-size: 20px;
+		font-weight: bold;
+		cursor: pointer;
+		width: 30px;
+		height: 30px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 50%;
+		padding: 0;
+		transition: background-color 0.2s;
+
+		&:hover {
+			background-color: rgba(0, 0, 0, 0.1);
+		}
+	}
 }
 
 .options-section .option {
 	margin-bottom: 2rem;
+
+	&:last-child {
+		margin-bottom: 0;
+	}
 
 	h3 {
 		margin-top: 0;
@@ -896,6 +921,14 @@ html.dark {
 		.loading-text {
 			background-color: #444;
 		}
+
+		.reset-button {
+			color: #f5f5f5;
+
+			&:hover {
+				background-color: rgba(255, 255, 255, 0.1);
+			}
+		}
 	}
 
 	.domain-preview {
@@ -1026,5 +1059,15 @@ html.dark {
 
 	footer p {
 		color: #777;
+	}
+
+	.switch {
+		.slider {
+			background-color: #777;
+		}
+	}
+
+	input:checked + .slider {
+		background-color: rgb(227, 42, 109);
 	}
 }
