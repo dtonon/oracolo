@@ -42,8 +42,6 @@
 		pinnedEvents?: string[];
 	}
 
-	const bootstrapRelays = ['wss://relay.damus.io', 'wss://nos.lol', 'wss://purplepag.es'];
-
 	// This tracks whether we need to update the previews when the block type changes
 	let previousBlockType: BlockType = 'articles';
 	let previousSelectionMode: SelectionMode = 'automatic';
@@ -132,11 +130,6 @@
 				// Get the user's write relays
 				const rl = (await loadRelayList(decode(npub).data as string)).items;
 				userWriteRelays = rl.filter((r) => r.write).map((r) => r.url);
-
-				// Ensure we have at least some defaults if no write relays found
-				if (userWriteRelays.length === 0) {
-					userWriteRelays = bootstrapRelays;
-				}
 
 				updateDomainPreview();
 			} else {
@@ -519,9 +512,9 @@
 		const eventData = extractEventData(originalId);
 
 		try {
-			// Collect relays from the extracted data and merge with user write relays and bootstrap relays
+			// Collect relays from the extracted data and merge with user write relays
 			let eventRelays: string[] = eventData.relays || [];
-			const relays = [...new Set([...eventRelays, ...userWriteRelays, ...bootstrapRelays])];
+			const relays = [...new Set([...eventRelays, ...userWriteRelays])];
 
 			// Use the shared blockTypeToKind for later type checking, but don't restrict the search
 
