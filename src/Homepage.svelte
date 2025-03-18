@@ -1355,69 +1355,75 @@
 				</div>
 			</section>
 
-			<section class="preview-section">
-				<h2>Your blog is ready!</h2>
+			{#if blocks.length > 0}
+				<section class="preview-section">
+					<h2>Your blog is ready!</h2>
 
-				<div class="domain-preview">
-					<code>http://{domainPreview}.{baseDomain}</code>
-				</div>
-
-				<div class="action-buttons">
-					<a
-						href={`http://${domainPreview}.${baseDomain}`}
-						target="_blank"
-						class="secondary-button"
-					>
-						View the blog preview
-					</a>
-				</div>
-
-				<div class="extra-options">
-					<div class="download-option">
-						<p>Download a single HTML file that run the full blog and upload it where you like</p>
-						<button on:click={() => startBlogDownload()} class="download-button">Download</button>
+					<div class="domain-preview">
+						<code>http://{domainPreview}.{baseDomain}</code>
 					</div>
 
-					<div class="dns-option">
-						<p>
-							Do you have a domain with DNS management?<br />
-							Point it to your blog effortlessly
-						</p>
-						<div class="input-group domain-input">
-							<input
-								type="text"
-								bind:value={userDomain}
-								on:input={handleDomainInput}
-								placeholder="Enter your domain (e.g. www.myblog.com)"
-							/>
+					<div class="action-buttons">
+						<a
+							href={`http://${domainPreview}.${baseDomain}`}
+							target="_blank"
+							class="secondary-button"
+						>
+							View the blog preview
+						</a>
+					</div>
+
+					<div class="extra-options">
+						<div class="download-option">
+							<p>Download a single HTML file that run the full blog and upload it where you like</p>
+							<button on:click={() => startBlogDownload()} class="download-button">Download</button>
 						</div>
 
-						{#if userDomain && showDomainValidation}
-							{#if processSubdomain(userDomain)}
-								<div class="dns-instructions" transition:fade={{ duration: 500 }}>
-									<p>Use this configuration in your DNS:</p>
-									<pre>{processSubdomain(userDomain)} IN CNAME {domainPreview}.{baseDomain}</pre>
-								</div>
-							{:else}
-								<div class="dns-error" transition:fade={{ duration: 500 }}>
-									<p>
-										Please enter a valid domain with a subdomain (e.g., "www.example.com",
-										"blog.yourdomain.net").
-									</p>
-									<p>
-										CNAME records can only be set for subdomains, not for root domains like
-										"example.com".
-									</p>
-									<p>
-										Make sure your domain includes at least one subdomain and a TLD (e.g., .com,
-										.org, .net).
-									</p>
-								</div>
+						<div class="dns-option">
+							<p>
+								Do you have a domain with DNS management?<br />
+								Point it to your blog effortlessly
+							</p>
+							<div class="input-group domain-input">
+								<input
+									type="text"
+									bind:value={userDomain}
+									on:input={handleDomainInput}
+									placeholder="Enter your domain (e.g. www.myblog.com)"
+								/>
+							</div>
+
+							{#if userDomain && showDomainValidation}
+								{#if processSubdomain(userDomain)}
+									<div class="dns-instructions" transition:fade={{ duration: 500 }}>
+										<p>Use this configuration in your DNS:</p>
+										<pre>{processSubdomain(userDomain)} IN CNAME {domainPreview}.{baseDomain}</pre>
+									</div>
+								{:else}
+									<div class="dns-error" transition:fade={{ duration: 500 }}>
+										<p>
+											Please enter a valid domain with a subdomain (e.g., "www.example.com",
+											"blog.yourdomain.net").
+										</p>
+										<p>
+											CNAME records can only be set for subdomains, not for root domains like
+											"example.com".
+										</p>
+										<p>
+											Make sure your domain includes at least one subdomain and a TLD (e.g., .com,
+											.org, .net).
+										</p>
+									</div>
+								{/if}
 							{/if}
-						{/if}
+						</div>
 					</div>
-				</div>
-			</section>
+				</section>
+			{:else}
+				<section class="preview-section">
+					Add some blocks to complete the configuration
+				</section>
+			{/if}
 		{/if}
 	</div>
 
