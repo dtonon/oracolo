@@ -6,7 +6,6 @@
 	import { pool } from '@nostr/gadgets/global';
 	import { neventEncode } from '@nostr/tools/nip19';
 	import 'zapthreads';
-	import Loading from './Loading.svelte';
 	import { type NostrUser } from '@nostr/gadgets/metadata';
 
 	let replyRelays: string[];

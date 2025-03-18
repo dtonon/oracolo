@@ -24,18 +24,29 @@ export type EventData = {
 	content: string;
 };
 
+const dateFormatter = new Intl.DateTimeFormat('en-US', {
+	day: '2-digit',
+	month: 'long',
+	year: 'numeric'
+});
+
 export function getEventData(event: NostrEvent): EventData {
-	let extractedTitle: string;
+	let extractedTitle: string | undefined;
 	let extractedSummary: string | undefined;
 	const extractedImages: string[] = [];
 	let extractedImage: string | undefined;
 
 	if (event.kind == 30023) {
-		extractedTitle = event?.tags.find(([k]) => k === 'title')?.[1] || 'No title';
-		extractedSummary = event?.tags.find(([k]) => k === 'summary')?.[1] || undefined;
-		extractedImage = event?.tags.find(([k]) => k === 'image')?.[1] || undefined;
+		extractedTitle =
+			event.tags.find(([k]) => k === 'title')?.[1] ||
+			'Article of ' + dateFormatter.format(new Date(event.created_at * 1000));
+
+		extractedSummary = event.tags.find(([k]) => k === 'summary')?.[1] || undefined;
+		extractedImage = event.tags.find(([k]) => k === 'image')?.[1] || undefined;
 	} else if (event.kind == 20) {
-		extractedTitle = event?.tags.find(([k]) => k === 'title')?.[1] || undefined;
+		extractedTitle =
+			event.tags.find(([k]) => k === 'title')?.[1] ||
+			'Photo of ' + dateFormatter.format(new Date(event.created_at * 1000));
 		extractedSummary = event.content;
 		event.tags.forEach((tag) => {
 			if (tag[0] === 'imeta') {
@@ -46,10 +57,8 @@ export function getEventData(event: NostrEvent): EventData {
 		extractedImage = extractedImages[0];
 	} else {
 		extractedTitle =
-			'Note of ' +
-			new Intl.DateTimeFormat('en-US', { day: '2-digit', month: 'long', year: 'numeric' }).format(
-				new Date(event.created_at * 1000)
-			);
+			event.tags.find(([k]) => k === 'subject')?.[1] ||
+			'Note of ' + dateFormatter.format(new Date(event.created_at * 1000));
 		extractedSummary = event.content.slice(0, 200) + '...';
 	}
 

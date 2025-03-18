@@ -235,10 +235,15 @@
 
 	let pinnedPreviews: { [key: string]: PinnedEventPreview } = {};
 
-	const blockTypeToKind = {
-		articles: 30023,
-		notes: 1,
-		images: 20
+	const blockTypeToKind = (type: BlockType) => {
+		switch (type) {
+			case 'articles':
+				return 30023;
+			case 'notes':
+				return 1;
+			case 'images':
+				return 20;
+		}
 	};
 
 	async function addPinnedId() {
@@ -290,7 +295,7 @@
 
 					// Check existing previews for matching event IDs
 					const duplicateEntry = Object.entries(pinnedPreviews).find(
-						([previewKey, preview]) => preview && preview.id === eventData.eventId
+						([_, preview]) => preview && preview.id === eventData.eventId
 					);
 
 					if (duplicateEntry) {
@@ -333,7 +338,7 @@
 					// Check if the event is of the expected type
 					if (!result.typeValid) {
 						// Set a more user-friendly error message explaining the type mismatch
-						pinnedEventError = `Type mismatch: Found ${result.detectedType} (kind ${result.event.kind}) but expected ${newBlockType} (kind ${blockTypeToKind[newBlockType]})`;
+						pinnedEventError = `Type mismatch: Found ${result.detectedType} (kind ${result.event!.kind}) but expected ${newBlockType} (kind ${blockTypeToKind(newBlockType)})`;
 						console.warn(pinnedEventError);
 
 						// Remove from IDs and previews - we don't want to add events of the wrong type
@@ -365,7 +370,7 @@
 				else if (eventData.type === 'naddr') {
 					// Check existing previews for matching addressable parameters
 					const duplicateEntry = Object.entries(pinnedPreviews).find(
-						([previewKey, preview]) =>
+						([_, preview]) =>
 							preview &&
 							preview.identifierCode === eventData.dTag &&
 							preview.kind === eventData.kind &&
@@ -408,8 +413,6 @@
 
 					// For naddr, we need to fetch the event to get its ID first
 					// Then we can check for duplicates with the actual ID
-					const tempKey = `naddr:${id}`;
-
 					// First fetch the event to get its ID - we do this BEFORE adding anything to the UI
 					const result = await fetchPinnedEventPreview(id, newBlockType);
 
@@ -423,7 +426,7 @@
 					// Check if the event is of the expected type
 					if (!result.typeValid) {
 						// Set a more user-friendly error message explaining the type mismatch
-						pinnedEventError = `Type mismatch: Found ${result.detectedType} (kind ${result.event.kind}) but expected ${newBlockType} (kind ${blockTypeToKind[newBlockType]})`;
+						pinnedEventError = `Type mismatch: Found ${result.detectedType} (kind ${result.event!.kind}) but expected ${newBlockType} (kind ${blockTypeToKind(newBlockType)})`;
 						console.warn(pinnedEventError);
 
 						// Skip this event entirely since it's the wrong type
@@ -440,7 +443,7 @@
 
 					// Now check if this event ID is already in our list (duplicate check with real ID)
 					const duplicateById = Object.entries(pinnedPreviews).find(
-						([existingKey, preview]) => preview && !preview.isLoading && preview.id === event.id // Match on actual event ID
+						([_, preview]) => preview && !preview.isLoading && preview.id === event.id // Match on actual event ID
 					);
 
 					if (duplicateById) {
@@ -475,7 +478,7 @@
 				}
 				idsAdded = true;
 			} catch (error) {
-				pinnedEventError = `Error processing ID ${id}: ${error.message}`;
+				pinnedEventError = `Error processing ID ${id}: ${(error as any).message}`;
 				console.error(pinnedEventError);
 			}
 		}
@@ -545,7 +548,7 @@
 			let foundEvent = false;
 
 			// Create a promise that will resolve when we get the event or time out
-			return new Promise<PinnedEventPreviewResult>((resolve, reject) => {
+			return new Promise<PinnedEventPreviewResult>((resolve) => {
 				// Cleanup timeout to avoid hanging connections
 				const timeoutId = setTimeout(() => {
 					if (!foundEvent) {
@@ -601,7 +604,7 @@
 							}
 
 							// Check if this is the expected type
-							const expectedKind = type ? blockTypeToKind[type] : undefined;
+							const expectedKind = type ? blockTypeToKind(type) : undefined;
 							typeValid = event.kind === expectedKind;
 
 							// If wrong type, just log it - we'll handle the UI in addPinnedId
@@ -623,7 +626,7 @@
 						} catch (error) {
 							console.error('Error processing event:', error);
 							resolve({
-								error: 'Error processing event: ' + error.message
+								error: 'Error processing event: ' + (error as any).message
 							});
 						}
 
@@ -645,7 +648,7 @@
 		} catch (error) {
 			console.error('Error in fetchPinnedEventPreview:', error);
 			return {
-				error: 'Error: ' + (error.message || 'Unknown error')
+				error: 'Error: ' + ((error as any).message || 'Unknown error')
 			};
 		}
 	}
@@ -1006,7 +1009,7 @@
 			window.open(blogUrl, '_blank');
 		} catch (error) {
 			console.error('Error opening blog URL:', error);
-			alert(`Failed to open blog: ${error.message}`);
+			alert(`Failed to open blog: ${(error as any).message}`);
 		}
 	}
 
