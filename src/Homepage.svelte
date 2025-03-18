@@ -730,6 +730,20 @@
 	// Blocks handling
 	// ------------------------------------------------------------
 
+	function addStadardBlocksConfig(event: { preventDefault: () => void }) {
+		event.preventDefault();
+		blocks = [
+			{ type: 'articles', count: 3, style: 'grid' },
+			{ type: 'notes', count: 10, style: 'slide', minChars: 400 },
+			{ type: 'articles', count: 2, style: 'grid' },
+			{ type: 'images', count: 10, style: 'grid' },
+			{ type: 'articles', count: 10, style: 'list' },
+			{ type: 'articles', count: 2, style: 'grid' },
+			{ type: 'articles', count: 10, style: 'list' }
+		];
+		updateDomainPreview();
+	}
+
 	function addBlock() {
 		if (selectionMode === 'pinned') {
 			// If it's a pinned block, we need at least one event ID
@@ -1189,7 +1203,13 @@
 						{/each}
 					</div>
 				{:else}
-					<p>Design your homepage structure with content blocks</p>
+					<p>
+						<!-- svelte-ignore a11y-click-events-have-key-events -->
+						Design your homepage structure with content blocks. <br />
+						Would you like to start with the
+						<!-- svelte-ignore a11y-invalid-attribute -->
+						<a href="#" on:click={addStadardBlocksConfig}>suggested configuration?</a>
+					</p>
 				{/if}
 
 				<div class="add-block">
