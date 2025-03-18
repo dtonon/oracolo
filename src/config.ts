@@ -1,7 +1,28 @@
 import { decode } from '@nostr/tools/nip19';
 import { loadRelayList } from '@nostr/gadgets/lists';
 
-export async function getConfig() {
+export type SiteConfig = {
+	npub: string;
+	readRelays: string[];
+	writeRelays: string[];
+	topics: string[];
+	comments: boolean;
+	blocks: Block[];
+};
+
+export type Block = {
+	type: string;
+	config: Config;
+};
+
+export interface Config {
+	count?: number;
+	style?: string;
+	minChars?: number;
+	ids?: string[];
+}
+
+export async function getConfig(): Promise<SiteConfig> {
 	const authorMeta = document.querySelector('meta[name="author"]');
 	const relaysMeta = document.querySelector('meta[name="relays"]');
 	const topicsMeta = document.querySelector('meta[name="topics"]');
@@ -45,13 +66,6 @@ export async function getConfig() {
 
 	// Blocks
 	// -------------------------------------------------------
-	interface Config {
-		count?: number;
-		style?: string;
-		minChars?: number;
-		ids?: string[];
-	}
-
 	let blocks: { type: string; config: any }[] = [];
 	const metaTags = document.querySelectorAll('meta');
 	const PREFIX = 'block:';
@@ -67,9 +81,7 @@ export async function getConfig() {
 		const value = meta.getAttribute('content');
 		const options = value ? value.split('-') : [];
 
-		const config: Config = {
-			ids: []
-		};
+		const config: Config = {};
 
 		if (options.length > 0 && !isNaN(Number(options[0]))) {
 			config.count = parseInt(options[0], 10);
@@ -85,6 +97,7 @@ export async function getConfig() {
 				config.minChars = parseInt(opt.substring(1), 10);
 			}
 			if (opt.startsWith('i')) {
+				config.ids = config.ids || [];
 				config.ids.push(opt.substring(1));
 			}
 		});
@@ -113,12 +126,4 @@ export async function getConfig() {
 		comments,
 		blocks
 	};
-}
-
-function parseNumber(metaTag: Element | null, defaultValue: number): number {
-	const strValue = metaTag?.getAttribute?.('content');
-	if (!strValue) return defaultValue;
-	let value = parseFloat(strValue);
-	if (isNaN(value)) return defaultValue;
-	return value;
 }

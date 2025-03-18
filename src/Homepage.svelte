@@ -4,6 +4,8 @@
 	import { type NostrEvent } from '@nostr/tools/core';
 	import { pool } from '@nostr/gadgets/global';
 	import { loadRelayList } from '@nostr/gadgets/lists';
+	import type { Filter } from '@nostr/tools/filter';
+
 	import { getProfile } from './utils';
 	import Loading from './Loading.svelte';
 	import ThemeSwitch from './ThemeSwitch.svelte';
@@ -518,8 +520,7 @@
 
 			// Use the shared blockTypeToKind for later type checking, but don't restrict the search
 
-			let filter: any;
-
+			let filter: Filter;
 			if (
 				eventData.type &&
 				['note', 'nevent', 'hex'].includes(eventData.type) &&
@@ -1420,9 +1421,7 @@
 					</div>
 				</section>
 			{:else}
-				<section class="preview-section">
-					Add some blocks to complete the configuration
-				</section>
+				<section class="preview-section">Add some blocks to complete the configuration</section>
 			{/if}
 		{/if}
 	</div>
