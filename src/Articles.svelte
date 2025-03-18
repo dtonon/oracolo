@@ -9,11 +9,11 @@
 	export let count = 2;
 	export let style = 'grid';
 	export let minChars = 10;
-	export let ids: string[] = [];
+	export let ids: string[] | undefined = undefined;
 	const kinds = [30023];
 
 	onMount(() => {
-		if (ids.length > 0) {
+		if (ids) {
 			style = 'grid';
 		}
 	});
@@ -37,7 +37,7 @@
 							{/if}
 							<div>
 								<span class="date">{formatDate(event.created_at)}</span>
-								{#if ids.some((id) => event.id.endsWith(id))}
+								{#if ids && ids.some((id) => event.id.endsWith(id))}
 									<span class="pinned">- 📌 Pinned</span>
 								{/if}
 							</div>

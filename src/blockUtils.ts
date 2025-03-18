@@ -1,14 +1,32 @@
 import { type NostrEvent } from '@nostr/tools/core';
+import * as nip27 from '@nostr/tools/nip27';
 import { uniqueEventsStore } from './stores/uniqueEventsStore';
-import { processUsersEntities, processEventsEntities, cleanMarkdownLinks } from './utils.js';
 
-async function renderEventContent(event: NostrEvent) {
-	let updatedEventContent = event.content;
-	updatedEventContent = await processUsersEntities(updatedEventContent);
-	updatedEventContent = processEventsEntities(updatedEventContent);
-	updatedEventContent = cleanMarkdownLinks(updatedEventContent);
-	event.content = updatedEventContent;
-	return event;
+// this function reads the event content progressively and exits early when the threshold has been met
+// this may save us some nanoseconds.
+function isLengthEqualOrGreaterThanThreshold(event: NostrEvent, threshold: number): boolean {
+	let curr = 0;
+	for (let block of nip27.parse(event.content)) {
+		switch (block.type) {
+			case 'text':
+				curr += block.text.length;
+			case 'url':
+			case 'image':
+			case 'video':
+			case 'audio':
+			case 'reference':
+				// each one of these items are supposed to be parsed and rendered in a custom way
+				// for the matter of counting the note size and filtering we will assign a static
+				// "length-value" to each
+				curr += 14;
+		}
+
+		if (curr >= threshold) {
+			return true;
+		}
+	}
+
+	return false;
 }
 
 export function filterEvents(
@@ -17,47 +35,41 @@ export function filterEvents(
 	minChars: number,
 	count: number = 10,
 	renderContentBeforeCount: boolean,
-	ids: string[] = []
+	ids: string[] | undefined
 ): NostrEvent[] {
 	// Filter out already displayed events and match kinds
-	let filteredEvents = items;
+	let filteredEvents = [];
 
-	filteredEvents = filteredEvents
-		.filter((item) => !uniqueEventsStore.hasBeenDisplayed(item.id))
-		.filter((item) => kinds.includes(item.kind));
+	// If we have an id count we can't go over it anyway
+	if (ids && ids.length < count) count = ids.length;
 
-	if (ids.length > 0) {
-		let foundEvent: NostrEvent | undefined;
-		if (ids.length == 1) {
-			// Performance tweak using find
-			foundEvent = filteredEvents.find((event) => event.id.endsWith(ids[0]));
-			if (foundEvent) {
-				filteredEvents = [foundEvent];
-			}
-		} else {
-			filteredEvents = filteredEvents.filter((event) => ids.some((id) => event.id.endsWith(id)));
+	for (let i = 0; i < items.length; i++) {
+		let item = items[i];
+
+		// Check if this hasn't been displayed before
+		if (uniqueEventsStore.hasBeenDisplayed(item.id)) continue;
+
+		// Check if kind matches
+		if (!kinds.includes(item.kind)) continue;
+
+		// Check if id matches
+		if (ids && ids.every((idSuffix) => !item.id.endsWith(idSuffix))) continue;
+
+		// Check min length
+		if (minChars > 0) {
+			if (renderContentBeforeCount) {
+				if (!isLengthEqualOrGreaterThanThreshold(item, minChars)) continue;
+			} else if (item.content.length < minChars) continue;
+		}
+
+		// This one passed all the filters:
+		filteredEvents.push(item);
+
+		// Exit early if we got everything we needed
+		if (filteredEvents.length === count) {
+			break;
 		}
 	}
-
-	filteredEvents = filteredEvents.filter((item) => kinds.includes(item.kind));
-
-	// If rendering content is required, process it
-	if (renderContentBeforeCount) {
-		// This is where we have the async problem
-		filteredEvents = filteredEvents.map((event) => {
-			try {
-				// We can't synchronously await here
-				renderEventContent(event);
-				return event;
-			} catch (error) {
-				console.warn('Event content processing failed:', error);
-				return event;
-			}
-		});
-	}
-
-	// Apply additional filters
-	filteredEvents = filteredEvents.filter((item) => item.content.length >= minChars).slice(0, count);
 
 	// Add to displayed events
 	if (filteredEvents.length > 0) {
