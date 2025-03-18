@@ -1026,7 +1026,7 @@
 
 	function startBlogDownload() {
 		try {
-			const blogUrl = `http://${domainPreview}.${baseDomain}?download=true`;
+			const blogUrl = `https://${domainPreview}.${baseDomain}?download=true`;
 			window.open(blogUrl, '_blank');
 		} catch (error) {
 			console.error('Error opening blog URL:', error);
@@ -1381,12 +1381,12 @@
 					<h2>Your blog is ready!</h2>
 
 					<div class="domain-preview">
-						<code>http://{domainPreview}.{baseDomain}</code>
+						<code>{domainPreview}.{baseDomain}</code>
 					</div>
 
 					<div class="action-buttons">
 						<a
-							href={`http://${domainPreview}.${baseDomain}`}
+							href={`https://${domainPreview}.${baseDomain}`}
 							target="_blank"
 							class="secondary-button"
 						>
