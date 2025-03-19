@@ -7,19 +7,20 @@ It works also without a web server; for example you can send it via email as a b
 ![Oracolo preview](docs/oracolo.jpg)
 
 ## Examples
+
 Here you can find some generated blogs for [OpenSats](https://raw.githack.com/dtonon/oracolo/master/examples/opensats.html), [Hodlbod](https://raw.githack.com/dtonon/oracolo/master/examples/hodlbod.html) and [fiatjaf](https://raw.githack.com/dtonon/oracolo/master/examples/fiatjaf.html).
 
 ## How to use - Developer mode
 
-1) Open `index.html` and personalize the `author` meta tag with your `npub`
-2) Run `npm install`
-3) Run `npm run build`
-4) Deploy the generated dist/index.html file
+1. Open `index.html` and personalize the `author` meta tag with your `npub`
+2. Run `npm install`
+3. Run `npm run build`
+4. Deploy the generated dist/index.html file
 
 ## How to use - "I hate npm" mode
 
-1) Open directly `dist/index.html` and personalize the `author` meta tag with your `npub`
-2) Save the file and deploy
+1. Open directly `dist/index.html` and personalize the `author` meta tag with your `npub`
+2. Save the file and deploy
 
 ## Optional settings
 
