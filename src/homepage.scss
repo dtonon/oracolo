@@ -1,7 +1,26 @@
-// Homepage-specific styles only
-
+// Homepage-specific styles
 @use 'sass:color';
 
+// Variables
+$primary-color: rgb(227, 42, 109);
+$primary-dark: color.adjust($primary-color, $lightness: -10%);
+$text-color: #242424;
+$text-secondary: #666;
+$bg-color: #f1f1f1;
+$bg-section: #f9f9f9;
+$bg-element: #f0f0f0;
+$border-color: #ddd;
+$error-color: #ff4545;
+
+// Dark mode variables
+$dark-bg: #242424;
+$dark-bg-section: #2a2a2a;
+$dark-bg-element: #333;
+$dark-text: #cbcbcb;
+$dark-text-secondary: #aaa;
+$dark-border: #444;
+
+// Base styles
 html {
   font-size: 20px;
 
@@ -14,44 +33,24 @@ body {
   margin: 0;
   padding: 0;
   font-family: Arial, Helvetica, sans-serif;
-  color: #242424;
-  background-color: #f1f1f1;
-}
+  color: $text-color;
+  background-color: $bg-color;
 
-.input-group input:focus-visible,
-.add-block .block-options .option-group input:focus-visible,
-.add-block .block-options .option-group select:focus-visible,
-select:focus-visible {
-  outline: 1px;
-  border: 1px solid #242424;
-}
-
-html.dark {
-  .input-group input,
-  .add-block .block-options .option-group input,
-  .add-block .block-options .option-group select,
-  select {
-    background-color: #333;
-    border-color: #444;
-    color: #f5f5f5;
+  html.dark & {
+    background-color: $dark-bg;
+    color: $dark-text;
   }
 }
 
-html.dark {
-  .input-group input:focus-visible,
-  .add-block .block-options .option-group input:focus-visible,
-  .add-block .block-options .option-group select:focus-visible,
-  select:focus-visible {
-    outline: 1px;
-    border: 1px solid #7f7f7f;
+a {
+  color: $text-color;
+
+  html.dark & {
+    color: white;
   }
 }
 
-html.dark body {
-  background-color: #242424;
-  color: #cbcbcb;
-}
-
+// App container
 #app {
   box-sizing: border-box;
   width: 80%;
@@ -65,20 +64,133 @@ html.dark body {
   }
 }
 
-h1 {
-  font-size: 3rem;
-  line-height: 0.9;
-  margin-top: 0;
+// Generic form elements
+input, select {
+  padding: 0.7rem;
+  border: 1px solid $border-color;
+  border-radius: 4px;
+  font-size: 1rem;
+  background-color: white;
 
-  @media only screen and (max-width: 768px) {
-    font-size: 2rem;
+  &:focus-visible {
+    outline: 1px;
+    border: 1px solid $text-color;
+  }
+
+  html.dark & {
+    background-color: $dark-bg-element;
+    border-color: $dark-border;
+    color: white;
+
+    &:focus-visible {
+      border: 1px solid #7f7f7f;
+    }
+  }
+
+  &.error {
+    border-color: $error-color;
   }
 }
 
-a {
-  color: #000;
+// Buttons
+button {
+  border-radius: 4px;
+  font-size: 1rem;
+  padding: 0.8rem 1.5rem;
+  background-color: $primary-color;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+
+  &:hover {
+    background-color: $primary-dark;
+  }
+
+  &:disabled {
+    background-color: rgb(120, 120, 120);
+    cursor: not-allowed;
+  }
 }
 
+// Remove button (x)
+.remove-button {
+  background: none;
+  border: none;
+  color: #777;
+  font-size: 1.2rem;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+
+  &:hover {
+    color: $error-color;
+    background-color: transparent;
+  }
+}
+
+// Error and notification styles
+.error-message, .input-error {
+  color: $primary-color;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background-color: rgba($primary-color, 0.1);
+  border-radius: 4px;
+  border-left: 3px solid $primary-color;
+}
+
+.hint, .topics-hint, .blocks-hint {
+  font-size: 0.9rem;
+  color: $text-secondary;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-style: italic;
+  
+  html.dark & {
+    color: $dark-text-secondary;
+  }
+}
+
+.note, .input-note {
+  padding: 0.5rem;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  color: $text-secondary;
+  margin-top: 0.5rem;
+
+  html.dark & {
+    background-color: $dark-bg-element;
+    color: $dark-text-secondary;
+  }
+}
+
+.input-help {
+  font-size: 0.8rem;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+  font-style: italic;
+  color: $text-secondary;
+
+  html.dark & {
+    color: $dark-text-secondary;
+  }
+
+  .relay-info {
+    display: block;
+    margin-top: 0.3rem;
+    color: #888;
+    font-size: 0.75rem;
+  }
+}
+
+// Homepage container
 .homepage {
   padding: 2rem;
   max-width: 800px;
@@ -92,12 +204,14 @@ a {
   }
 }
 
+// Theme switch
 .theme-switch {
   position: absolute;
   top: 1rem;
   right: 1rem;
 }
 
+// Header
 header {
   text-align: center;
   margin-bottom: 3rem;
@@ -109,28 +223,71 @@ header {
   h1 {
     margin-bottom: 0.5rem;
     font-size: 3rem;
+    line-height: 0.9;
+    margin-top: 0;
+
+    @media only screen and (max-width: 768px) {
+      font-size: 2rem;
+    }
   }
 
   p {
     color: #747474;
     font-size: 1.2rem;
+
+    html.dark & {
+      color: $dark-text-secondary;
+    }
   }
 }
 
+// Section (common)
 section {
   margin-bottom: 3rem;
   padding: 2rem;
   border-radius: 12px;
-  background-color: #f9f9f9;
+  background-color: $bg-section;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+
+  html.dark & {
+    background-color: $dark-bg-section;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  }
 
   h2 {
     margin-top: 0;
     margin-bottom: 1.5rem;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
+    color: $primary-color;
+  }
+
+  h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+  }
+
+  p {
+    margin-top: 0;
+    color: $text-secondary;
+    margin-bottom: 1rem;
+
+    html.dark & {
+      color: $dark-text-secondary;
+    }
   }
 }
 
+// Option
+.option {
+  margin-bottom: 2rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// Input group
 .input-group {
   display: flex;
   margin-bottom: 1rem;
@@ -138,91 +295,45 @@ section {
   input {
     flex: 1;
     min-width: 0;
-    padding: 0.8rem 1rem;
-    border: 1px solid #ddd;
     border-radius: 4px 0 0 4px;
-    font-size: 1rem;
-
-    &.error {
-      border-color: #ff4545;
-    }
   }
 
   button {
-    font-size: 1rem;
-    padding: 0.8rem 1.5rem;
-    background-color: rgb(227, 42, 109);
-    color: white;
-    border: none;
     border-radius: 0 4px 4px 0;
-    cursor: pointer;
-    font-weight: bold;
     flex-shrink: 0;
-
-    &:hover {
-      background-color: color.adjust(rgb(227, 42, 109), $lightness: -10%);
-    }
-
-    &:disabled {
-      background-color: rgb(120, 120, 120);
-      cursor: not-allowed;
-    }
   }
 }
 
-.input-error {
-  color: #e32a6d;
-  font-size: 0.9rem;
-  margin-top: 0.5rem;
-  padding: 0.5rem;
-  background-color: rgba(227, 42, 109, 0.1);
-  border-radius: 4px;
-  border-left: 3px solid #e32a6d;
-}
-
-.input-help {
-  font-size: 0.8rem;
-  color: #777;
-  margin-top: -0.5rem;
-  margin-bottom: 1rem;
-  font-style: italic;
-
-  .relay-info {
-    display: block;
-    margin-top: 0.3rem;
-    color: #888;
-    font-size: 0.75rem;
-  }
-}
-
-.input-note {
-  font-size: 0.9rem;
-  color: #666;
-  padding: 0.5rem;
-  background-color: #f5f5f5;
-  border-radius: 4px;
-  margin-top: 0.5rem;
-}
-
+// User Info
 .user-info {
   position: relative;
   display: flex;
   align-items: center;
   padding: 1rem;
-  background-color: #f0f0f0;
+  background-color: $bg-element;
   border-radius: 8px;
+
+  html.dark & {
+    background-color: $dark-bg-element;
+  }
+
+  .loading-picture, .loading-text {
+    background-color: #ddd;
+
+    html.dark & {
+      background-color: #444;
+    }
+  }
 
   .loading-picture {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #ddd;
   }
 
   .loading-text {
     height: 1.2rem;
     width: 80%;
-    background-color: #ddd;
     border-radius: 4px;
     margin-bottom: 0.5rem;
 
@@ -248,7 +359,7 @@ section {
     .default-avatar {
       width: 100%;
       height: 100%;
-      background-color: #f0f0f0;
+      background-color: $bg-element;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -272,52 +383,14 @@ section {
     }
   }
 
-  .reset-button {
+  .remove-button {
     position: absolute;
     top: 5px;
     right: 5px;
-    background: transparent;
-    border: none;
-    color: #333;
-    font-size: 20px;
-    font-weight: bold;
-    cursor: pointer;
-    width: 30px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    padding: 0;
-    transition: background-color 0.2s;
-
-    &:hover {
-      background-color: rgba(0, 0, 0, 0.1);
-    }
   }
 }
 
-.options-section .option,
-.blocks-section .option {
-  margin-bottom: 2rem;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
-
-  h3 {
-    margin-top: 0;
-    margin-bottom: 0.5rem;
-    font-size: 1.2rem;
-  }
-
-  p {
-    margin-top: 0;
-    color: #666;
-    margin-bottom: 1rem;
-  }
-}
-
+// Topics list
 .topics-list {
   display: flex;
   justify-content: space-between;
@@ -335,71 +408,61 @@ section {
     flex-wrap: wrap;
     gap: 0.5rem;
   }
+}
 
-  .topics-hint {
-    font-size: 0.8rem;
-    color: #777;
-    font-style: italic;
-    white-space: nowrap;
+// Topic tag
+.topic-tag {
+  display: flex;
+  align-items: center;
+  background-color: $bg-element;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  cursor: grab;
+  transition: all 0.2s ease;
 
-    @media (max-width: 576px) {
-      margin-top: 1rem;
+  html.dark & {
+    background-color: $dark-bg-element;
+  }
+
+  &.dragging {
+    opacity: 0.5;
+    transform: scale(0.98);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  }
+
+  &.drop-target {
+    border: 2px dashed $primary-color;
+    background-color: rgba($primary-color, 0.1);
+
+    html.dark & {
+      background-color: rgba($primary-color, 0.15);
     }
   }
 
-  .topic-tag {
+  .drag-handle {
+    margin-right: 0.5rem;
+    color: #999;
+    cursor: grab;
     display: flex;
     align-items: center;
-    background-color: #f0f0f0;
-    padding: 0.4rem 0.8rem;
-    border-radius: 4px;
-    font-size: 0.9rem;
-    cursor: grab;
-    transition: all 0.2s ease;
 
-    &.dragging {
-      opacity: 0.5;
-      transform: scale(0.98);
-      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    html.dark & {
+      color: #777;
     }
 
-    &.drop-target {
-      border: 2px dashed rgb(227, 42, 109);
-      background-color: rgba(227, 42, 109, 0.1);
+    svg {
+      fill: currentColor;
     }
+  }
 
-    .drag-handle {
-      margin-right: 0.5rem;
-      color: #999;
-      cursor: grab;
-      display: flex;
-      align-items: center;
+  .topic-text {
+    margin-right: 0.5rem;
+  }
 
-      svg {
-        fill: currentColor;
-      }
-    }
-
-    .topic-text {
-      margin-right: 0.5rem;
-    }
-
-    .remove-button {
-      background: none;
-      border: none;
-      font-size: 1.2rem;
-      padding: 0;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 1.2rem;
-      height: 1.2rem;
-
-      &:hover {
-        color: #ff4545;
-      }
-    }
+  .remove-button {
+    width: 1.2rem;
+    height: 1.2rem;
   }
 }
 
@@ -423,9 +486,13 @@ section {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #f0f0f0;
+    background-color: $bg-element;
     transition: 0.4s;
     border-radius: 34px;
+
+    html.dark & {
+      background-color: #777;
+    }
 
     &:before {
       position: absolute;
@@ -441,7 +508,7 @@ section {
   }
 
   input:checked + .slider {
-    background-color: rgb(227, 42, 109);
+    background-color: $primary-color;
   }
 
   input:checked + .slider:before {
@@ -449,152 +516,110 @@ section {
   }
 }
 
-// Styling for pinned IDs section
-
-.pinned-ids-container {
-  grid-column: 1 / -1;
-  margin-top: 1rem;
+// Blocks list
+.blocks-list {
+  h3 .hint {
+    font-size: 0.8rem;
+    font-weight: normal;
+  }
 }
 
-.pinned-events-list {
+// Block item
+.block-item {
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-top: 1rem;
-  width: 100%;
+  align-items: center;
+  padding: 1rem;
+  background-color: $bg-element;
+  border-radius: 6px;
+  margin-bottom: 0.8rem;
+  cursor: grab;
+  transition: all 0.2s ease;
 
-  .pinned-event-item {
+  html.dark & {
+    background-color: $dark-bg-element;
+  }
+
+  &.dragging {
+    opacity: 0.5;
+    transform: scale(0.98);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  &.drop-target {
+    border: 2px dashed $primary-color;
+    background-color: rgba($primary-color, 0.1);
+
+    html.dark & {
+      background-color: rgba($primary-color, 0.15);
+    }
+  }
+
+  .drag-handle {
+    margin-right: 0.5rem;
+    color: #999;
+    cursor: grab;
     display: flex;
-    flex-direction: column;
-    background-color: #f5f5f5;
-    border-radius: 6px;
-    overflow: hidden;
-    border: 1px solid #eaeaea;
+    align-items: center;
 
-    &.type-mismatch {
-      border: 1px solid #e32a6d;
-      box-shadow: 0 0 3px rgba(227, 42, 109, 0.5);
-
-      .type-mismatch-indicator {
-        background-color: rgba(227, 42, 109, 0.1);
-        color: #e32a6d;
-        padding: 4px 8px;
-        font-size: 0.8rem;
-        margin-top: 8px;
-        border-radius: 4px;
-        display: inline-block;
-        font-weight: bold;
-      }
+    html.dark & {
+      color: #777;
     }
 
-    .pinned-preview-container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      width: 100%;
-      background-color: #f9f9f9;
+    svg {
+      fill: currentColor;
+    }
+  }
 
-      &.image-preview {
-        height: 150px;
-        overflow: hidden;
+  .block-type {
+    font-weight: bold;
+    margin-right: 1rem;
+    text-transform: capitalize;
+    min-width: 80px;
+  }
 
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-      }
+  .block-details {
+    flex: 1;
+    color: $text-secondary;
+    font-size: 0.9rem;
 
-      &.articles {
-        .pinned-preview {
-          font-weight: bold;
-          padding: 15px;
-        }
-      }
+    html.dark & {
+      color: $dark-text-secondary;
+    }
 
-      &.notes {
-        .pinned-preview {
-          padding: 15px;
-          background-color: #f9f9f9;
-          font-style: italic;
-          white-space: pre-line;
-        }
-      }
+    .pinned-badge {
+      display: inline-block;
+      background-color: $primary-color;
+      color: white;
+      font-size: 0.75rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-weight: bold;
+    }
 
-      &.images {
-        .pinned-preview {
-          padding: 15px;
-          background-color: #f9f9f9;
-          text-align: center;
-          font-style: italic;
-        }
-      }
+    .event-id-preview {
+      font-family: monospace;
+      font-size: 0.8rem;
+      color: #555;
+      margin-left: 0.3rem;
 
-      .pinned-preview.loading {
+      html.dark & {
         color: #999;
-        position: relative;
-
-        &:after {
-          content: '';
-          display: inline-block;
-          width: 12px;
-          height: 12px;
-          border: 2px solid #999;
-          border-radius: 50%;
-          border-top-color: transparent;
-          animation: spin 1s linear infinite;
-          margin-left: 10px;
-          vertical-align: middle;
-        }
-
-        @keyframes spin {
-          to {
-            transform: rotate(360deg);
-          }
-        }
-      }
-
-      .remove-button {
-        background: none;
-        border: none;
-        font-size: 1.2rem;
-        padding-right: 1rem;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-
-        &:hover {
-          color: #e32a6d;
-        }
-      }
-    }
-
-    .pinned-event-details {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 15px;
-      background-color: #f0f0f0;
-      font-size: 0.85rem;
-
-      .pinned-event-id {
-        color: #666;
-        font-family: monospace;
       }
     }
   }
 }
 
+// Add block
 .add-block {
-  border-radius: 8px;
   margin-top: 2rem;
 
   h3 {
-    margin-top: 0;
-    margin-bottom: 1rem;
-    font-size: 1.2rem;
-    border-bottom: 4px solid #f0f0f0;
+    border-bottom: 4px solid $bg-element;
     padding-bottom: 0.5rem;
+
+    html.dark & {
+      border-bottom: 4px solid $dark-bg-element;
+    }
   }
 
   .block-options {
@@ -603,179 +628,212 @@ section {
     gap: 1.5rem;
     margin-bottom: 1.5rem;
 
-    .common-options-row {
+    .common-options-row, .auto-select-row {
       display: grid;
-      grid-template-columns: 1fr 1fr;
       gap: 1rem;
       width: 100%;
+    }
 
+    .common-options-row {
+      grid-template-columns: 1fr 1fr;
+      
       @media (max-width: 576px) {
         grid-template-columns: 1fr;
-        grid-template-rows: auto auto;
       }
     }
 
     .auto-select-row {
-      display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
-      width: 100%;
 
       @media (max-width: 992px) {
         grid-template-columns: repeat(2, 1fr);
-        grid-template-rows: auto auto;
       }
 
       @media (max-width: 576px) {
         grid-template-columns: 1fr;
-        grid-template-rows: repeat(3, auto);
       }
     }
+  }
 
-    .option-group {
-      display: flex;
-      flex-direction: column;
+  .option-group {
+    display: flex;
+    flex-direction: column;
 
-      label {
-        margin-bottom: 0.5rem;
-        font-size: 0.9rem;
-        font-weight: bold;
-      }
-
-      select,
-      input {
-        padding: 0.7rem;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        font-size: 1rem;
-      }
+    label {
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      font-weight: bold;
     }
+  }
 
-    .pinned-ids-container {
-      width: 100%;
-    }
+  .pinned-ids-container {
+    grid-column: 1 / -1;
+    width: 100%;
+    margin-top: 1rem;
   }
 
   .add-block-button {
-    background-color: rgb(227, 42, 109);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 0.8rem 1.5rem;
-    font-weight: bold;
-    cursor: pointer;
     width: 100%;
-
-    &:hover {
-      background-color: color.adjust(rgb(227, 42, 109), $lightness: -10%);
-    }
-
-    &:disabled {
-      background-color: rgb(120, 120, 120);
-      cursor: not-allowed;
-    }
   }
 }
 
-.blocks-list {
-  h3 {
-    margin-top: 0;
-    margin-bottom: 1rem;
-    font-size: 1.2rem;
+// Pinned events list
+.pinned-events-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  width: 100%;
+}
 
-    .blocks-hint {
+// Pinned event item
+.pinned-event-item {
+  display: flex;
+  flex-direction: column;
+  background-color: #f5f5f5;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #eaeaea;
+
+  html.dark & {
+    background-color: $dark-bg-element;
+    border-color: $dark-border;
+  }
+
+  &.type-mismatch {
+    border: 1px solid $primary-color;
+    box-shadow: 0 0 3px rgba($primary-color, 0.5);
+
+    .type-mismatch-indicator {
+      background-color: rgba($primary-color, 0.1);
+      color: $primary-color;
+      padding: 4px 8px;
       font-size: 0.8rem;
-      font-weight: normal;
-      color: #777;
-    }
-  }
-
-  .block-item {
-    display: flex;
-    align-items: center;
-    padding: 1rem;
-    background-color: #f0f0f0;
-    border-radius: 6px;
-    margin-bottom: 0.8rem;
-    cursor: grab;
-    transition: all 0.2s ease;
-
-    &.dragging {
-      opacity: 0.5;
-      transform: scale(0.98);
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    &.drop-target {
-      border: 2px dashed rgb(227, 42, 109);
-      background-color: rgba(227, 42, 109, 0.1);
-    }
-
-    .drag-handle {
-      margin-right: 0.5rem;
-      color: #999;
-      cursor: grab;
-      display: flex;
-      align-items: center;
-
-      svg {
-        fill: currentColor;
-      }
-    }
-
-    .block-type {
+      margin-top: 8px;
+      border-radius: 4px;
+      display: inline-block;
       font-weight: bold;
-      margin-right: 1rem;
-      text-transform: capitalize;
-      min-width: 80px;
-    }
-
-    .block-details {
-      flex: 1;
-      color: #666;
-      font-size: 0.9rem;
-
-      .pinned-badge {
-        display: inline-block;
-        background-color: rgb(227, 42, 109);
-        color: white;
-        font-size: 0.75rem;
-        padding: 0.2rem 0.5rem;
-        border-radius: 4px;
-        font-weight: bold;
-      }
-
-      .event-id-preview {
-        font-family: monospace;
-        font-size: 0.8rem;
-        color: #555;
-        margin-left: 0.3rem;
-      }
-    }
-
-    .remove-button {
-      background: none;
-      border: none;
-      font-size: 1.2rem;
-      color: #777;
-      cursor: pointer;
-
-      &:hover {
-        color: #ff4545;
-      }
     }
   }
 }
 
+// Pinned preview container
+.pinned-preview-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  background-color: $bg-section;
+
+  html.dark & {
+    background-color: $dark-bg-section;
+    color: #ddd;
+  }
+
+  &.image-preview {
+    height: 150px;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &.articles {
+    .pinned-preview {
+      font-weight: bold;
+      padding: 15px;
+    }
+  }
+
+  &.notes, &.images {
+    .pinned-preview {
+      padding: 15px;
+      background-color: $bg-section;
+      font-style: italic;
+
+      html.dark & {
+        background-color: $dark-bg-section;
+      }
+    }
+  }
+
+  &.notes .pinned-preview {
+    white-space: pre-line;
+  }
+
+  &.images .pinned-preview {
+    text-align: center;
+  }
+
+  .pinned-preview.loading {
+    color: #999;
+    position: relative;
+
+    &:after {
+      content: '';
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border: 2px solid #999;
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: spin 1s linear infinite;
+      margin-left: 10px;
+      vertical-align: middle;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  }
+
+  .remove-button {
+    padding-right: 1rem;
+  }
+}
+
+// Pinned event details
+.pinned-event-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: $bg-element;
+  font-size: 0.85rem;
+
+  html.dark & {
+    background-color: #222;
+  }
+
+  .pinned-event-id {
+    color: $text-secondary;
+    font-family: monospace;
+
+    html.dark & {
+      color: $dark-text-secondary;
+    }
+  }
+}
+
+// Preview section
 .preview-section {
   text-align: center;
 
   .domain-preview {
-    background-color: #f0f0f0;
+    background-color: $bg-element;
     padding: 1.5rem;
     border-radius: 8px;
     margin: 1.5rem 0;
     overflow-x: auto;
+
+    html.dark & {
+      background-color: $dark-bg-element;
+    }
 
     code {
       font-family: monospace;
@@ -783,131 +841,147 @@ section {
       word-break: break-all;
     }
   }
+}
 
-  .instructions {
-    margin-bottom: 2rem;
-    font-size: 0.9rem;
-    color: #666;
+// Action buttons
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+
+  .primary-button {
+    display: inline-block;
+    background-color: $primary-color;
+    color: white;
+    text-decoration: none;
+    padding: 1rem 2rem;
+    border-radius: 4px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+
+    &:hover {
+      background-color: $primary-dark;
+    }
   }
 
-  .action-buttons {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 2rem;
+  .secondary-button {
+    display: inline-block;
+    background-color: transparent;
+    color: $primary-color;
+    text-decoration: underline;
+    cursor: pointer;
 
-    .primary-button {
-      display: inline-block;
-      background-color: rgb(227, 42, 109);
+    &:hover {
+      background-color: rgba($primary-color, 0.1);
+    }
+
+    html.dark & {
       color: white;
-      text-decoration: none;
-      padding: 1rem 2rem;
-      border-radius: 4px;
-      font-weight: bold;
-      border: none;
-      cursor: pointer;
 
       &:hover {
-        background-color: color.adjust(rgb(227, 42, 109), $lightness: -10%);
-      }
-    }
-
-    .secondary-button {
-      display: inline-block;
-      background-color: transparent;
-      color: rgb(227, 42, 109);
-      text-decoration: underline;
-      cursor: pointer;
-
-      &:hover {
-        background-color: rgba(227, 42, 109, 0.1);
-      }
-    }
-  }
-
-  .extra-options {
-    margin-top: 2rem;
-    border-top: 1px solid #eee;
-    padding-top: 2rem;
-
-    .download-option,
-    .dns-option {
-      background-color: #f9f9f9;
-      padding: 1.5rem;
-      border-radius: 8px;
-      margin-bottom: 1.5rem;
-
-      p {
-        margin-top: 0;
-        margin-bottom: 1.5rem;
-        font-weight: bold;
-      }
-
-      .download-button {
-        font-size: 1rem;
-        background-color: rgb(227, 42, 109);
-        color: white;
-        border: none;
-        border-radius: 4px;
-        padding: 0.8rem 1.5rem;
-        font-weight: bold;
-        cursor: pointer;
-
-        &:hover {
-          background-color: color.adjust(rgb(227, 42, 109), $lightness: -10%);
-        }
-      }
-    }
-
-    .domain-input {
-      margin-bottom: 1.5rem;
-    }
-
-    .dns-instructions {
-      background-color: #f0f0f0;
-      padding: 1rem;
-      border-radius: 6px;
-      border-left: 4px solid rgb(227, 42, 109);
-
-      p {
-        margin-top: 0;
-        margin-bottom: 0.5rem;
-        font-weight: bold;
-        font-size: 0.9rem;
-      }
-
-      pre {
-        margin: 0;
-        padding: 0.8rem;
-        background-color: #fff;
-        border-radius: 4px;
-        overflow-x: auto;
-        font-family: monospace;
-        font-size: 0.9rem;
-      }
-    }
-
-    .dns-error {
-      background-color: #fff4f7;
-      padding: 1rem;
-      border-radius: 6px;
-      border-left: 4px solid #ff4545;
-
-      p {
-        margin-top: 0;
-        margin-bottom: 0.5rem;
-        color: #e32a6d;
-        font-size: 0.9rem;
-
-        &:last-child {
-          margin-bottom: 0;
-        }
+        background-color: rgba(255, 255, 255, 0.1);
       }
     }
   }
 }
 
+// Extra options
+.extra-options {
+  margin-top: 2rem;
+  border-top: 1px solid #eee;
+  padding-top: 2rem;
+
+  html.dark & {
+    border-top-color: $dark-border;
+  }
+
+  .download-option,
+  .dns-option {
+    background-color: $bg-section;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+
+    html.dark & {
+      background-color: $dark-bg-section;
+    }
+
+    p {
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+      font-weight: bold;
+    }
+  }
+
+  .domain-input {
+    margin-bottom: 1.5rem;
+  }
+
+  .dns-instructions {
+    background-color: $bg-element;
+    padding: 1rem;
+    border-radius: 6px;
+    border-left: 4px solid $primary-color;
+
+    html.dark & {
+      background-color: $dark-bg-element;
+    }
+
+    p {
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+
+    pre {
+      margin: 0;
+      padding: 0.8rem;
+      background-color: white;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-family: monospace;
+      font-size: 0.9rem;
+
+      html.dark & {
+        background-color: #222;
+        color: #ddd;
+      }
+    }
+  }
+
+  .dns-error {
+    background-color: #fff4f7;
+    padding: 1rem;
+    border-radius: 6px;
+    border-left: 4px solid $error-color;
+
+    html.dark & {
+      background-color: rgba($primary-color, 0.15);
+      border-left-color: $primary-color;
+    }
+
+    p {
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+      color: $primary-color;
+      font-size: 0.9rem;
+
+      html.dark & {
+        color: #ff6b9d;
+      }
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+// Footer
 footer {
   margin-top: auto;
   text-align: center;
@@ -916,181 +990,9 @@ footer {
   p {
     color: #999;
     font-size: 0.9rem;
-  }
-}
 
-/* Dark theme adjustments */
-html.dark {
-  a {
-    color: #fff;
-  }
-
-  .homepage {
-    color: #f5f5f5;
-  }
-
-  section {
-    background-color: #2a2a2a;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-  }
-
-  header p {
-    color: #aaa;
-  }
-
-  .input-group input {
-    background-color: #333;
-    border-color: #444;
-    color: #f5f5f5;
-  }
-
-  .user-info {
-    background-color: #333;
-
-    .loading-picture,
-    .loading-text {
-      background-color: #444;
-    }
-
-    .reset-button {
-      color: #f5f5f5;
-
-      &:hover {
-        background-color: rgba(255, 255, 255, 0.1);
-      }
-    }
-  }
-
-  .domain-preview {
-    background-color: #333;
-  }
-
-  .topic-tag {
-    background-color: #333;
-
-    &.drop-target {
-      border-color: rgb(227, 42, 109);
-      background-color: rgba(227, 42, 109, 0.15);
-    }
-
-    .drag-handle {
+    html.dark & {
       color: #777;
     }
-  }
-
-  .topics-hint {
-    color: #777 !important;
-  }
-
-  .remove-button {
-    color: #777;
-  }
-
-  .pinned-events-list {
-    .pinned-event-item {
-      background-color: #333;
-      border-color: #444;
-
-      .pinned-preview-container {
-        background-color: #2a2a2a;
-        border-color: #444;
-        color: #ddd;
-      }
-
-      .pinned-event-details {
-        background-color: #222;
-
-        .pinned-event-id {
-          color: #aaa;
-        }
-      }
-    }
-  }
-
-  .add-block h3 {
-    border-bottom: 4px solid #333;
-  }
-
-  .block-item {
-    background-color: #333;
-
-    &.drop-target {
-      border-color: rgb(227, 42, 109);
-      background-color: rgba(227, 42, 109, 0.15);
-    }
-
-    .drag-handle {
-      color: #777;
-    }
-
-    .event-id-preview {
-      color: #999;
-    }
-  }
-
-  .blocks-hint {
-    color: #777 !important;
-  }
-
-  .option p,
-  .block-details,
-  .instructions,
-  .input-help,
-  .input-note {
-    color: #aaa;
-  }
-
-  .input-note {
-    background-color: #333;
-  }
-
-  .extra-options {
-    border-top-color: #444;
-
-    .download-option,
-    .dns-option {
-      background-color: #2a2a2a;
-    }
-
-    .dns-instructions {
-      background-color: #333;
-
-      pre {
-        background-color: #222;
-        color: #ddd;
-      }
-    }
-
-    .dns-error {
-      background-color: rgba(227, 42, 109, 0.15);
-      border-left-color: #e32a6d;
-
-      p {
-        color: #ff6b9d;
-      }
-    }
-  }
-
-  .secondary-button {
-    color: #f5f5f5;
-    border-color: #f5f5f5;
-
-    &:hover {
-      background-color: rgba(255, 255, 255, 0.1);
-    }
-  }
-
-  footer p {
-    color: #777;
-  }
-
-  .switch {
-    .slider {
-      background-color: #777;
-    }
-  }
-
-  input:checked + .slider {
-    background-color: rgb(227, 42, 109);
   }
 }

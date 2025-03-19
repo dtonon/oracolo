@@ -1094,7 +1094,7 @@
         </div>
 
         {#if error}
-          <p class="input-error">{error}</p>
+          <p class="error-message">{error}</p>
         {/if}
       {/if}
 
@@ -1124,7 +1124,7 @@
               <span class="user-id">{npub}</span>
               <span class="user-id">{userWriteRelays.join(', ')}</span>
             </div>
-            <button class="reset-button" on:click={resetUserSearch}>×</button>
+            <button class="remove-button" on:click={resetUserSearch}>×</button>
           </div>
         {/if}
       </div>
@@ -1175,7 +1175,7 @@
                   </div>
                 {/each}
               </div>
-              <div class="topics-hint">(drag to reorder)</div>
+              <div class="hint">(drag to reorder)</div>
             </div>
           {/if}
         </div>
@@ -1196,7 +1196,7 @@
         <div class="option">
           {#if blocks.length > 0}
             <div class="blocks-list" role="list">
-              <h3>Your blocks <span class="blocks-hint">(drag to reorder)</span></h3>
+              <h3>Your blocks <span class="hint">(drag to reorder)</span></h3>
 
               {#each blocks as block, index}
                 <div
@@ -1294,7 +1294,7 @@
 
                 <!-- Error message area for type mismatch or invalid IDs -->
                 {#if pinnedEventError}
-                  <p class="input-error">{pinnedEventError}</p>
+                  <p class="error-message">{pinnedEventError}</p>
                 {/if}
 
                 {#if newpinnedEvents.length > 0}
@@ -1336,7 +1336,7 @@
                     {/each}
                   </div>
                 {:else}
-                  <p class="input-note">Add at least one event ID to create a pinned block</p>
+                  <p class="note">Add at least one event ID to create a pinned block</p>
                 {/if}
               </div>
             {:else}
@@ -1378,7 +1378,7 @@
             {/if}
           </div>
 
-          <div class="input-group">
+          <div>
             <button class="add-block-button" on:click={addBlock} disabled={isAddPinnedDisabled}>
               Add Block
             </button>
@@ -1415,7 +1415,7 @@
                 Do you have a domain with DNS management?<br />
                 Point it to your blog effortlessly
               </p>
-              <div class="input-group domain-input">
+              <div class="domain-input">
                 <input
                   type="text"
                   bind:value={userDomain}
