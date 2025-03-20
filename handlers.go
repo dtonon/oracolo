@@ -1,8 +1,11 @@
 package main
 
 import (
+	"embed"
 	_ "embed"
+	"io"
 	"net/http"
+	"path/filepath"
 	"strings"
 	"time"
 )
@@ -15,6 +18,9 @@ var homepageJS []byte
 
 //go:embed dist/homepage.css
 var homepageCSS []byte
+
+//go:embed static/images
+var staticImages embed.FS
 
 func handleHome(w http.ResponseWriter, r *http.Request) {
 	// If requesting static files from /dist/, serve them
@@ -36,6 +42,45 @@ func handleHome(w http.ResponseWriter, r *http.Request) {
 		default:
 			http.NotFound(w, r)
 		}
+		return
+	}
+
+	// Handle static image files
+	if strings.HasPrefix(r.URL.Path, "/static/images/") {
+		if !isProduction() {
+			// In development, serve directly from disk
+			http.ServeFile(w, r, r.URL.Path[1:]) // Remove leading slash
+			return
+		}
+
+		// In production, serve from embedded file system
+		imagePath := strings.TrimPrefix(r.URL.Path, "/")
+		file, err := staticImages.Open(imagePath)
+		if err != nil {
+			http.NotFound(w, r)
+			return
+		}
+		defer file.Close()
+
+		// Set content type based on file extension
+		ext := filepath.Ext(r.URL.Path)
+		switch strings.ToLower(ext) {
+		case ".jpg", ".jpeg":
+			w.Header().Set("Content-Type", "image/jpeg")
+		case ".png":
+			w.Header().Set("Content-Type", "image/png")
+		case ".gif":
+			w.Header().Set("Content-Type", "image/gif")
+		case ".svg":
+			w.Header().Set("Content-Type", "image/svg+xml")
+		case ".webp":
+			w.Header().Set("Content-Type", "image/webp")
+		default:
+			w.Header().Set("Content-Type", "application/octet-stream")
+		}
+
+		// Copy the file content to the response
+		io.Copy(w, file)
 		return
 	}
 
