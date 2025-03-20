@@ -115,7 +115,7 @@
   }
 
   #theme-toggle:not(:checked) + label {
-    background-color: #e9e9e9;
+    background-color: #cccccc;
   }
 
   #theme-toggle:checked + label {

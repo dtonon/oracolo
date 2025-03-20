@@ -43,6 +43,13 @@ const baseOptions = {
   conditions: ['svelte', 'browser'],
   bundle: true,
   format: 'iife',
+  loader: {
+    '.jpg': 'copy',
+    '.png': 'copy',
+    '.svg': 'copy',
+    '.gif': 'copy'
+  },
+  assetNames: 'images/[name]',
   plugins: [
     sveltePlugin({
       preprocess: sveltePreprocess(),
@@ -63,7 +70,7 @@ const mainOptions = {
   outfile: 'dist/out.js',
   plugins: [
     ...baseOptions.plugins,
-    createCssExtractorPlugin() // Add separate CSS extractor for main app
+    createCssExtractorPlugin(),
   ]
 };
 
@@ -74,7 +81,7 @@ const homepageOptions = {
   outfile: 'dist/homepage.js',
   plugins: [
     ...baseOptions.plugins,
-    createCssExtractorPlugin() // Add separate CSS extractor for homepage
+    createCssExtractorPlugin(),
   ]
 };
 

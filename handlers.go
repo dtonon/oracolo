@@ -19,34 +19,13 @@ var homepageJS []byte
 //go:embed dist/homepage.css
 var homepageCSS []byte
 
-//go:embed static/images
+//go:embed dist/images
 var staticImages embed.FS
 
 func handleHome(w http.ResponseWriter, r *http.Request) {
-	// If requesting static files from /dist/, serve them
-	if strings.HasPrefix(r.URL.Path, "/dist/") {
-		if !isProduction() {
-			// In development, serve directly from disk
-			http.ServeFile(w, r, r.URL.Path[1:]) // Remove leading slash
-			return
-		}
-
-		// In production, serve from embedded files
-		switch r.URL.Path {
-		case "/dist/homepage.js":
-			w.Header().Set("Content-Type", "application/javascript")
-			w.Write(homepageJS)
-		case "/dist/homepage.css":
-			w.Header().Set("Content-Type", "text/css")
-			w.Write(homepageCSS)
-		default:
-			http.NotFound(w, r)
-		}
-		return
-	}
 
 	// Handle static image files
-	if strings.HasPrefix(r.URL.Path, "/static/images/") {
+	if strings.HasPrefix(r.URL.Path, "/dist/images/") {
 		if !isProduction() {
 			// In development, serve directly from disk
 			http.ServeFile(w, r, r.URL.Path[1:]) // Remove leading slash
@@ -81,6 +60,28 @@ func handleHome(w http.ResponseWriter, r *http.Request) {
 
 		// Copy the file content to the response
 		io.Copy(w, file)
+		return
+	}
+
+	// If requesting static files from /dist/, serve them
+	if strings.HasPrefix(r.URL.Path, "/dist/") {
+		if !isProduction() {
+			// In development, serve directly from disk
+			http.ServeFile(w, r, r.URL.Path[1:]) // Remove leading slash
+			return
+		}
+
+		// In production, serve from embedded files
+		switch r.URL.Path {
+		case "/dist/homepage.js":
+			w.Header().Set("Content-Type", "application/javascript")
+			w.Write(homepageJS)
+		case "/dist/homepage.css":
+			w.Header().Set("Content-Type", "text/css")
+			w.Write(homepageCSS)
+		default:
+			http.NotFound(w, r)
+		}
 		return
 	}
 
