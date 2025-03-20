@@ -221,10 +221,19 @@ header {
   }
 
   h1 {
+    display: block;
     margin-bottom: 0.5rem;
     font-size: 3rem;
     line-height: 0.9;
     margin-top: 0;
+
+    svg {
+      max-width: 500px;
+
+      @media only screen and (max-width: 768px) {
+        max-width: 80%;
+      }
+    }
 
     @media only screen and (max-width: 768px) {
       font-size: 2rem;
