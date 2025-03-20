@@ -1,24 +1,25 @@
 // Homepage-specific styles
 @use 'sass:color';
 
+$neutral-50: #fafafa;
+$neutral-100: #f5f5f5;
+$neutral-150: #ededed;
+$neutral-200: #e5e5e5;
+$neutral-300: #d4d4d4;
+$neutral-400: #a3a3a3;
+$neutral-500: #737373;
+$neutral-600: #525252;
+$neutral-700: #404040;
+$neutral-750: #333333;
+$neutral-800: #262626;
+$neutral-900: #171717;
+$neutral-950: #0a0a0a;
+
 // Variables
 $primary-color: rgb(227, 42, 109);
 $primary-dark: color.adjust($primary-color, $lightness: -10%);
-$text-color: #242424;
-$text-secondary: #666;
-$bg-color: #f1f1f1;
-$bg-section: #f9f9f9;
-$bg-element: #f0f0f0;
-$border-color: #ddd;
-$error-color: #ff4545;
 
-// Dark mode variables
-$dark-bg: #242424;
-$dark-bg-section: #2a2a2a;
-$dark-bg-element: #333;
-$dark-text: #cbcbcb;
-$dark-text-secondary: #aaa;
-$dark-border: #444;
+$error-color: $primary-color;
 
 // Base styles
 html {
@@ -33,20 +34,20 @@ body {
   margin: 0;
   padding: 0;
   font-family: Arial, Helvetica, sans-serif;
-  color: $text-color;
-  background-color: $bg-color;
+  color: $neutral-900;
+  background-color: $neutral-100;
 
   html.dark & {
-    background-color: $dark-bg;
-    color: $dark-text;
+    background-color: $neutral-900;
+    color: $neutral-200;
   }
 }
 
 a {
-  color: $text-color;
+  color: $neutral-900;
 
   html.dark & {
-    color: white;
+    color: $neutral-300;
   }
 }
 
@@ -65,25 +66,25 @@ a {
 }
 
 // Generic form elements
-input, select {
+input,
+select {
   padding: 0.7rem;
-  border: 1px solid $border-color;
+  border: 1px solid $neutral-300;
   border-radius: 4px;
   font-size: 1rem;
   background-color: white;
 
   &:focus-visible {
-    outline: 1px;
-    border: 1px solid $text-color;
+    outline: none;
+    box-shadow: inset 0 0 0 4px $neutral-100;
   }
 
   html.dark & {
-    background-color: $dark-bg-element;
-    border-color: $dark-border;
+    background-color: $neutral-750;
     color: white;
 
     &:focus-visible {
-      border: 1px solid #7f7f7f;
+      box-shadow: inset 0 0 0 4px $neutral-700;
     }
   }
 
@@ -108,6 +109,10 @@ button {
     background-color: $primary-dark;
   }
 
+  &:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 4px rgba($neutral-900, 0.2);
+  }
   &:disabled {
     background-color: rgb(120, 120, 120);
     cursor: not-allowed;
@@ -118,7 +123,7 @@ button {
 .remove-button {
   background: none;
   border: none;
-  color: #777;
+  color: $neutral-500;
   font-size: 1.2rem;
   padding: 0;
   cursor: pointer;
@@ -135,7 +140,8 @@ button {
 }
 
 // Error and notification styles
-.error-message, .input-error {
+.error-message,
+.input-error {
   color: $primary-color;
   font-size: 0.9rem;
   margin-top: 0.5rem;
@@ -145,29 +151,33 @@ button {
   border-left: 3px solid $primary-color;
 }
 
-.hint, .topics-hint, .blocks-hint {
+.hint,
+.topics-hint,
+.blocks-hint {
   font-size: 0.9rem;
-  color: $text-secondary;
+  color: $neutral-600;
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
   font-style: italic;
   
+
   html.dark & {
-    color: $dark-text-secondary;
+    color: $neutral-400;
   }
 }
 
-.note, .input-note {
+.note,
+.input-note {
   padding: 0.5rem;
-  background-color: #f5f5f5;
+  background-color: $neutral-150;
   border-radius: 4px;
   font-size: 0.9rem;
-  color: $text-secondary;
+  color: $neutral-600;
   margin-top: 0.5rem;
 
   html.dark & {
-    background-color: $dark-bg-element;
-    color: $dark-text-secondary;
+    background-color: $neutral-750;
+    color: $neutral-400;
   }
 }
 
@@ -176,16 +186,16 @@ button {
   margin-top: -0.5rem;
   margin-bottom: 1rem;
   font-style: italic;
-  color: $text-secondary;
+  color: $neutral-600;
 
   html.dark & {
-    color: $dark-text-secondary;
+    color: $neutral-400;
   }
 
   .relay-info {
     display: block;
     margin-top: 0.3rem;
-    color: #888;
+    color: $neutral-500;
     font-size: 0.75rem;
   }
 }
@@ -241,11 +251,12 @@ header {
   }
 
   p {
-    color: #747474;
+    display: none;
+    color: $neutral-700;
     font-size: 1.2rem;
 
     html.dark & {
-      color: $dark-text-secondary;
+      color: $neutral-400;
     }
   }
 }
@@ -255,11 +266,11 @@ section {
   margin-bottom: 3rem;
   padding: 2rem;
   border-radius: 12px;
-  background-color: $bg-section;
+  background-color: $neutral-50;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 
   html.dark & {
-    background-color: $dark-bg-section;
+    background-color: $neutral-800;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   }
 
@@ -278,11 +289,11 @@ section {
 
   p {
     margin-top: 0;
-    color: $text-secondary;
+    color: $neutral-600;
     margin-bottom: 1rem;
 
     html.dark & {
-      color: $dark-text-secondary;
+      color: $neutral-400;
     }
   }
 }
@@ -319,18 +330,19 @@ section {
   display: flex;
   align-items: center;
   padding: 1rem;
-  background-color: $bg-element;
+  background-color: $neutral-150;
   border-radius: 8px;
 
   html.dark & {
-    background-color: $dark-bg-element;
+    background-color: $neutral-750;
   }
 
-  .loading-picture, .loading-text {
-    background-color: #ddd;
+  .loading-picture,
+  .loading-text {
+    background-color: $neutral-200;
 
     html.dark & {
-      background-color: #444;
+      background-color: $neutral-700;
     }
   }
 
@@ -368,7 +380,7 @@ section {
     .default-avatar {
       width: 100%;
       height: 100%;
-      background-color: $bg-element;
+      background-color: $neutral-150;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -386,7 +398,7 @@ section {
     .user-id {
       display: block;
       font-size: 0.8rem;
-      color: #777;
+      color: $neutral-500;
       margin-top: 0.3rem;
       overflow-wrap: anywhere;
     }
@@ -423,7 +435,7 @@ section {
 .topic-tag {
   display: flex;
   align-items: center;
-  background-color: $bg-element;
+  background-color: $neutral-150;
   padding: 0.4rem 0.8rem;
   border-radius: 4px;
   font-size: 0.9rem;
@@ -431,7 +443,7 @@ section {
   transition: all 0.2s ease;
 
   html.dark & {
-    background-color: $dark-bg-element;
+    background-color: $neutral-750;
   }
 
   &.dragging {
@@ -451,13 +463,13 @@ section {
 
   .drag-handle {
     margin-right: 0.5rem;
-    color: #999;
+    color: $neutral-400;
     cursor: grab;
     display: flex;
     align-items: center;
 
     html.dark & {
-      color: #777;
+      color: $neutral-500;
     }
 
     svg {
@@ -495,12 +507,12 @@ section {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: $bg-element;
+    background-color: $neutral-150;
     transition: 0.4s;
     border-radius: 34px;
 
     html.dark & {
-      background-color: #777;
+      background-color: $neutral-500;
     }
 
     &:before {
@@ -538,14 +550,14 @@ section {
   display: flex;
   align-items: center;
   padding: 1rem;
-  background-color: $bg-element;
+  background-color: $neutral-150;
   border-radius: 6px;
   margin-bottom: 0.8rem;
   cursor: grab;
   transition: all 0.2s ease;
 
   html.dark & {
-    background-color: $dark-bg-element;
+    background-color: $neutral-750;
   }
 
   &.dragging {
@@ -565,13 +577,13 @@ section {
 
   .drag-handle {
     margin-right: 0.5rem;
-    color: #999;
+    color: $neutral-400;
     cursor: grab;
     display: flex;
     align-items: center;
 
     html.dark & {
-      color: #777;
+      color: $neutral-500;
     }
 
     svg {
@@ -588,17 +600,17 @@ section {
 
   .block-details {
     flex: 1;
-    color: $text-secondary;
+    color: $neutral-600;
     font-size: 0.9rem;
 
     html.dark & {
-      color: $dark-text-secondary;
+      color: $neutral-400;
     }
 
     .pinned-badge {
       display: inline-block;
       background-color: $primary-color;
-      color: white;
+      color: $neutral-50;
       font-size: 0.75rem;
       padding: 0.2rem 0.5rem;
       border-radius: 4px;
@@ -608,11 +620,11 @@ section {
     .event-id-preview {
       font-family: monospace;
       font-size: 0.8rem;
-      color: #555;
+      color: $neutral-800;
       margin-left: 0.3rem;
 
       html.dark & {
-        color: #999;
+        color: $neutral-400;
       }
     }
   }
@@ -623,11 +635,11 @@ section {
   margin-top: 2rem;
 
   h3 {
-    border-bottom: 4px solid $bg-element;
+    border-bottom: 4px solid $neutral-150;
     padding-bottom: 0.5rem;
 
     html.dark & {
-      border-bottom: 4px solid $dark-bg-element;
+      border-bottom: 4px solid $neutral-750;
     }
   }
 
@@ -637,7 +649,8 @@ section {
     gap: 1.5rem;
     margin-bottom: 1.5rem;
 
-    .common-options-row, .auto-select-row {
+    .common-options-row,
+    .auto-select-row {
       display: grid;
       gap: 1rem;
       width: 100%;
@@ -645,7 +658,7 @@ section {
 
     .common-options-row {
       grid-template-columns: 1fr 1fr;
-      
+
       @media (max-width: 576px) {
         grid-template-columns: 1fr;
       }
@@ -699,14 +712,14 @@ section {
 .pinned-event-item {
   display: flex;
   flex-direction: column;
-  background-color: #f5f5f5;
+  background-color: white;
   border-radius: 6px;
   overflow: hidden;
-  border: 1px solid #eaeaea;
+  border: 1px solid $neutral-300;
 
   html.dark & {
-    background-color: $dark-bg-element;
-    border-color: $dark-border;
+    background-color: $neutral-750;
+    border-color: $neutral-700;
   }
 
   &.type-mismatch {
@@ -732,12 +745,6 @@ section {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  background-color: $bg-section;
-
-  html.dark & {
-    background-color: $dark-bg-section;
-    color: #ddd;
-  }
 
   &.image-preview {
     height: 150px;
@@ -752,19 +759,19 @@ section {
 
   &.articles {
     .pinned-preview {
-      font-weight: bold;
       padding: 15px;
     }
   }
 
-  &.notes, &.images {
+  &.notes,
+  &.images {
     .pinned-preview {
       padding: 15px;
-      background-color: $bg-section;
+      background-color: $neutral-50;
       font-style: italic;
 
       html.dark & {
-        background-color: $dark-bg-section;
+        background-color: $neutral-800;
       }
     }
   }
@@ -778,7 +785,7 @@ section {
   }
 
   .pinned-preview.loading {
-    color: #999;
+    color: $neutral-400;
     position: relative;
 
     &:after {
@@ -786,7 +793,7 @@ section {
       display: inline-block;
       width: 12px;
       height: 12px;
-      border: 2px solid #999;
+      border: 2px solid $neutral-400;
       border-radius: 50%;
       border-top-color: transparent;
       animation: spin 1s linear infinite;
@@ -806,42 +813,19 @@ section {
   }
 }
 
-// Pinned event details
-.pinned-event-details {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 15px;
-  background-color: $bg-element;
-  font-size: 0.85rem;
-
-  html.dark & {
-    background-color: #222;
-  }
-
-  .pinned-event-id {
-    color: $text-secondary;
-    font-family: monospace;
-
-    html.dark & {
-      color: $dark-text-secondary;
-    }
-  }
-}
-
 // Preview section
 .preview-section {
   text-align: center;
 
   .domain-preview {
-    background-color: $bg-element;
+    background-color: $neutral-150;
     padding: 1.5rem;
     border-radius: 8px;
     margin: 1.5rem 0;
     overflow-x: auto;
 
     html.dark & {
-      background-color: $dark-bg-element;
+      background-color: $neutral-750;
     }
 
     code {
@@ -904,18 +888,18 @@ section {
   padding-top: 2rem;
 
   html.dark & {
-    border-top-color: $dark-border;
+    border-top-color: $neutral-700;
   }
 
   .download-option,
   .dns-option {
-    background-color: $bg-section;
+    background-color: $neutral-50;
     padding: 1.5rem;
     border-radius: 8px;
     margin-bottom: 1.5rem;
 
     html.dark & {
-      background-color: $dark-bg-section;
+      background-color: $neutral-800;
     }
 
     p {
@@ -930,13 +914,13 @@ section {
   }
 
   .dns-instructions {
-    background-color: $bg-element;
+    background-color: $neutral-150;
     padding: 1rem;
     border-radius: 6px;
     border-left: 4px solid $primary-color;
 
     html.dark & {
-      background-color: $dark-bg-element;
+      background-color: $neutral-750;
     }
 
     p {
@@ -980,7 +964,7 @@ section {
       font-size: 0.9rem;
 
       html.dark & {
-        color: #ff6b9d;
+        color: $primary-color;
       }
 
       &:last-child {
@@ -997,11 +981,11 @@ footer {
   padding-top: 2rem;
 
   p {
-    color: #999;
+    color: $neutral-400;
     font-size: 0.9rem;
 
     html.dark & {
-      color: #777;
+      color: $neutral-700;
     }
   }
 }
