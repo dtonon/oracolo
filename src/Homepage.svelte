@@ -1435,7 +1435,8 @@
               </a>
             </p>
             <p>
-              You can freely updated the config in the previous steps, the preview will updated autoamtically.
+              You can freely updated the config in the previous steps, the preview will updated
+              autoamtically.
             </p>
             <p>
               <i
@@ -1477,9 +1478,48 @@
                   {#if processSubdomain(userDomain)}
                     <div class="dns-instructions" transition:fade={{ duration: 100 }}>
                       <p>Use this configuration in your DNS:</p>
-                      <pre>{processSubdomain(
-                          userDomain
-                        )} IN CNAME {domainPreview}.{baseDomain}</pre>
+                      <div class="dns-code">
+                        <pre>{processSubdomain(
+                            userDomain
+                          )} IN CNAME {domainPreview}.{baseDomain}</pre>
+                        <button
+                          class="copy-button"
+                          on:click={(event) => {
+                            const text = `${processSubdomain(userDomain)} IN CNAME ${domainPreview}.${baseDomain}`;
+                            navigator.clipboard.writeText(text);
+
+                            // Change to checkmark icon
+                            const button = event.currentTarget;
+                            const originalHTML = button.innerHTML;
+                            button.innerHTML =
+                              '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+                            button.title = 'Copied!';
+
+                            // Revert to original state after 2 seconds
+                            setTimeout(() => {
+                              button.innerHTML = originalHTML;
+                              button.title = 'Copy to clipboard';
+                            }, 2000);
+                          }}
+                          title="Copy to clipboard"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          >
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                            ></path>
+                          </svg>
+                        </button>
+                      </div>
                     </div>
                   {:else}
                     <div class="dns-error" transition:fade={{ duration: 100 }}>

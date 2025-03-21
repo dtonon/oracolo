@@ -1094,6 +1094,11 @@ section {
       font-size: 0.9rem;
     }
 
+    .dns-code {
+      position: relative;
+      display: flex;
+    }
+
     pre {
       margin: 0;
       padding: 0.8rem;
@@ -1102,10 +1107,44 @@ section {
       overflow-x: auto;
       font-family: monospace;
       font-size: 0.9rem;
+      flex: 1;
 
       html.dark & {
         background-color: #222;
         color: #ddd;
+      }
+    }
+    
+    .copy-button {
+      position: absolute;
+      height: 100%;
+      width: auto;
+      right: 0px;
+      top: 0px;
+      background-color: transparent;
+      border: none;
+      padding: 0 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      color: $neutral-700;
+      background: $neutral-200;
+      
+      &:hover {
+        color: $primary-color;
+        background-color: $neutral-300;
+      }
+      
+      html.dark & {
+        color: $neutral-400;
+        background-color: $neutral-600;
+        
+        &:hover {
+          color: $primary-color;
+          background-color: $neutral-700;
+        }
       }
     }
   }
