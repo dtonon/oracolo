@@ -1423,35 +1423,46 @@
         {#if blocks.length > 0}
           <section class="preview-section" transition:fade={{ duration: 100 }}>
             <h2>Your blog is ready!</h2>
-
-            <div class="domain-preview">
-              <code>{domainPreview}.{baseDomain}</code>
-            </div>
-
-            <div class="action-buttons">
+            <p>
+              Your blog is ready, we have prepared a preview so you can check the configuration
+              before deploying it:
               <a
                 href={`http://${domainPreview}.${baseDomain}`}
                 target="_blank"
                 class="secondary-button"
               >
-                View the blog preview
+                view your Nostr blog
               </a>
-            </div>
+            </p>
+            <p>
+              You can freely updated the config in the previous steps, the preview will updated autoamtically.
+            </p>
+            <p>
+              <i
+                >PS: Please don't share this URL, it's quite ugly and dosn't support HTTPS, it is
+                intended only to the check the configuration and for the possible DNS option (see
+                below).</i
+              >
+            </p>
 
             <div class="extra-options">
+              <h2>Make it visible to the world</h2>
+              <p>To deploy your Nostr blog blog you have a couple of options.</p>
               <div class="download-option">
                 <p>
-                  Download a single HTML file that run the full blog and upload it where you like
+                  <!-- svelte-ignore a11y-invalid-attribute -->
+                  The first one is to
+                  <a href="#" on:click={() => startBlogDownload()}>download a single HTML file</a> that
+                  runs the full blog, and upload it in your preferred web hosting. You can also give
+                  the file as a kind of business card, the person who receives it can simply open it
+                  on his PC.
                 </p>
-                <button on:click={() => startBlogDownload()} class="download-button"
-                  >Download</button
-                >
               </div>
 
               <div class="dns-option">
                 <p>
-                  Do you have a domain with DNS management?<br />
-                  Point it to your blog effortlessly
+                  Instead if you have only a domain with DNS management you can point it to the
+                  Oracolo service effortlessly, it's free!
                 </p>
                 <div class="domain-input">
                   <input
@@ -1502,7 +1513,8 @@
 
     <footer>
       <p>
-        Oracolo • A Nostr-powered blogging platform<br />
+        Oracolo • <a href="https://njump.me" target="_blank">A Nostr-powered</a> blogging platform<br
+        />
         The source code for this service is
         <a href="https://github.com/dtonon/oracolo" target="_blank">free and open</a>
       </p>

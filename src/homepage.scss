@@ -987,7 +987,6 @@ section {
 
 // Preview section
 .preview-section {
-  text-align: center;
 
   .wait {
     text-align: center;
@@ -995,9 +994,7 @@ section {
 
   .domain-preview {
     background-color: $neutral-150;
-    padding: 1.5rem;
     border-radius: 8px;
-    margin: 1.5rem 0;
     overflow-x: auto;
 
     html.dark & {
@@ -1067,26 +1064,17 @@ section {
     border-top-color: $neutral-700;
   }
 
-  .download-option,
-  .dns-option {
-    background-color: $neutral-50;
-    padding: 1.5rem;
-    border-radius: 8px;
-    margin-bottom: 1.5rem;
-
-    html.dark & {
-      background-color: $neutral-800;
-    }
-
-    p {
-      margin-top: 0;
-      margin-bottom: 1.5rem;
-      font-weight: bold;
-    }
+  .download-option {
+    margin-bottom: 2rem;
   }
 
   .domain-input {
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
+
+    input {
+      box-sizing: border-box;
+      width: 100%;
+    }
   }
 
   .dns-instructions {
