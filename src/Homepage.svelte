@@ -953,7 +953,7 @@
 
     domainValidationTimer = setTimeout(() => {
       showDomainValidation = true;
-    }, 1500);
+    }, 800);
   }
 
   function updateDomainPreview() {
