@@ -1,5 +1,5 @@
 import { loadNostrUser, type NostrUser } from '@nostr/gadgets/metadata';
-import { decode } from '@nostr/tools/nip19';
+import { decode, npubEncode } from '@nostr/tools/nip19';
 import showdown from 'showdown';
 import { type NostrEvent } from '@nostr/tools/core';
 
@@ -74,27 +74,66 @@ export function getEventData(event: NostrEvent): EventData {
   };
 }
 
+export async function resolveNip05(address: string): Promise<string | null> {
+  try {
+    const match = address.match(/^([a-zA-Z0-9-_.]+)@([a-zA-Z0-9-.]+)$/);
+    if (!match) {
+      return null;
+    }
+
+    const [_, name, domain] = match;
+    const url = `https://${domain}/.well-known/nostr.json?name=${name}`;
+
+    const response = await fetch(url);
+    if (!response.ok) {
+      console.error(`Failed to fetch NIP-05 data: ${response.status}`);
+      return null;
+    }
+
+    const data = await response.json();
+    if (data && data.names && data.names[name]) {
+      return data.names[name]; // Return the hex pubkey
+    }
+
+    return null;
+  } catch (error) {
+    console.error('Error resolving NIP-05 address:', error);
+    return null;
+  }
+}
+
 export async function getProfile(code: string): Promise<NostrUser | null> {
   let pubkey: string;
   let relays: string[] = [];
 
-  try {
-    let result = decode(code);
-    if (result.type === 'npub') {
-      pubkey = result.data;
-    } else if (result.type === 'nprofile') {
-      pubkey = result.data.pubkey;
-      relays = result.data.relays || [];
+  // Check if it's a NIP-05 identifier
+  if (code.includes('@')) {
+    const resolvedPubkey = await resolveNip05(code);
+    if (resolvedPubkey) {
+      pubkey = resolvedPubkey;
     } else {
-      console.error('author should be an npub');
+      console.error('Failed to resolve NIP-05 address');
       return null;
     }
-  } catch (err) {
-    if (code.length === 64) {
-      pubkey = code;
-    } else {
-      console.error('Failed to decode npub:', err);
-      return null;
+  } else {
+    try {
+      let result = decode(code);
+      if (result.type === 'npub') {
+        pubkey = result.data;
+      } else if (result.type === 'nprofile') {
+        pubkey = result.data.pubkey;
+        relays = result.data.relays || [];
+      } else {
+        console.error('author should be an npub');
+        return null;
+      }
+    } catch (err) {
+      if (code.length === 64) {
+        pubkey = code;
+      } else {
+        console.error('Failed to decode npub:', err);
+        return null;
+      }
     }
   }
 

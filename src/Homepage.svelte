@@ -89,12 +89,19 @@
 
   function isValidNpub(value: string): boolean {
     try {
-      if (!value.startsWith('npub1')) return false;
-      const decoded = decode(value);
-      return decoded.type === 'npub';
+      if (value.startsWith('npub1')) {
+        const decoded = decode(value);
+        return decoded.type === 'npub';
+      }
+      return false;
     } catch (e) {
       return false;
     }
+  }
+
+  function isValidNip05(value: string): boolean {
+    // Simple check for user@domain.tld format
+    return /^([a-zA-Z0-9-_.]+)@([a-zA-Z0-9-.]+)$/.test(value);
   }
 
   function getBaseDomain(): string {
@@ -119,8 +126,8 @@
   }
 
   async function searchUser() {
-    if (!isValidNpub(npub)) {
-      error = 'Please enter a valid npub';
+    if (!isValidNpub(npub) && !isValidNip05(npub)) {
+      error = 'Please enter a valid npub or NIP-05 address';
       return;
     }
 
@@ -128,7 +135,7 @@
     error = '';
     userFound = false;
 
-    // Reset pinned elements when searching for a new npub
+    // Reset pinned elements when searching for a new user identifier
     newpinnedEvents = [];
     pinnedPreviews = {};
     pinnedEventError = '';
@@ -142,6 +149,7 @@
       if (userProfile) {
         userName = userProfile.metadata.name || userProfile.shortName || '';
         userPicture = userProfile.image || '';
+        npub = userProfile.npub; // Force it to override the possible NIP-05
         userFound = true;
         userPubkey = userProfile.pubkey;
 
@@ -1103,7 +1111,7 @@
               type="text"
               bind:value={npub}
               bind:this={npubInput}
-              placeholder="npub1..."
+              placeholder="npub1... or NIP-05 address"
               class:error
               on:keydown={(e) => e.key === 'Enter' && searchUser()}
             />
