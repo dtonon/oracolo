@@ -5,6 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Oracolo</title>
     <link rel="stylesheet" href="/dist/homepage.css" />
+
+    <script>
+      // Inline script to set theme before any content renders
+      (function () {
+        function determineTheme() {
+          // First check for explicit user preference
+          if (localStorage.getItem('theme') === 'dark') {
+            return true;
+          } else if (localStorage.getItem('theme') === 'light') {
+            return false;
+          }
+
+          // If no explicit preference, use system preference
+          const darkSetting = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          localStorage.setItem('systemTheme', darkSetting ? 'dark' : 'light');
+          return darkSetting;
+        }
+
+        // Apply theme immediately
+        const isDark = determineTheme();
+        if (isDark) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="app"></div>
