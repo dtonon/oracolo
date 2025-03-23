@@ -69,7 +69,7 @@
     <h1>{note.title}</h1>
     {#if note.image}
       <!-- svelte-ignore a11y-missing-attribute -->
-      <img class="note-banner" src={note.image} />
+      <img class={note.image ? 'note-image' : 'note-banner'} src={note.image} />
     {/if}
     <div class="content">
       {@html renderedHtml}

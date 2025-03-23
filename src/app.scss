@@ -577,6 +577,12 @@ html.dark .block {
       object-fit: cover;
       max-height: 50vh;
     }
+
+    &.note-image {
+      margin: 0;
+      margin-top: 1.5rem;
+      width: 100%;
+    }
   }
 
   video {
