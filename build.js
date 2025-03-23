@@ -5,6 +5,7 @@ import sveltePlugin from 'esbuild-svelte';
 import { sveltePreprocess } from 'svelte-preprocess';
 import { sassPlugin } from 'esbuild-sass-plugin';
 import fs from 'fs';
+import { copyFileSync, mkdirSync, existsSync } from 'fs';
 import path from 'path';
 
 const prod = process.argv.indexOf('prod') !== -1;
@@ -38,6 +39,21 @@ const createCssExtractorPlugin = () => ({
   }
 });
 
+function copyFavicon() {
+  const sourceDir = 'static/images';
+  const destDir = 'dist/images';
+
+  // Create destination directory if it doesn't exist
+  if (!existsSync(destDir)) {
+    mkdirSync(destDir, { recursive: true });
+  }
+
+  // Copy the favicon
+  // Adjust the filename as needed to match your actual favicon filename
+  copyFileSync(`${sourceDir}/favicon.png`, `${destDir}/favicon.png`);
+  console.log('Favicon copied to dist/images');
+}
+
 const baseOptions = {
   mainFields: ['svelte', 'browser', 'module', 'main'],
   conditions: ['svelte', 'browser'],
@@ -68,10 +84,7 @@ const mainOptions = {
   ...baseOptions,
   entryPoints: ['src/main.ts'],
   outfile: 'dist/out.js',
-  plugins: [
-    ...baseOptions.plugins,
-    createCssExtractorPlugin(),
-  ]
+  plugins: [...baseOptions.plugins, createCssExtractorPlugin()]
 };
 
 // Homepage build
@@ -79,15 +92,13 @@ const homepageOptions = {
   ...baseOptions,
   entryPoints: ['src/homepage.ts'],
   outfile: 'dist/homepage.js',
-  plugins: [
-    ...baseOptions.plugins,
-    createCssExtractorPlugin(),
-  ]
+  plugins: [...baseOptions.plugins, createCssExtractorPlugin()]
 };
 
 if (watch) {
   let mainCtx = await esbuild.context(mainOptions);
   let homeCtx = await esbuild.context(homepageOptions);
+  copyFavicon();
   await Promise.all([mainCtx.watch(), homeCtx.watch()]);
   await mainCtx.serve({
     host: 'localhost',
@@ -95,5 +106,6 @@ if (watch) {
   });
 } else {
   await Promise.all([esbuild.build(mainOptions), esbuild.build(homepageOptions)]);
+  copyFavicon();
   console.log('built.');
 }

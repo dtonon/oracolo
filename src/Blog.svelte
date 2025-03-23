@@ -77,22 +77,22 @@
           }));
         }
 
-				pool.subscribeManyEose(writeRelays, filters, {
-					onevent: async (event) => {
-						if (!isRootNote(event)) {
-							return;
-						}
-						events = [...events, event].sort((a, b) => b.created_at - a.created_at);
-					},
-					onclose() {
-						finishedLoading = true;
-						console.log('Got', events.length, 'events');
-						console.log('Finish, subscription closed.');
-					}
-				});
-			}
-		);
-	});
+        pool.subscribeManyEose(writeRelays, filters, {
+          onevent: async (event) => {
+            if (!isRootNote(event)) {
+              return;
+            }
+            events = [...events, event].sort((a, b) => b.created_at - a.created_at);
+          },
+          onclose() {
+            finishedLoading = true;
+            console.log('Got', events.length, 'events');
+            console.log('Finish, subscription closed.');
+          }
+        });
+      }
+    );
+  });
 </script>
 
 {#if profile}
