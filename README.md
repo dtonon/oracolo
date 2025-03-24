@@ -11,7 +11,7 @@ The HTML produced works also without a web server; for example, you can send it 
 
 Finally, Oracolo is a web service. In fact it contains a server that permits to dynamically create blogs for any Nostr user. Read more below.
 
-![Oracolo preview](docs/oracolo.jpg)
+https://github.com/user-attachments/assets/a7db3f59-e676-469f-a3d7-c2a5c7b8d18f
 
 ## How to use
 
