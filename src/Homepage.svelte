@@ -184,8 +184,9 @@
 
     let topicsAdded = false;
     newTopics.forEach((topic) => {
-      if (!topics.includes(topic)) {
-        topics = [...topics, topic];
+      let sanitizedTopic = topic.replace(/[^a-zA-Z]/g, '');
+      if (!topics.includes(sanitizedTopic)) {
+        topics = [...topics, sanitizedTopic];
         topicsAdded = true;
       }
     });
