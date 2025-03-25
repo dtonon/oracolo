@@ -13,11 +13,11 @@ import (
 type Params [][]string
 
 var metaSettings = map[string]string{
-	"ba":       "block:articles",
-	"bn":       "block:notes",
-	"bi":       "block:images",
-	"topics":   "topics",
-	"comments": "comments",
+	"ba": "block:articles",
+	"bn": "block:notes",
+	"bi": "block:images",
+	"t":  "topics",
+	"c":  "comments",
 }
 
 func paramsFromSubdomain(subdomain string) (Params, error) {
@@ -43,10 +43,10 @@ func paramsFromSubdomain(subdomain string) (Params, error) {
 			for key, name := range metaSettings {
 				if strings.HasPrefix(part, key) {
 					value := "yes"
-					if key != "comments" {
+					if key != "c" {
 						value = part[len(key)+1:]
 					}
-					if key == "topics" {
+					if key == "t" {
 						value = strings.Replace(value, "-", ",", -1)
 					}
 					params = append(params, []string{name, value})

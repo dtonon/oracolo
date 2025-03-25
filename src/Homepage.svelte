@@ -1021,11 +1021,11 @@
     });
 
     if (enableComments) {
-      subdomains.push('comments');
+      subdomains.push('c');
     }
 
     if (topics.length > 0) {
-      subdomains.push(`topics-${topics.join('-')}`);
+      subdomains.push(`t-${topics.join('-')}`);
     }
 
     domainPreview = subdomains.join('.');

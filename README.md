@@ -104,13 +104,13 @@ The first subdomain on the left should be the npub, the you can have the configu
 | `ba-` | Add a block of articles |
 | `bn-` | Add a block of short notes |
 | `bi-` | Add a block of images |
-| `topics-` | Create a menu with some topics |
-| `comments` | Enable comments at the end of the content |
+| `t-` | Create a menu with some topics |
+| `c-` | Enable comments at the end of the content |
 
 After the prefix you can happend the same content used in the meta tags. For example:
 
 ```
-http://npub1jlrs53pkdfjnts29kveljul2sm0actt6n8dxrrzqcersttvcuv3qdjynqn.ba-2.ba-ib07ef.bn-slide-m400.ba-2.ba-10-list.topics-nostr-groups-relays-nip44.localhost:45070
+http://npub1jlrs53pkdfjnts29kveljul2sm0actt6n8dxrrzqcersttvcuv3qdjynqn.ba-2.ba-ib07ef.bn-slide-m400.ba-2.ba-10-list.t-nostr-groups-relays-nip44.c.localhost:45070
 ```
 | Param | Generates |
 | - | - |
@@ -119,6 +119,7 @@ http://npub1jlrs53pkdfjnts29kveljul2sm0actt6n8dxrrzqcersttvcuv3qdjynqn.ba-2.ba-i
 | `bn-slide-m400` | Slide of notes with lenght min of 400 chars |
 | `ba-2` | 2 more articles |
 | `ba-10-list` | 10 more articles, as list |
-| `topics-nostr-groups-relays-nip44` | Show a top menu with these topics |
+| `t-nostr-groups-relays-nip44` | Show a top menu with these topics |
+| `c` | Enable comments |
 
 See the live version [here](http://npub1jlrs53pkdfjnts29kveljul2sm0actt6n8dxrrzqcersttvcuv3qdjynqn.ba-2.ba-ib07ef.bn-slide-m400.ba-2.ba-10-list.topics-nostr-groups-relays-nip44.oracolo.me)!
