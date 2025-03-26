@@ -22,7 +22,7 @@ export interface Config {
   ids?: string[];
 }
 
-export async function getConfig(): Promise<SiteConfig> {
+export async function getConfig(): Promise<SiteConfig | undefined> {
   const authorMeta = document.querySelector('meta[name="author"]');
   const relaysMeta = document.querySelector('meta[name="relays"]');
   const topicsMeta = document.querySelector('meta[name="topics"]');
@@ -31,7 +31,8 @@ export async function getConfig(): Promise<SiteConfig> {
   // Author
   // -------------------------------------------------------
   if (!authorMeta) {
-    throw new Error('Missing meta tags for configuration');
+    console.log('Missing meta tags for configuration');
+    return undefined;
   }
   const npub = authorMeta.getAttribute('content') as string;
 

@@ -9,11 +9,11 @@
   import ThemeSwitch from './ThemeSwitch.svelte';
 
   let currentHash = '';
-  let profile: NostrUser | null;
+  let profile: NostrUser | null = null;
   let missingConfig = false;
   let name = '';
-  let picture: string | null = '';
-  let relays: string[];
+  let picture: string | null = null;
+  let relays: string[] = [];
   let comments = false;
 
   onMount(() => {
@@ -21,35 +21,61 @@
     const urlParams = new URLSearchParams(window.location.search);
     const shouldDownload = urlParams.get('download') === 'true';
 
-    getConfig().then(async ({ npub, readRelays, writeRelays, comments: configComments }) => {
-      relays = Array.from(new Set(readRelays.concat(writeRelays)));
-      comments = configComments;
-
-      if (comments) {
-        try {
-          await import('window.nostr.js');
-          console.log('window.nostr.js has been successfully loaded');
-          // You can place any initialization code here if needed
-        } catch (error) {
-          console.error('Failed to load window.nostr.js:', error);
+    getConfig()
+      .then(async (configOrUndefined) => {
+        // Early return if config is undefined
+        if (!configOrUndefined) {
+          missingConfig = true;
+          return;
         }
-      }
 
-      handleHashChange();
-      window.addEventListener('hashchange', handleHashChange);
+        // Destructure with default values to satisfy TypeScript
+        const {
+          npub = '',
+          readRelays = [],
+          writeRelays = [],
+          comments: configComments = false
+        } = configOrUndefined;
 
-      profile = await getProfile(npub);
-      if (profile) {
-        name = profile.metadata.name || profile.shortName;
-        picture = profile.image || null;
-
-        if (shouldDownload) {
-          downloadHtmlApp();
+        // Validate config
+        if (!npub) {
+          missingConfig = true;
+          return;
         }
-      } else {
+
+        relays = Array.from(new Set(readRelays.concat(writeRelays)));
+        comments = configComments;
+
+        if (comments) {
+          try {
+            await import('window.nostr.js');
+            console.log('window.nostr.js has been successfully loaded');
+          } catch (error) {
+            console.error('Failed to load window.nostr.js:', error);
+          }
+        }
+
+        handleHashChange();
+        window.addEventListener('hashchange', handleHashChange);
+
+        profile = await getProfile(npub);
+        if (profile) {
+          name = profile.metadata.name || profile.shortName;
+          picture = profile.image || null;
+
+          if (shouldDownload) {
+            downloadHtmlApp();
+          }
+        } else {
+          missingConfig = true;
+          return;
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching config:', error);
         missingConfig = true;
-      }
-    });
+        return;
+      });
   });
 
   onDestroy(() => {
@@ -68,8 +94,13 @@
   <div class="unfinished-setup">
     <h1>Oracolo</h1>
     <h2>Missing config!</h2>
-    You need to set (at least) the<strong>author meta tag</strong> by updating this html file! Open it
-    with an editor, look at the first lines and personalize them.
+    <p>
+      You need to <a href="https://github.com/dtonon/oracolo?tab=readme-ov-file#configuration"
+        >configure your blog</a
+      >
+      adding some meta tags inside this HTML file.<br /><br />
+      Are you lazy? Use the handy web wizard at <a href="https://oracolo.me">oracolo.me</a>.
+    </p>
   </div>
 {/if}
 
@@ -89,11 +120,13 @@
   This blog is powered by <a href="https://github.com/dtonon/oracolo">Oracolo</a> and Nostr,
   <a href="https://njump.me">read more</a><br /><br />
 
-  Would you like to host this website yourself? It's just one HTML file,
-  <button on:click={() => downloadHtmlApp()} class="link-button">download it</button>.<br /><br />
+  {#if !missingConfig}
+    Would you like to host this website yourself? It's just one HTML file,
+    <button on:click={() => downloadHtmlApp()} class="link-button">download it</button>.<br /><br />
 
-  {#if relays}
-    This page connects to some servers (Nostr relays) to retrieve data: {relays.join(', ')}
+    {#if relays.length > 0}
+      This page connects to some servers (Nostr relays) to retrieve data: {relays.join(', ')}
+    {/if}
   {/if}
 </div>
 
