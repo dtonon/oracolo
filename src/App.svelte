@@ -44,10 +44,7 @@
         picture = profile.image || null;
 
         if (shouldDownload) {
-          // Short timeout to ensure the page has loaded
-          setTimeout(() => {
-            downloadHtmlApp();
-          }, 500);
+          downloadHtmlApp();
         }
       } else {
         missingConfig = true;

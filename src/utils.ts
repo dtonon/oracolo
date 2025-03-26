@@ -332,10 +332,17 @@ export function formatDate(timestamp: number, includeTime = false) {
 
 export async function downloadHtmlApp(): Promise<void> {
   try {
-    const response = await fetch(window.location.href);
+    const response = await fetch(window.location.href, {
+      method: 'GET',
+      headers: {
+        Accept: 'text/html'
+      }
+    });
+
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
+
     const originalHTML = await response.text();
     const blob = new Blob([originalHTML], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
