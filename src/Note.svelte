@@ -37,15 +37,17 @@
     nevent = neventEncode({ id });
     comments = config.comments;
 
-    let event = await pool.get(config.writeRelays, { ids: [id] });
-    if (event) {
-      console.log('Received event:', event);
-      note = getEventData(event);
-      documentTitle.set(note.title);
-      renderedContent = await processAll(note);
-    } else {
-      console.log(`Didn't get any event for ${id} query.`);
-    }
+    pool.subscribeManyEose(config.writeRelays, [{ ids: [id] }], {
+      onevent: async (event) => {
+        console.log('Received event:', event);
+        note = getEventData(event);
+        documentTitle.set(note.title);
+        renderedContent = await processAll(note);
+      },
+      onclose() {
+        console.log('Finish, subscription closed.');
+      }
+    });
   });
 
   $: renderedHtml = renderedContent;
