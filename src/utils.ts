@@ -230,8 +230,15 @@ export function processVideoUrls(content: string) {
     /(?:https?:\/\/\S+\.(?:mp4|webm|ogg|mov))|(?:\!\[.*?\]\((https?:\/\/\S+\.(?:mp4|webm|ogg|mov))\))/gi;
 
   // Replace the video URL with HTML <video> tag
-  const htmlText = content.replace(videoUrlRegex, (_, group) => {
-    return ` <video controls><source src="${group}" type="video/mp4"></video> `;
+  const htmlText = content.replace(videoUrlRegex, (match) => {
+    // Extract the URL from either plain URL or markdown-style link
+    const url =
+      match.match(/https?:\/\/\S+\.(?:mp4|webm|ogg|mov)/)?.[0] ||
+      match.match(/\((https?:\/\/\S+\.(?:mp4|webm|ogg|mov))\)/)?.[1];
+
+    if (!url) return match; // Fallback if no URL is found
+
+    return ` <video controls><source src="${url}" type="video/mp4"></video> `;
   });
 
   return htmlText;
