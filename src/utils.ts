@@ -213,8 +213,8 @@ export function cleanMarkdownLinks(content: string) {
 }
 
 export function processImageUrls(content: string) {
-  // Regular expression to match the image URL
-  const imageUrlRegex = /(?<!$)\s*(https?:\/\/(?!.*$).*?\.(?:png|jpg|jpeg|gif|bmp))\s*(?!\))/gi;
+  // Regex to match image URLs, excluding those between parentheses
+  const imageUrlRegex = /(?<![(])\b(https?:\/\/\S+\.(?:png|jpg|jpeg|gif|bmp))\b(?![\)])/;
 
   // Replace the image URL with Markdown syntax
   const markdownText = content.replace(imageUrlRegex, (_, group) => {
