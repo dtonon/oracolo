@@ -225,8 +225,9 @@ export function processImageUrls(content: string) {
 }
 
 export function processVideoUrls(content: string) {
-  // Regular expression to match the video URL
-  const videoUrlRegex = /\s*(https?:\/\/\S+\.(?:mp4|webm|ogg|mov))(\s*|$)/gi;
+  // Regular expression to match the video URL and markdown image-style syntax
+  const videoUrlRegex =
+    /(?:https?:\/\/\S+\.(?:mp4|webm|ogg|mov))|(?:\!\[.*?\]\((https?:\/\/\S+\.(?:mp4|webm|ogg|mov))\))/gi;
 
   // Replace the video URL with HTML <video> tag
   const htmlText = content.replace(videoUrlRegex, (_, group) => {
