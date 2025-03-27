@@ -3,10 +3,10 @@
   import { type NostrEvent } from '@nostr/tools/core';
   import { type Filter } from '@nostr/tools/filter';
 
-  import { getConfig } from './config';
+  import { type SiteConfig } from './config';
   import { pool } from '@nostr/gadgets/global';
   import { documentTitle } from './stores/documentTitleStore';
-  import { getProfile, isRootNote } from './utils';
+  import { isRootNote } from './utils';
   import Loading from './Loading.svelte';
   import type { NostrUser } from '@nostr/gadgets/metadata';
   import Articles from './Articles.svelte';
@@ -19,11 +19,11 @@
 
   let npub = '';
   let topics: string[] = [];
-
   let blocks: { type: string; config: any }[];
 
   export let tag: string;
   export let profile: NostrUser | null;
+  export let config: SiteConfig;
 
   $: documentTitle.subscribe((value) => {
     document.title = value;
@@ -37,61 +37,56 @@
   onMount(() => {
     uniqueEventsStore.reset();
 
-    getConfig().then(
-      async ({ npub: configNpub, writeRelays, topics: configTopics, blocks: configBlocks }) => {
-        npub = configNpub;
-        profile = await getProfile(npub);
-        if (!profile) {
-          throw new Error('invalid npub');
-        }
+    if (!profile) {
+      throw new Error('invalid npub');
+    }
+    npub = config.npub;
+    topics = config.topics;
+    blocks = config.blocks;
+    let writeRelays = config.writeRelays;
 
-        topics = configTopics;
-        blocks = configBlocks;
+    documentTitle.set(profile.shortName + ' home, powered by Nostr');
 
-        documentTitle.set(profile.shortName + ' home, powered by Nostr');
-
-        // Fetch all possible data
-        let filters: Filter[] = [
-          {
-            kinds: [1],
-            authors: [profile.pubkey],
-            limit: 1000
-          },
-          {
-            kinds: [30023],
-            authors: [profile.pubkey],
-            limit: 1000
-          },
-          {
-            kinds: [20],
-            authors: [profile.pubkey],
-            limit: 1000
-          }
-        ];
-
-        if (tag) {
-          tag = tag.substring('/tags'.length);
-          filters = filters.map((filter) => ({
-            ...filter,
-            '#t': [tag]
-          }));
-        }
-
-        pool.subscribeManyEose(writeRelays, filters, {
-          onevent: async (event) => {
-            if (!isRootNote(event)) {
-              return;
-            }
-            events = [...events, event].sort((a, b) => b.created_at - a.created_at);
-          },
-          onclose() {
-            finishedLoading = true;
-            console.log('Got', events.length, 'events');
-            console.log('Finish, subscription closed.');
-          }
-        });
+    // Fetch all possible data
+    let filters: Filter[] = [
+      {
+        kinds: [1],
+        authors: [profile.pubkey],
+        limit: 1000
+      },
+      {
+        kinds: [30023],
+        authors: [profile.pubkey],
+        limit: 1000
+      },
+      {
+        kinds: [20],
+        authors: [profile.pubkey],
+        limit: 1000
       }
-    );
+    ];
+
+    if (tag) {
+      tag = tag.substring('/tags'.length);
+      filters = filters.map((filter) => ({
+        ...filter,
+        '#t': [tag]
+      }));
+    }
+
+    pool.subscribeManyEose(writeRelays, filters, {
+      onevent: async (event) => {
+        if (!isRootNote(event)) {
+          return;
+        }
+        events = [...events, event].sort((a, b) => b.created_at - a.created_at);
+      },
+      onclose() {
+        finishedLoading = true;
+        console.log('Got', events.length, 'events');
+        console.log('Finish, subscription closed.');
+      }
+    });
   });
 </script>
 

@@ -2,7 +2,7 @@
   import { onMount, onDestroy } from 'svelte';
   import { type NostrUser } from '@nostr/gadgets/metadata';
 
-  import { getConfig } from './config';
+  import { getConfig, type SiteConfig } from './config';
   import { getProfile, downloadHtmlApp } from './utils';
   import Home from './Blog.svelte';
   import Note from './Note.svelte';
@@ -15,6 +15,7 @@
   let picture: string | null = null;
   let relays: string[] = [];
   let comments = false;
+  let config: SiteConfig;
 
   onMount(() => {
     // Check if the URL has a download parameter
@@ -27,6 +28,8 @@
         if (!configOrUndefined) {
           missingConfig = true;
           return;
+        } else {
+          config = configOrUndefined;
         }
 
         // Destructure with default values to satisfy TypeScript
@@ -34,7 +37,7 @@
           npub = '',
           readRelays = [],
           writeRelays = [],
-          comments: configComments = false
+          comments = false
         } = configOrUndefined;
 
         // Validate config
@@ -44,7 +47,6 @@
         }
 
         relays = Array.from(new Set(readRelays.concat(writeRelays)));
-        comments = configComments;
 
         if (comments) {
           try {
@@ -107,11 +109,11 @@
 {#if profile && Object.keys(profile).length > 0}
   {#key currentHash}
     {#if currentHash === ''}
-      <Home tag="" {profile} />
+      <Home tag="" {profile} {config} />
     {:else if currentHash.startsWith('tags/')}
-      <Home tag={currentHash} {profile} />
+      <Home tag={currentHash} {profile} {config} />
     {:else}
-      <Note id={currentHash} {profile} />
+      <Note id={currentHash} {profile} {config} />
     {/if}
   {/key}
 {/if}

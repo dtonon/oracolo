@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { getConfig } from './config';
+  import { type SiteConfig } from './config';
   import { documentTitle } from './stores/documentTitleStore';
   import { getEventData, processAll, formatDate, getProfile, type EventData } from './utils';
   import { pool } from '@nostr/gadgets/global';
@@ -20,28 +20,32 @@
 
   export let id: string;
   export let profile: NostrUser | null;
+  export let config: SiteConfig;
 
-  onMount(() => {
-    getConfig().then(async ({ npub, writeRelays, readRelays, comments: configComments }) => {
-      replyRelays = readRelays;
+  onMount(async () => {
+    if (!profile) {
+      throw new Error('invalid npub');
+      return;
+    }
 
-      profile = await getProfile(npub);
-      if (!profile) {
-        throw new Error('npub is invalid');
-      }
-      nevent = neventEncode({ id });
-      comments = configComments;
+    replyRelays = config.readRelays;
 
-      let event = await pool.get(writeRelays, { ids: [id] });
-      if (event) {
-        console.log('Received event:', event);
-        note = getEventData(event);
-        documentTitle.set(note.title);
-        renderedContent = await processAll(note);
-      } else {
-        console.log(`Didn't get any event for ${id} query.`);
-      }
-    });
+    profile = await getProfile(config.npub);
+    if (!profile) {
+      throw new Error('npub is invalid');
+    }
+    nevent = neventEncode({ id });
+    comments = config.comments;
+
+    let event = await pool.get(config.writeRelays, { ids: [id] });
+    if (event) {
+      console.log('Received event:', event);
+      note = getEventData(event);
+      documentTitle.set(note.title);
+      renderedContent = await processAll(note);
+    } else {
+      console.log(`Didn't get any event for ${id} query.`);
+    }
   });
 
   $: renderedHtml = renderedContent;
