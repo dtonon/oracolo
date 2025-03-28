@@ -293,12 +293,14 @@ export async function processAll(note: EventData | NostrEvent): Promise<string> 
   }
 
   // Render markdown
-  let converter = new showdown.Converter({
-    simplifiedAutoLink: true,
-    tables: true,
-    strikethrough: true
-  });
-  noteContent = converter.makeHtml(noteContent);
+  if (note.kind === 30023) {
+    let converter = new showdown.Converter({
+      simplifiedAutoLink: true,
+      tables: true,
+      strikethrough: true
+    });
+    noteContent = converter.makeHtml(noteContent);
+  }
 
   return noteContent;
 }
