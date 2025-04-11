@@ -1,31 +1,34 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { type NostrEvent } from '@nostr/tools/core';
-  import { filterEvents } from './blockUtils.js';
-  import { formatDate, getEventData } from './utils.js';
+  import { formatDate, type EventData } from './utils.js';
+  import type { Config } from './config.js';
+  import type { EventSource } from './blockUtils.js';
 
   // Block-specific props
-  export let events: NostrEvent[] = [];
-  export let count = 2;
-  export let style = 'grid';
-  export let minChars = 10;
+  export let source: EventSource;
+  export let count: Config['count'];
+  export let style: Config['style'];
+  export let minChars: Config['minChars'];
   export let ids: string[] | undefined = undefined;
-  const kinds = [30023];
 
+  let items: EventData[] = [];
   onMount(() => {
-    if (ids) {
-      style = 'grid';
-    }
+    (async () => {
+      if (ids) {
+        style = 'grid';
+        items = await source.fetchIds(ids);
+      } else {
+        items = await source.pluck(count, minChars);
+      }
+    })();
   });
-
-  $: filteredItems = filterEvents(events, kinds, minChars, count, false, ids).map(getEventData);
 </script>
 
-{#if filteredItems.length > 0}
+{#if items.length > 0}
   <section class="block articles">
     {#if style === 'grid'}
-      <div class="grid {filteredItems.length % 2 !== 0 ? 'odd' : ''}">
-        {#each filteredItems as event}
+      <div class="grid {items.length % 2 !== 0 ? 'odd' : ''}">
+        {#each items as event}
           <div class="item">
             <a href={`#${event.id}`}>
               <!-- svelte-ignore a11y-missing-attribute -->
@@ -50,7 +53,7 @@
     {:else if style === 'list'}
       <div class="list">
         <ul>
-          {#each filteredItems as event}
+          {#each items as event}
             <li>
               <a href={`#${event.id}`}>
                 <h2>{event.title}</h2>

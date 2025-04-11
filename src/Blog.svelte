@@ -1,25 +1,22 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { type NostrEvent } from '@nostr/tools/core';
-  import { type Filter } from '@nostr/tools/filter';
 
-  import { type SiteConfig } from './config';
-  import { pool } from '@nostr/gadgets/global';
+  import { type SiteConfig, type Block } from './config';
   import { documentTitle } from './stores/documentTitleStore';
-  import { isRootNote } from './utils';
   import Loading from './Loading.svelte';
   import type { NostrUser } from '@nostr/gadgets/metadata';
   import Articles from './Articles.svelte';
   import Notes from './Notes.svelte';
   import Images from './Images.svelte';
-  import { uniqueEventsStore } from './stores/uniqueEventsStore';
-
-  let events: NostrEvent[] = [];
-  let finishedLoading = false;
+  import { loaded, totalDisplayedNotes, EventSource } from './blockUtils';
 
   let npub = '';
   let topics: string[] = [];
-  let blocks: { type: string; config: any }[];
+  let blocks: Block[];
+
+  let noteSource: EventSource;
+  let imageSource: EventSource;
+  let articleSource: EventSource;
 
   export let tag: string;
   export let profile: NostrUser | null;
@@ -29,63 +26,33 @@
     document.title = value;
   });
 
-  // Reset events mapping when the var refresh
-  $: if (events) {
-    uniqueEventsStore.reset();
-  }
-
   onMount(() => {
-    uniqueEventsStore.reset();
-
     if (!profile) {
       throw new Error('invalid npub');
     }
     npub = config.npub;
     topics = config.topics;
     blocks = config.blocks;
-    let writeRelays = config.writeRelays;
 
     documentTitle.set(profile.shortName + ' home, powered by Nostr');
 
-    // Fetch all possible data
-    let filters: Filter[] = [
-      {
-        kinds: [1],
-        authors: [profile.pubkey],
-        limit: 1000
-      },
-      {
-        kinds: [30023],
-        authors: [profile.pubkey],
-        limit: 1000
-      },
-      {
-        kinds: [20],
-        authors: [profile.pubkey],
-        limit: 1000
-      }
-    ];
+    // fetch only required data
+    const tagFilter = tag ? { '#t': [tag.substring('/tags'.length)] } : {};
 
-    if (tag) {
-      tag = tag.substring('/tags'.length);
-      filters = filters.map((filter) => ({
-        ...filter,
-        '#t': [tag]
-      }));
-    }
-
-    pool.subscribeManyEose(writeRelays, filters, {
-      onevent: async (event) => {
-        if (!isRootNote(event)) {
-          return;
-        }
-        events = [...events, event].sort((a, b) => b.created_at - a.created_at);
-      },
-      onclose() {
-        finishedLoading = true;
-        console.log('Got', events.length, 'events');
-        console.log('Finish, subscription closed.');
-      }
+    noteSource = new EventSource(config.writeRelays, {
+      kinds: [1],
+      authors: [profile.pubkey],
+      ...tagFilter
+    });
+    imageSource = new EventSource(config.writeRelays, {
+      kinds: [20],
+      authors: [profile.pubkey],
+      ...tagFilter
+    });
+    articleSource = new EventSource(config.writeRelays, {
+      kinds: [30023],
+      authors: [profile.pubkey],
+      ...tagFilter
     });
   });
 </script>
@@ -105,34 +72,42 @@
   </div>
 {/if}
 
-{#if events.length > 20 || finishedLoading}
-  {#if topics.length > 0}
-    <div class="topic-wrapper">
-      <!-- svelte-ignore a11y-invalid-attribute -->
-      <div><a href="#" class={tag == '' ? 'selected' : ''}>Home</a></div>
-      {#each topics as topic}
-        <div><a href="#tags/{topic}" class={topic == tag ? 'selected' : ''}>#{topic}</a></div>
-      {/each}
-    </div>
-  {/if}
+{#if topics.length > 0}
+  <div class="topic-wrapper" class:hidden={!$loaded}>
+    <!-- svelte-ignore a11y-invalid-attribute -->
+    <div><a href="#" class={tag == '' ? 'selected' : ''}>Home</a></div>
+    {#each topics as topic}
+      <div><a href="#tags/{topic}" class={topic == tag ? 'selected' : ''}>#{topic}</a></div>
+    {/each}
+  </div>
+{/if}
 
-  {#if blocks && events.length > 0}
+{#if blocks}
+  <div class:hidden={!$loaded}>
     {#each blocks as block}
       {#if block.type === 'articles'}
-        <Articles {events} {...block.config} />
+        <Articles source={articleSource} {...block.config} />
       {:else if block.type === 'notes'}
-        <Notes {events} {...block.config} noMoreEvents={finishedLoading} />
+        <Notes source={noteSource} {...block.config} noMoreEvents={$loaded} />
       {:else if block.type === 'images'}
-        <Images {events} {...block.config} />
+        <Images source={imageSource} {...block.config} />
       {/if}
     {/each}
-  {/if}
-
-  {#if tag.length > 0 && finishedLoading && uniqueEventsStore.getDisplayedEventsCount() < 12}
-    <Articles {events} count={40} style="grid" />
-    <Images {events} count={40} style="grid" />
-    <Notes {events} count={40} style="grid" />
-  {/if}
-{:else}
-  <Loading />
+  </div>
 {/if}
+
+{#if tag.length > 0 && $loaded && $totalDisplayedNotes < 12}
+  <Articles source={articleSource} minChars={10} count={40} style="grid" />
+  <Images source={imageSource} minChars={0} count={40} style="grid" />
+  <Notes source={noteSource} minChars={0} count={40} style="grid" />
+{/if}
+
+<div class:hidden={$loaded}>
+  <Loading />
+</div>
+
+<style>
+  .hidden {
+    display: none;
+  }
+</style>

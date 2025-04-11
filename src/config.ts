@@ -11,18 +11,18 @@ export type SiteConfig = {
 };
 
 export type Block = {
-  type: string;
+  type: 'articles' | 'notes' | 'images';
   config: Config;
 };
 
 export interface Config {
-  count?: number;
-  style?: string;
-  minChars?: number;
+  count: number;
+  style: 'grid' | 'list' | 'slide';
+  minChars: number;
   ids?: string[];
 }
 
-export async function getConfig(): Promise<SiteConfig | undefined> {
+export async function getConfig(): Promise<SiteConfig> {
   const authorMeta = document.querySelector('meta[name="author"]');
   const relaysMeta = document.querySelector('meta[name="relays"]');
   const topicsMeta = document.querySelector('meta[name="topics"]');
@@ -30,11 +30,13 @@ export async function getConfig(): Promise<SiteConfig | undefined> {
 
   // Author
   // -------------------------------------------------------
-  if (!authorMeta) {
-    console.log('Missing meta tags for configuration');
-    return undefined;
+  let npub: string;
+  if (authorMeta) {
+    npub = authorMeta.getAttribute('content') as string;
+  } else {
+    console.warn('Missing meta tags for configuration, using hodlbod as a fallback');
+    npub = 'npub1jlrs53pkdfjnts29kveljul2sm0actt6n8dxrrzqcersttvcuv3qdjynqn';
   }
-  const npub = authorMeta.getAttribute('content') as string;
 
   // Relays
   // -------------------------------------------------------
@@ -49,7 +51,10 @@ export async function getConfig(): Promise<SiteConfig | undefined> {
     writeRelays = relays;
   } else {
     const rl = (await loadRelayList(decode(npub).data as string)).items;
-    writeRelays = rl.filter((r) => r.write).map((r) => r.url);
+    writeRelays = rl
+      .filter((r) => r.write)
+      .map((r) => r.url)
+      .slice(0, 5);
     readRelays = rl.filter((r) => r.read).map((r) => r.url);
   }
 
@@ -67,7 +72,7 @@ export async function getConfig(): Promise<SiteConfig | undefined> {
 
   // Blocks
   // -------------------------------------------------------
-  let blocks: { type: string; config: any }[] = [];
+  let blocks: Block[] = [];
   const metaTags = document.querySelectorAll('meta');
   const PREFIX = 'block:';
   metaTags.forEach((meta) => {
@@ -75,14 +80,24 @@ export async function getConfig(): Promise<SiteConfig | undefined> {
     if (!name || !name.startsWith(PREFIX)) {
       return;
     }
-    const type = name.substring(PREFIX.length);
-    if (!['articles', 'notes', 'images'].includes(type)) {
-      return;
-    }
     const value = meta.getAttribute('content');
     const options = value ? value.split('-') : [];
 
-    const config: Config = {};
+    let config: Config;
+    const type = name.substring(PREFIX.length);
+    switch (type) {
+      case 'articles':
+        config = { count: 2, minChars: 10, style: 'grid' };
+        break;
+      case 'notes':
+        config = { count: 10, minChars: 0, style: 'list' };
+        break;
+      case 'images':
+        config = { count: 10, minChars: 0, style: 'grid' };
+        break;
+      default:
+        return;
+    }
 
     if (options.length > 0 && !isNaN(Number(options[0]))) {
       config.count = parseInt(options[0], 10);
@@ -90,7 +105,7 @@ export async function getConfig(): Promise<SiteConfig | undefined> {
     }
     const styleIndex = options.findIndex((opt) => ['list', 'slide', 'grid'].includes(opt));
     if (styleIndex >= 0) {
-      config.style = options[styleIndex];
+      config.style = options[styleIndex] as Config['style'];
       options.splice(styleIndex, 1);
     }
     options.forEach((opt) => {
@@ -103,20 +118,20 @@ export async function getConfig(): Promise<SiteConfig | undefined> {
       }
     });
     blocks.push({
-      type,
+      type: type as Block['type'],
       config
     });
   });
 
   // Fallback if no blocks are present
   if (blocks.length == 0) {
-    blocks.push({ type: 'articles', config: { count: 3, style: 'grid' } });
+    blocks.push({ type: 'articles', config: { count: 3, style: 'grid', minChars: 10 } });
     blocks.push({ type: 'notes', config: { count: 10, style: 'slide', minChars: 400 } });
-    blocks.push({ type: 'articles', config: { count: 2, style: 'grid' } });
-    blocks.push({ type: 'images', config: { count: 10, style: 'grid' } });
-    blocks.push({ type: 'articles', config: { count: 10, style: 'list' } });
-    blocks.push({ type: 'articles', config: { count: 2, style: 'grid' } });
-    blocks.push({ type: 'articles', config: { count: 30, style: 'list' } });
+    blocks.push({ type: 'articles', config: { count: 2, style: 'grid', minChars: 10 } });
+    blocks.push({ type: 'images', config: { count: 10, style: 'grid', minChars: 0 } });
+    blocks.push({ type: 'articles', config: { count: 10, style: 'list', minChars: 0 } });
+    blocks.push({ type: 'articles', config: { count: 2, style: 'grid', minChars: 0 } });
+    blocks.push({ type: 'articles', config: { count: 30, style: 'list', minChars: 0 } });
   }
 
   return {

@@ -1,37 +1,36 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { type NostrEvent } from '@nostr/tools/core';
   import { Splide, SplideSlide } from '@splidejs/svelte-splide';
   import '@splidejs/svelte-splide/css';
-  import { filterEvents } from './blockUtils.js';
-  import { formatDate, getEventData } from './utils.js';
+  import { formatDate, type EventData } from './utils.js';
+  import type { Config } from './config.js';
+  import type { EventSource } from './blockUtils.js';
 
   // Block-specific props
-  export let events: NostrEvent[] = [];
-  export let count = 10;
-  export let style = 'grid';
-  export let minChars = 0;
+  export let source: EventSource;
+  export let count: Config['count'];
+  export let style: Config['style'];
+  export let minChars: Config['minChars'];
   export let ids: string[] | undefined = undefined;
-  const kinds = [20];
 
+  let items: EventData[] = [];
   onMount(() => {
-    if (ids) {
-      style = 'grid';
-    }
+    (async () => {
+      if (ids) {
+        style = 'grid';
+        items = await source.fetchIds(ids);
+      } else {
+        items = await source.pluck(count, minChars);
+      }
+    })();
   });
-
-  $: filteredItems = filterEvents(events, kinds, minChars, count, true, ids).map(getEventData);
 </script>
 
-{#if filteredItems.length > 0}
+{#if items.length > 0}
   <section class="block images">
     {#if style === 'grid'}
-      <div
-        class="grid {filteredItems.length % 2 !== 0 ? 'odd' : ''} {filteredItems.length == 1
-          ? 'single'
-          : ''}"
-      >
-        {#each filteredItems as event}
+      <div class="grid {items.length % 2 !== 0 ? 'odd' : ''} {items.length == 1 ? 'single' : ''}">
+        {#each items as event}
           <div class="item">
             <a href={`#${event.id}`}>
               <!-- svelte-ignore a11y-missing-attribute -->
@@ -54,7 +53,7 @@
     {:else if style === 'list'}
       <div class="list">
         <ul>
-          {#each filteredItems as event}
+          {#each items as event}
             <li>
               <h2><a href={`#${event.id}`}>{event.title}</a></h2>
               <div class="summary">{event.summary}</div>
@@ -78,7 +77,7 @@
           autoplay: true
         }}
       >
-        {#each filteredItems as event}
+        {#each items as event}
           <SplideSlide>
             <a href={`#${event.id}`}>
               <div class="date">{formatDate(event.created_at, true)}</div>

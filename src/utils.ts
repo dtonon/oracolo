@@ -1,5 +1,5 @@
 import { loadNostrUser, type NostrUser } from '@nostr/gadgets/metadata';
-import { decode, npubEncode } from '@nostr/tools/nip19';
+import { decode } from '@nostr/tools/nip19';
 import showdown from 'showdown';
 import { type NostrEvent } from '@nostr/tools/core';
 

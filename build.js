@@ -26,7 +26,7 @@ const createCssExtractorPlugin = () => ({
     });
 
     // Write the CSS file after the build completes
-    build.onEnd(async (result) => {
+    build.onEnd(async () => {
       if (cssContent) {
         const outDir = path.dirname(build.initialOptions.outfile);
         const baseName = path.basename(build.initialOptions.outfile, '.js');
