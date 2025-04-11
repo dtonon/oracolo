@@ -84,7 +84,7 @@
           <SplideSlide>
             <a href={`#${event.id}`}>
               <div class="date">{formatDate(event.created_at, true)}</div>
-              {event.summary}
+              <div class="summary">{event.summary}</div>
             </a>
           </SplideSlide>
         {/each}

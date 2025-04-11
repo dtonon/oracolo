@@ -278,6 +278,10 @@ html.dark .separator {
   padding-bottom: 1.5rem;
   color: #747474;
 
+  .summary {
+    white-space: pre-wrap;
+  }
+
   .grid {
     display: flex;
     padding-top: 0.5rem;
