@@ -119,8 +119,8 @@
 {/if}
 
 <div class="footer">
-  This blog is powered by <a href="https://github.com/dtonon/oracolo">Oracolo</a> and Nostr,
-  <a href="https://njump.me">read more</a><br /><br />
+  This blog is powered by <a href="https://github.com/dtonon/oracolo">Oracolo</a> and Nostr.
+  <a href="https://oracolo.me">Make your own</a>.<br /><br />
 
   {#if !missingConfig}
     Would you like to host this website yourself? It's just one HTML file,
