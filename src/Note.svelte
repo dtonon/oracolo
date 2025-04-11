@@ -25,7 +25,6 @@
   onMount(async () => {
     if (!profile) {
       throw new Error('invalid npub');
-      return;
     }
 
     replyRelays = config.readRelays;

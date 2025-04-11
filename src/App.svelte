@@ -14,7 +14,6 @@
   let name = '';
   let picture: string | null = null;
   let relays: string[] = [];
-  let comments = false;
   let config: SiteConfig;
 
   onMount(() => {
