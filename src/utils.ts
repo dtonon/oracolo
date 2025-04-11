@@ -459,7 +459,7 @@ function shortenURL(url: string): string {
       lastPart = `…${lastPart.substring(lastPart.length - 6)}`;
     }
 
-    if (parts.length >= 2) {
+    if (parts.length > 2) {
       pathname = `/…/${lastPart}`;
     } else {
       pathname = `/${lastPart}`;
