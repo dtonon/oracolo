@@ -19,11 +19,10 @@ var homepageJS []byte
 //go:embed dist/homepage.css
 var homepageCSS []byte
 
-//go:embed dist/images
+//go:embed static/images
 var staticImages embed.FS
 
 func handleHome(w http.ResponseWriter, r *http.Request) {
-
 	// Handle static image files
 	if strings.HasPrefix(r.URL.Path, "/dist/images/") {
 		if !isProduction() {
