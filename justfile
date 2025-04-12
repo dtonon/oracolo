@@ -2,7 +2,6 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
 
 watch:
   #!/usr/bin/env bash
-  templ generate
   go build -tags=dev
   godotenv ./oracolo &
   pid1=$!
@@ -19,13 +18,11 @@ dev:
       break
     fi
   done
-  templ generate
   go build
   godotenv ./oracolo
 
 build:
   ./build.js prod
-  templ generate
   CGO_ENABLED=1 GOOS=linux GOARCH=amd64 CC=$(which musl-gcc) go build -ldflags="-s -w -linkmode external -extldflags '-static'"
 
 deploy target: build

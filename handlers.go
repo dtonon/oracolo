@@ -155,3 +155,10 @@ func handleCaddyAsk(w http.ResponseWriter, r *http.Request) {
 	log.Info().Str("domain", domain).Msg("allowing external domain")
 	return
 }
+
+// favicon.ico is good because people can use it when they download their own HTML
+func handleFavicon(w http.ResponseWriter, r *http.Request) {
+	f, _ := staticImages.ReadFile("static/images/favicon.png")
+	w.Header().Set("content-type", "image/png")
+	w.Write(f)
+}

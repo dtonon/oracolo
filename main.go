@@ -34,6 +34,7 @@ func main() {
 	// setup handlers
 	mux := http.NewServeMux()
 	mux.HandleFunc("/ask", handleCaddyAsk)
+	mux.HandleFunc("/favicon.ico", handleFavicon)
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		subdomain, found := strings.CutSuffix(r.Host, "."+s.BaseDomain)
 		if found {
