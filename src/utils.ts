@@ -25,6 +25,7 @@ export type EventData = {
   image: string | undefined;
   images: string[] | [];
   content: string;
+  renderedContent: string;
 };
 
 const dateFormatter = new Intl.DateTimeFormat('en-US', {
@@ -339,6 +340,11 @@ export function processSmartyPants(content: string) {
   });
 
   return content;
+}
+
+export async function processContent(event: EventData): Promise<EventData> {
+  event.renderedContent = await processAll(event);
+  return event;
 }
 
 export async function processAll(note: EventData | NostrEvent): Promise<string> {

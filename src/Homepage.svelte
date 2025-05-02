@@ -1391,6 +1391,8 @@
                       <option value="grid">Grid</option>
                       <option value="list">List</option>
                       {#if newBlockType === 'notes'}
+                        <option value="board">Board</option>
+                        <option value="wall">Full content</option>
                         <option value="slide">Carousel</option>
                       {/if}
                     </select>

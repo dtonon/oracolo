@@ -17,7 +17,7 @@ export type Block = {
 
 export interface Config {
   count: number;
-  style: 'grid' | 'list' | 'slide';
+  style: 'grid' | 'list' | 'slide' | 'board' | 'wall';
   minChars: number;
   ids?: string[];
 }
@@ -103,7 +103,9 @@ export async function getConfig(): Promise<SiteConfig> {
       config.count = parseInt(options[0], 10);
       options.shift();
     }
-    const styleIndex = options.findIndex((opt) => ['list', 'slide', 'grid'].includes(opt));
+    const styleIndex = options.findIndex((opt) =>
+      ['list', 'slide', 'grid', 'board', 'wall'].includes(opt)
+    );
     if (styleIndex >= 0) {
       config.style = options[styleIndex] as Config['style'];
       options.splice(styleIndex, 1);
