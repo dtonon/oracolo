@@ -1169,71 +1169,6 @@
       </section>
 
       {#if userFound}
-        <section class="options-section" transition:fade={{ duration: 100 }}>
-          <h2>Configure basic options</h2>
-
-          <div class="option">
-            <h3>Topics</h3>
-            <p>Add topics to filter content by tags</p>
-
-            <div class="input-group">
-              <input
-                type="text"
-                bind:value={newTopic}
-                placeholder="Enter topics (comma separated)"
-                on:keydown={(e) => e.key === 'Enter' && addTopic()}
-              />
-              <button on:click={addTopic}>Add</button>
-            </div>
-
-            {#if topics.length > 0}
-              <div class="topics-list" role="list">
-                <div class="wrapper">
-                  {#each topics as topic, index}
-                    <div
-                      class="topic-tag"
-                      draggable="true"
-                      role="listitem"
-                      on:dragstart={(e) => handleTopicDragStart(e, index)}
-                      on:dragover={(e) => handleTopicDragOver(e, index)}
-                      on:drop={handleTopicDrop}
-                      on:dragend={handleTopicDragEnd}
-                      class:dragging={draggedTopicIndex === index}
-                      class:drop-target={dragOverTopicIndex === index &&
-                        draggedTopicIndex !== index}
-                    >
-                      <div class="drag-handle">
-                        <svg viewBox="0 0 20 20" width="12" height="12">
-                          <path
-                            d="M7 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 2zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 14zm6-8a2 2 0 1 0-.001-4.001A2 2 0 0 0 13 6zm0 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 14z"
-                          ></path>
-                        </svg>
-                      </div>
-                      <span class="topic-text">{topic}</span>
-                      <button class="remove-button" on:click={() => removeTopic(topic)}>×</button>
-                    </div>
-                  {/each}
-                </div>
-                <div class="hint">(drag to reorder)</div>
-              </div>
-            {/if}
-          </div>
-
-          <div class="option">
-            <h3>Comments</h3>
-            <p>Enable comments on your blog posts</p>
-
-            <label class="switch">
-              <input
-                type="checkbox"
-                bind:checked={enableComments}
-                on:change={updateDomainPreview}
-              />
-              <span class="slider"></span>
-            </label>
-          </div>
-        </section>
-
         <section class="blocks-section" transition:fade={{ duration: 100 }}>
           <h2>Add some content blocks</h2>
           <div class="option">
@@ -1428,6 +1363,71 @@
                 Add Block
               </button>
             </div>
+          </div>
+        </section>
+
+        <section class="options-section" transition:fade={{ duration: 100 }}>
+          <h2>Configure basic options</h2>
+
+          <div class="option">
+            <h3>Topics</h3>
+            <p>Add topics to filter content by tags</p>
+
+            <div class="input-group">
+              <input
+                type="text"
+                bind:value={newTopic}
+                placeholder="Enter topics (comma separated)"
+                on:keydown={(e) => e.key === 'Enter' && addTopic()}
+              />
+              <button on:click={addTopic}>Add</button>
+            </div>
+
+            {#if topics.length > 0}
+              <div class="topics-list" role="list">
+                <div class="wrapper">
+                  {#each topics as topic, index}
+                    <div
+                      class="topic-tag"
+                      draggable="true"
+                      role="listitem"
+                      on:dragstart={(e) => handleTopicDragStart(e, index)}
+                      on:dragover={(e) => handleTopicDragOver(e, index)}
+                      on:drop={handleTopicDrop}
+                      on:dragend={handleTopicDragEnd}
+                      class:dragging={draggedTopicIndex === index}
+                      class:drop-target={dragOverTopicIndex === index &&
+                        draggedTopicIndex !== index}
+                    >
+                      <div class="drag-handle">
+                        <svg viewBox="0 0 20 20" width="12" height="12">
+                          <path
+                            d="M7 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 2zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 14zm6-8a2 2 0 1 0-.001-4.001A2 2 0 0 0 13 6zm0 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 14z"
+                          ></path>
+                        </svg>
+                      </div>
+                      <span class="topic-text">{topic}</span>
+                      <button class="remove-button" on:click={() => removeTopic(topic)}>×</button>
+                    </div>
+                  {/each}
+                </div>
+                <div class="hint">(drag to reorder)</div>
+              </div>
+            {/if}
+          </div>
+
+          <div class="option">
+            <h3>Comments</h3>
+            <p>Enable comments on your blog posts</p>
+
+            <label class="switch">
+              <input
+                type="checkbox"
+                bind:checked={enableComments}
+                on:change={updateDomainPreview}
+              />
+              <span class="slider"></span>
+            </label>
           </div>
         </section>
 
