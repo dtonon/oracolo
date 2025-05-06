@@ -3,7 +3,6 @@ package main
 import (
 	"embed"
 	_ "embed"
-	"io"
 	"net/http"
 	"path/filepath"
 	"strings"
@@ -25,20 +24,10 @@ var staticImages embed.FS
 func handleHome(w http.ResponseWriter, r *http.Request) {
 	// Handle static image files
 	if strings.HasPrefix(r.URL.Path, "/dist/images/") {
-		if !isProduction() {
-			// In development, serve directly from disk
-			http.ServeFile(w, r, r.URL.Path[1:]) // Remove leading slash
-			return
-		}
 
-		// In production, serve from embedded file system
-		imagePath := strings.TrimPrefix(r.URL.Path, "/")
-		file, err := staticImages.Open(imagePath)
-		if err != nil {
-			http.NotFound(w, r)
-			return
-		}
-		defer file.Close()
+		// Replace /dist/images paths with the embed file system
+		imagePath := strings.ReplaceAll(strings.TrimPrefix(r.URL.Path, "/"), "dist", "static")
+		f, _ := staticImages.ReadFile(imagePath)
 
 		// Set content type based on file extension
 		ext := filepath.Ext(r.URL.Path)
@@ -57,8 +46,7 @@ func handleHome(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Content-Type", "application/octet-stream")
 		}
 
-		// Copy the file content to the response
-		io.Copy(w, file)
+		w.Write(f)
 		return
 	}
 
