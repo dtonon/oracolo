@@ -18,7 +18,6 @@
   let items: EventData[] = [];
   onMount(() => {
     (async () => {
-      console.log('style', style);
       if (ids) {
         style = 'grid';
         items = await source.fetchIds(ids);

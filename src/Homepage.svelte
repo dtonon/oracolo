@@ -1072,6 +1072,11 @@
       npubInput.focus();
     }
   });
+
+  $: if (newBlockType) {
+    // Always reset to the first available option when block type changes
+    newBlockStyle = 'grid';
+  }
 </script>
 
 <div class="homepage {!userFound && !isLoading ? 'initial-state' : ''}">
