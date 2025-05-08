@@ -43,8 +43,12 @@ export class EventSource {
           let downloaded = await pool.querySync(relays, {
             ...this.filter,
             until: this.#until,
-            limit:
-              count * (minChars > (this.#kind === 1 ? 0 : 10) ? 3 : 1) * (this.#kind === 1 ? 6 : 1)
+            limit: Math.floor(
+              count *
+                (minChars > (this.#kind === 1 ? 20 : 200)
+                  ? minChars / (this.#kind === 1 ? 20 : 200)
+                  : 1)
+            )
           });
 
           if (downloaded.length === 0) {
