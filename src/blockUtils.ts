@@ -47,7 +47,8 @@ export class EventSource {
               count *
                 (minChars > (this.#kind === 1 ? 20 : 200)
                   ? minChars / (this.#kind === 1 ? 20 : 200)
-                  : 1)
+                  : 1) *
+                20 // Apply a x20 multiplier to handle the root notes filter
             )
           });
 
