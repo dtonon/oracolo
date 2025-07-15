@@ -134,12 +134,16 @@ func handleCaddyAsk(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(400)
 		return
 	}
+	if strings.HasSuffix(domain, "."+s.BaseDomain) {
+		w.WriteHeader(400)
+		return
+	}
 	if !strings.HasSuffix(cname, "."+s.BaseDomain+".") {
 		w.WriteHeader(400)
 		return
 	}
 
-	log.Info().Str("domain", domain).Msg("allowing external domain")
+	log.Info().Str("domain", domain).Str("cname", cname).Msg("allowing external domain")
 	return
 }
 
