@@ -86,7 +86,6 @@ func handleHome(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// In production, serve from embedded file
-	log.Printf("homepageHTML: %s", homepageHTML)
 	w.Write(homepageHTML)
 }
 
