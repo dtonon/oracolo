@@ -19,8 +19,9 @@ type Settings struct {
 }
 
 var (
-	s   Settings
-	log = zerolog.New(os.Stderr).Output(zerolog.ConsoleWriter{Out: os.Stdout}).With().Timestamp().Logger()
+	s             Settings
+	log           = zerolog.New(os.Stderr).Output(zerolog.ConsoleWriter{Out: os.Stdout}).With().Timestamp().Logger()
+	domainTracker *DomainTracker
 )
 
 func main() {
@@ -31,9 +32,16 @@ func main() {
 		return
 	}
 
+	// initialize domain tracker
+	domainTracker, err = NewDomainTracker("domains.db")
+	if err != nil {
+		log.Fatal().Err(err).Msg("couldn't initialize domain tracker")
+		return
+	}
+	defer domainTracker.Close()
+
 	// setup handlers
 	mux := http.NewServeMux()
-	mux.HandleFunc("/ask", handleCaddyAsk)
 	mux.HandleFunc("/favicon.ico", handleFavicon)
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		subdomain, found := strings.CutSuffix(r.Host, "."+s.BaseDomain)

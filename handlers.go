@@ -119,6 +119,11 @@ func handleMagicCNAME(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// record domain usage
+	if domainTracker != nil {
+		domainTracker.RecordDomain(r.Host, subdomain)
+	}
+
 	// cache headers for 2 hours
 	w.Header().Set("Cache-Control", "public, max-age=7200")
 	w.Header().Set("Expires", time.Now().Add(2*time.Hour).Format(http.TimeFormat))
