@@ -165,6 +165,7 @@
             <div class="item">
               <a href={`#${event.id}`}>
                 {#if event.image}
+                  <!-- svelte-ignore a11y-missing-attribute -->
                   <img src={event.image} />
                 {/if}
                 <h2>{event.title}</h2>
