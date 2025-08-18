@@ -61,7 +61,7 @@
   onMount(() => {
     // Set the initial theme
     darkMode = determineTheme();
-  applyTheme(darkMode);
+    applyTheme(darkMode);
     initialized = true;
 
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
