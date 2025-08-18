@@ -28,6 +28,29 @@ var devModeRest = []byte(`
         compactMode: true,
       };
     </script>
+    <script>
+      (function () {
+        function getMetaTheme() {
+          var meta = document.querySelector('meta[name="theme"]');
+          if (!meta) return null;
+          var value = (meta.getAttribute('content') || meta.getAttribute('value') || '').toLowerCase();
+          if (value === 'dark' || value === 'light') return value;
+          return null;
+        }
+        function determineTheme() {
+          if (localStorage.getItem('theme') === 'dark') return true;
+          if (localStorage.getItem('theme') === 'light') return false;
+          var metaTheme = getMetaTheme();
+          if (metaTheme) return metaTheme === 'dark';
+          var darkSetting = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          localStorage.setItem('systemTheme', darkSetting ? 'dark' : 'light');
+          return darkSetting;
+        }
+        if (determineTheme()) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
     <script id="js" src="http://localhost:45071/out.js"></script>
     <script>
       let es = new EventSource('http://localhost:45071/esbuild')

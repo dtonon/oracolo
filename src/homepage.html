@@ -9,6 +9,14 @@
     <script>
       // Inline script to set theme before any content renders
       (function () {
+        function getMetaTheme() {
+          const meta = document.querySelector('meta[name="theme"]');
+          if (!meta) return null;
+          const value = (meta.getAttribute('content') || meta.getAttribute('value') || '').toLowerCase();
+          if (value === 'dark' || value === 'light') return value;
+          return null;
+        }
+
         function determineTheme() {
           // First check for explicit user preference
           if (localStorage.getItem('theme') === 'dark') {
@@ -17,7 +25,13 @@
             return false;
           }
 
-          // If no explicit preference, use system preference
+          // If no explicit preference, check meta default
+          const metaTheme = getMetaTheme();
+          if (metaTheme) {
+            return metaTheme === 'dark';
+          }
+
+          // If no explicit preference and no meta theme, use system preference
           const darkSetting = window.matchMedia('(prefers-color-scheme: dark)').matches;
           localStorage.setItem('systemTheme', darkSetting ? 'dark' : 'light');
           return darkSetting;
