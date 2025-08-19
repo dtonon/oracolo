@@ -3,6 +3,7 @@ oracolo
 package-lock.json
 examples
 dist
+domains.db
 
 # Logs
 logs
