@@ -123,3 +123,25 @@ http://npub1jlrs53pkdfjnts29kveljul2sm0actt6n8dxrrzqcersttvcuv3qdjynqn.ba-2.ba-i
 | `c` | Enable comments |
 
 See the live version [here](http://npub1jlrs53pkdfjnts29kveljul2sm0actt6n8dxrrzqcersttvcuv3qdjynqn.ba-2.ba-ib07ef.bn-slide-m400.ba-2.ba-10-list.topics-nostr-groups-relays-nip44.oracolo.me)!
+
+# Building
+
+If you want to build the HTML file locally (for example if you have
+made local changes to the code), you can run the local server which
+will help you generate the static file for download.
+
+First install dependencies. If you are on macOS, use homebrew:
+
+```bash
+brew install just fd go
+go install github.com/joho/godotenv/cmd/godotenv@latest
+```
+
+Then you can run the server:
+
+```bash
+touch .env
+BASE_DOMAIN=localhost:45070 just dev
+```
+
+This server will serve the static generator, where you can download the final index.html.
