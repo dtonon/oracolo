@@ -10,14 +10,14 @@
       // Inline script to set theme before any content renders
       (function () {
         function getMetaTheme() {
-          const meta = document.querySelector('meta[name="theme"]');
+          const meta = document.querySelector('meta[name="force-theme"]');
           if (!meta) return null;
-          const value = (meta.getAttribute('content') || meta.getAttribute('value') || '').toLowerCase();
+          const value = (meta.getAttribute('content') || '').toLowerCase();
           if (value === 'dark' || value === 'light') return value;
           return null;
         }
 
-        function determineTheme() {
+        function isDarkTheme() {
           // First check for explicit user preference
           if (localStorage.getItem('theme') === 'dark') {
             return true;
@@ -38,7 +38,7 @@
         }
 
         // Apply theme immediately
-        const isDark = determineTheme();
+  const isDark = isDarkTheme();
         if (isDark) {
           document.documentElement.classList.add('dark');
         }

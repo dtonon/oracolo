@@ -18,7 +18,7 @@ var metaSettings = map[string]string{
 	"bi": "block:images",
 	"t":  "topics",
 	"c":  "comments",
-	"th": "theme",
+	"ft": "force-theme",
 }
 
 func paramsFromSubdomain(subdomain string) (Params, error) {
@@ -50,7 +50,7 @@ func paramsFromSubdomain(subdomain string) (Params, error) {
 					if key == "t" {
 						value = strings.Replace(value, "-", ",", -1)
 					}
-					if key == "th" {
+					if key == "ft" {
 						// normalize allowed values only
 						v := strings.ToLower(value)
 						if v != "dark" && v != "light" {

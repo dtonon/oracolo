@@ -31,13 +31,13 @@ var devModeRest = []byte(`
     <script>
       (function () {
         function getMetaTheme() {
-          var meta = document.querySelector('meta[name="theme"]');
+          var meta = document.querySelector('meta[name="force-theme"]');
           if (!meta) return null;
-          var value = (meta.getAttribute('content') || meta.getAttribute('value') || '').toLowerCase();
+          var value = (meta.getAttribute('content') || '').toLowerCase();
           if (value === 'dark' || value === 'light') return value;
           return null;
         }
-        function determineTheme() {
+        function isDarkTheme() {
           if (localStorage.getItem('theme') === 'dark') return true;
           if (localStorage.getItem('theme') === 'light') return false;
           var metaTheme = getMetaTheme();
@@ -46,7 +46,7 @@ var devModeRest = []byte(`
           localStorage.setItem('systemTheme', darkSetting ? 'dark' : 'light');
           return darkSetting;
         }
-        if (determineTheme()) {
+        if (isDarkTheme()) {
           document.documentElement.classList.add('dark');
         }
       })();

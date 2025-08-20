@@ -6,9 +6,9 @@
   let hasMetaTheme = false;
 
   function getMetaTheme(): 'dark' | 'light' | null {
-    const meta = document.querySelector('meta[name="theme"]');
+  const meta = document.querySelector('meta[name="force-theme"]');
     if (!meta) return null;
-    const value = (meta.getAttribute('content') || meta.getAttribute('value') || '').toLowerCase();
+  const value = (meta.getAttribute('content') || '').toLowerCase();
     if (value === 'dark' || value === 'light') return value as 'dark' | 'light';
     return null;
   }
@@ -37,7 +37,7 @@
     }
   }
 
-  function determineTheme(): boolean {
+  function isDarkTheme(): boolean {
     // First check for explicit user preference in localStorage
     if (localStorage.getItem('theme') === 'dark') {
       return true;
@@ -60,7 +60,7 @@
 
   onMount(() => {
     // Set the initial theme
-    darkMode = determineTheme();
+    darkMode = isDarkTheme();
     applyTheme(darkMode);
     initialized = true;
 
