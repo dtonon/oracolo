@@ -40,6 +40,9 @@ There are then some optional tags:
 
 <!-- Overwrite the relays fetched using the Outbox model with hardcoded ones -->
 <meta name="relays" content="my-alt-relay.com,backup-relay.com">
+
+<!-- Force a theme (dark or light). If omitted, follows system unless user sets a preference via the switch -->
+<meta name="force-theme" content="dark">
 ```
 
 Finally the homepage structure can be configured using "blocks". There are 3 types of blocks:
@@ -106,6 +109,7 @@ The first subdomain on the left should be the npub, the you can have the configu
 | `bi-` | Add a block of images |
 | `t-` | Create a menu with some topics |
 | `c-` | Enable comments at the end of the content |
+| `ft-` | Force theme: `dark` or `light` |
 
 After the prefix you can happend the same content used in the meta tags. For example:
 
@@ -121,5 +125,6 @@ http://npub1jlrs53pkdfjnts29kveljul2sm0actt6n8dxrrzqcersttvcuv3qdjynqn.ba-2.ba-i
 | `ba-10-list` | 10 more articles, as list |
 | `t-nostr-groups-relays-nip44` | Show a top menu with these topics |
 | `c` | Enable comments |
+| `ft-dark` | Force dark theme (user can still toggle) |
 
 See the live version [here](http://npub1jlrs53pkdfjnts29kveljul2sm0actt6n8dxrrzqcersttvcuv3qdjynqn.ba-2.ba-ib07ef.bn-slide-m400.ba-2.ba-10-list.topics-nostr-groups-relays-nip44.oracolo.me)!

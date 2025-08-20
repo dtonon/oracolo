@@ -350,9 +350,6 @@ button {
           }
         }
       }
-
-
-
     }
 
     footer {
@@ -476,6 +473,11 @@ section {
 
   &:last-child {
     margin-bottom: 0;
+  }
+
+  input,
+  select {
+    width: 100%;
   }
 }
 
@@ -987,7 +989,6 @@ section {
 
 // Preview section
 .preview-section {
-
   .wait {
     text-align: center;
   }
@@ -1114,7 +1115,7 @@ section {
         color: #ddd;
       }
     }
-    
+
     .copy-button {
       position: absolute;
       height: 100%;
@@ -1131,16 +1132,16 @@ section {
       border-radius: 4px;
       color: $neutral-700;
       background: $neutral-200;
-      
+
       &:hover {
         color: $primary-color;
         background-color: $neutral-300;
       }
-      
+
       html.dark & {
         color: $neutral-400;
         background-color: $neutral-600;
-        
+
         &:hover {
           color: $primary-color;
           background-color: $neutral-700;

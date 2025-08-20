@@ -26,6 +26,8 @@
   let topics: string[] = [];
   let newTopic = '';
   let enableComments = false;
+  // Theme configuration for wizard (auto follows system, or force light/dark)
+  let themeMode: 'auto' | 'light' | 'dark' = 'auto';
 
   // Block selection
   type BlockType = 'articles' | 'notes' | 'images' | undefined;
@@ -1021,6 +1023,13 @@
       subdomains.push(blockString);
     });
 
+    // Theme selection: include only when forcing a theme
+    if (themeMode === 'light') {
+      subdomains.push('ft-light');
+    } else if (themeMode === 'dark') {
+      subdomains.push('ft-dark');
+    }
+
     if (enableComments) {
       subdomains.push('c');
     }
@@ -1433,6 +1442,19 @@
               />
               <span class="slider"></span>
             </label>
+          </div>
+
+          <div class="option">
+            <h3>Theme</h3>
+            <p>Manage the blog light/dark themes</p>
+
+            <div class="input-group">
+              <select id="theme-mode" bind:value={themeMode} on:change={updateDomainPreview}>
+                <option value="auto">Automatic, follow system preferences (default)</option>
+                <option value="light">Always start with the light theme</option>
+                <option value="dark">Always start with the dark theme</option>
+              </select>
+            </div>
           </div>
         </section>
 

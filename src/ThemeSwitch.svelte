@@ -3,6 +3,15 @@
 
   let darkMode = false;
   let initialized = false;
+  let hasMetaTheme = false;
+
+  function getMetaTheme(): 'dark' | 'light' | null {
+  const meta = document.querySelector('meta[name="force-theme"]');
+    if (!meta) return null;
+  const value = (meta.getAttribute('content') || '').toLowerCase();
+    if (value === 'dark' || value === 'light') return value as 'dark' | 'light';
+    return null;
+  }
 
   function handleSwitchDarkMode() {
     darkMode = !darkMode;
@@ -28,7 +37,7 @@
     }
   }
 
-  function determineTheme(): boolean {
+  function isDarkTheme(): boolean {
     // First check for explicit user preference in localStorage
     if (localStorage.getItem('theme') === 'dark') {
       return true;
@@ -36,7 +45,14 @@
       return false;
     }
 
-    // If no explicit preference, use system preference
+    // If no explicit preference, check for a meta default theme
+    const metaTheme = getMetaTheme();
+    if (metaTheme) {
+      hasMetaTheme = true;
+      return metaTheme === 'dark';
+    }
+
+    // If no explicit preference and no meta theme, use system preference
     let darkSetting = window.matchMedia('(prefers-color-scheme: dark)').matches;
     localStorage.setItem('systemTheme', darkSetting ? 'dark' : 'light');
     return darkSetting;
@@ -44,7 +60,8 @@
 
   onMount(() => {
     // Set the initial theme
-    darkMode = determineTheme();
+    darkMode = isDarkTheme();
+    applyTheme(darkMode);
     initialized = true;
 
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -52,7 +69,8 @@
     const handleSystemThemeChange = (event: MediaQueryListEvent) => {
       localStorage.setItem('systemTheme', event.matches ? 'dark' : 'light');
       // Only update based on system preference if user hasn't set a preference
-      if (!localStorage.getItem('theme')) {
+      // and there is no meta default theme defined
+      if (!localStorage.getItem('theme') && !hasMetaTheme) {
         darkMode = event.matches;
         applyTheme(darkMode);
       }
