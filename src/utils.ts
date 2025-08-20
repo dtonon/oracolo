@@ -335,11 +335,41 @@ export function processSmartyPants(content: string) {
     { regex: /--/g, replacement: '&mdash;' }
   ];
 
-  replacements.forEach(({ regex, replacement }) => {
-    content = content.replace(regex, replacement);
-  });
+  // Split content by <pre> and <code> tags, preserve them, and process only text outside
+  const parts: Array<{ text: string; isProtected: boolean }> = [];
+  let index = 0;
 
-  return content;
+  const protectedRegex = /(<pre[^>]*>[\s\S]*?<\/pre>|<code[^>]*>[\s\S]*?<\/code>)/gi;
+  let match;
+
+  while ((match = protectedRegex.exec(content)) !== null) {
+    if (match.index > index) {
+      parts.push({ text: content.slice(index, match.index), isProtected: false });
+    }
+    parts.push({ text: match[0], isProtected: true });
+    index = match.index + match[0].length;
+  }
+
+  if (index < content.length) {
+    parts.push({ text: content.slice(index), isProtected: false });
+  }
+
+  if (parts.length === 0) {
+    parts.push({ text: content, isProtected: false });
+  }
+
+  return parts
+    .map((part) => {
+      if (part.isProtected) {
+        return part.text;
+      }
+      let processedText = part.text;
+      replacements.forEach(({ regex, replacement }) => {
+        processedText = processedText.replace(regex, replacement);
+      });
+      return processedText;
+    })
+    .join('');
 }
 
 export async function processContent(event: EventData): Promise<EventData> {
@@ -355,7 +385,6 @@ export async function processAll(note: EventData | NostrEvent): Promise<string> 
   noteContent = processImageUrls(noteContent);
   noteContent = processVideoUrls(noteContent);
   noteContent = processAudioUrls(noteContent);
-  noteContent = processSmartyPants(noteContent);
 
   // Render returns in kind:1
   if (note.kind == 1) {
@@ -377,6 +406,9 @@ export async function processAll(note: EventData | NostrEvent): Promise<string> 
     });
     noteContent = converter.makeHtml(noteContent);
   }
+
+  // Process smartypants after the markdown conversion, to manage pre/code blocks
+  noteContent = processSmartyPants(noteContent);
 
   return noteContent;
 }
