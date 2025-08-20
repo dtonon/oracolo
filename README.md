@@ -128,3 +128,36 @@ http://npub1jlrs53pkdfjnts29kveljul2sm0actt6n8dxrrzqcersttvcuv3qdjynqn.ba-2.ba-i
 | `ft-dark` | Force dark theme (user can still toggle) |
 
 See the live version [here](http://npub1jlrs53pkdfjnts29kveljul2sm0actt6n8dxrrzqcersttvcuv3qdjynqn.ba-2.ba-ib07ef.bn-slide-m400.ba-2.ba-10-list.topics-nostr-groups-relays-nip44.oracolo.me)!
+
+# Build and test locally
+
+First, install the required dependencies:
+
+    * [`just`](https://github.com/casey/just)
+    * [`fd`](https://github.com/sharkdp/fd)
+    * [`go`](https://go.dev/doc/install)
+    * [`godotenv`](https://github.com/joho/godotenv)
+
+On apt-based Linux (Debian, Ubuntu):
+
+```shell
+sudo apt update
+sudo apt install just fd-find golang
+go install github.com/joho/godotenv/cmd/godotenv@latest
+```
+
+On macOS using homebrew:
+
+```shell
+brew install just fd go
+go install github.com/joho/godotenv/cmd/godotenv@latest
+```
+
+Then you can run the server:
+
+```bash
+echo BASE_DOMAIN=localhost:45070 >> .env
+just dev
+```
+
+This server will serve the static generator, where you can download the final index.html.
