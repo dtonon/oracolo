@@ -52,8 +52,8 @@ func handleHome(w http.ResponseWriter, r *http.Request) {
 
 	// If requesting static files from /dist/, serve them
 	if strings.HasPrefix(r.URL.Path, "/dist/") {
-		if !isProduction() {
-			// In development, serve directly from disk
+		if s.Development {
+			// in development, serve directly from disk
 			http.ServeFile(w, r, r.URL.Path[1:]) // Remove leading slash
 			return
 		}
@@ -72,20 +72,20 @@ func handleHome(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Only serve homepage HTML for the root path
+	// only serve homepage HTML for the root path
 	if r.URL.Path != "/" {
 		http.NotFound(w, r)
 		return
 	}
 
-	// Serve homepage HTML
+	// serve homepage HTML
 	w.Header().Set("Content-Type", "text/html")
-	if !isProduction() {
-		// In development, serve directly from disk
+	if s.Development {
+		// in development, serve directly from disk
 		http.ServeFile(w, r, "src/homepage.html")
 		return
 	}
-	// In production, serve from embedded file
+	// in production, serve from embedded file
 	w.Write(homepageHTML)
 }
 
@@ -96,7 +96,12 @@ func handleSubdomain(subdomain string, w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 400)
 		return
 	}
-	renderModifiedHTML(w, params)
+
+	if r.URL.Query().Get("bundled") == "1" {
+		renderModifiedBundled(w, params)
+	} else {
+		renderModified(w, params)
+	}
 }
 
 // this handles requests from arbitrary external domains
@@ -123,7 +128,11 @@ func handleMagicCNAME(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "public, max-age=7200")
 	w.Header().Set("Expires", time.Now().Add(2*time.Hour).Format(http.TimeFormat))
 
-	renderModifiedHTML(w, params)
+	if r.URL.Query().Get("bundled") == "1" {
+		renderModifiedBundled(w, params)
+	} else {
+		renderModified(w, params)
+	}
 }
 
 // this is called by caddy to know if it should get a certificate for a domain or not
@@ -145,6 +154,16 @@ func handleCaddyAsk(w http.ResponseWriter, r *http.Request) {
 
 	log.Info().Str("domain", domain).Str("cname", cname).Msg("allowing external domain")
 	return
+}
+
+func handleCSS(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("content-type", "text/css")
+	w.Write(css)
+}
+
+func handleJS(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("content-type", "application/javascript")
+	w.Write(js)
 }
 
 // favicon.ico is good because people can use it when they download their own HTML

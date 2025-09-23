@@ -1,5 +1,3 @@
-//go:build dev
-
 package main
 
 import (
@@ -7,16 +5,16 @@ import (
 	"io"
 )
 
-var step1 = []byte(`<!doctype html>
+var start = []byte(`<!doctype html>
 <html lang="en">
   <head>
 `)
 
-var devModeRest = []byte(`
+var rest = []byte(`
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title></title>
-    <link id="css" rel="stylesheet" href="http://localhost:45071/out.css" />
+    <link id="css" rel="stylesheet" href="/out.css" />
   </head>
   <body>
     <div id="app"></div>
@@ -51,7 +49,10 @@ var devModeRest = []byte(`
         }
       })();
     </script>
-    <script id="js" src="http://localhost:45071/out.js"></script>
+    <script id="js" src="/out.js"></script>
+`)
+
+var devEsbuild = []byte(`
     <script>
       let es = new EventSource('http://localhost:45071/esbuild')
 
@@ -84,10 +85,15 @@ var devModeRest = []byte(`
     </script>
 `)
 
-func renderModifiedHTML(w io.Writer, params Params) {
-	w.Write(step1)
+func renderModified(w io.Writer, params Params) {
+	w.Write(start)
+
 	for _, param := range params {
 		fmt.Fprintf(w, "    <meta name=\"%s\" content=\"%s\">\n", param[0], param[1])
 	}
-	w.Write(devModeRest)
+	w.Write(rest)
+
+	if s.Development {
+		w.Write(devEsbuild)
+	}
 }

@@ -1,5 +1,3 @@
-//go:build !dev
-
 package main
 
 import (
@@ -15,11 +13,11 @@ var js []byte
 var css []byte
 
 var (
-	step1 = []byte(`<!doctype html>
+	bundledStep1 = []byte(`<!doctype html>
 <html lang="en">
   <head>
 `)
-	step3 = []byte(`
+	bundledStep3 = []byte(`
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title></title>
@@ -59,25 +57,25 @@ var (
     </script>
     <script>
 `)
-	step5 = []byte(`
+	bundledStep5 = []byte(`
     </script>
     <style>
 `)
-	step7 = []byte(`
+	bundledStep7 = []byte(`
     </style>
   </body>
 </html>
 `)
 )
 
-func renderModifiedHTML(w io.Writer, params Params) {
-	w.Write(step1)
+func renderModifiedBundled(w io.Writer, params Params) {
+	w.Write(bundledStep1)
 	for _, param := range params {
 		fmt.Fprintf(w, "    <meta name=\"%s\" content=\"%s\">\n", param[0], param[1])
 	}
-	w.Write(step3)
+	w.Write(bundledStep3)
 	w.Write(js)
-	w.Write(step5)
+	w.Write(bundledStep5)
 	w.Write(css)
-	w.Write(step7)
+	w.Write(bundledStep7)
 }

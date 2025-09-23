@@ -16,6 +16,8 @@ import (
 type Settings struct {
 	BaseDomain string `envconfig:"BASE_DOMAIN" required:"true"`
 	Port       string `envconfig:"PORT" default:"45070"`
+
+	Development bool `envconfig:"DEVELOPMENT"`
 }
 
 var (
@@ -35,6 +37,8 @@ func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/ask", handleCaddyAsk)
 	mux.HandleFunc("/favicon.ico", handleFavicon)
+	mux.HandleFunc("/out.css", handleCSS)
+	mux.HandleFunc("/out.js", handleJS)
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		subdomain, found := strings.CutSuffix(r.Host, "."+s.BaseDomain)
 		if found {

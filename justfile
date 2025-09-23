@@ -2,8 +2,8 @@ export PATH := "./node_modules/.bin:" + env_var('PATH')
 
 watch:
   #!/usr/bin/env bash
-  go build -tags=dev
-  godotenv ./oracolo &
+  go build
+  DEVELOPMENT=true godotenv ./oracolo &
   pid1=$!
   ./build.js watch &
   pid2=$!
