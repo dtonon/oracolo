@@ -23,7 +23,7 @@ Finally you can also create [your own](#the-blog-engine) Oracolo blog service.
 
 ## Configuration
 
-The basic configuration is a simple meta tag that specifices the author:
+The basic configuration is a simple meta tag that specifies the author:
 
 ```html
 <meta name="author" content="npub1xxxx.....">
@@ -73,7 +73,7 @@ Where:
 | - | - |
 |`<num>`| The number of events to show |
 |`<style>`| The style (list, grid, slide) |
-|`<mXXXX>`| The minimum lenght that an event must have to be included |
+|`<mXXXX>`| The minimum length that an event must have to be included |
 
 For example:
 
@@ -97,9 +97,9 @@ You can also pin one or more events replacing the `<num>` param with the char `i
 
 ## The blog engine
 
-Intead of using the single html file you can deploy the full app. It creates a web server that uses the chained subdomains of the main domain as config params, and so this avoid the necessity to manually modify the html file. The resulting (long) domanin can be used as `cname` target for an external domain!
+Instead of using the single html file you can deploy the full app. It creates a web server that uses the chained subdomains of the main domain as config params, and so this avoid the necessity to manually modify the html file. The resulting (long) domain can be used as `cname` target for an external domain!
 
-The configurarion is derived from the meta tag structure, a little compressed to optimize the characters use (domains have a limit of 255 total chars).
+The configuration is derived from the meta tag structure, a little compressed to optimize the characters use (domains have a limit of 255 total chars).
 The first subdomain on the left should be the npub, the you can have the configuration params:
 
 | Subdomain starts with |  |
@@ -111,7 +111,7 @@ The first subdomain on the left should be the npub, the you can have the configu
 | `c-` | Enable comments at the end of the content |
 | `ft-` | Force theme: `dark` or `light` |
 
-After the prefix you can happend the same content used in the meta tags. For example:
+After the prefix you can append the same content used in the meta tags. For example:
 
 ```
 http://npub1jlrs53pkdfjnts29kveljul2sm0actt6n8dxrrzqcersttvcuv3qdjynqn.ba-2.ba-ib07ef.bn-slide-m400.ba-2.ba-10-list.t-nostr-groups-relays-nip44.c.localhost:45070
