@@ -450,7 +450,8 @@ export function formatDate(timestamp: number, includeTime = false) {
 
 export async function downloadHtmlApp(): Promise<void> {
   try {
-    const response = await fetch(window.location.href.split('#')[0] + '?bundled=1', {
+    console.log(window.location.href.split('#')[0]);
+    const response = await fetch(window.location.href.split('?')[0].split('#')[0] + '?bundled=1', {
       method: 'GET',
       headers: {
         Accept: 'text/html'
