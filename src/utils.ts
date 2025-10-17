@@ -377,8 +377,23 @@ export async function processContent(event: EventData): Promise<EventData> {
   return event;
 }
 
+export function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 export async function processAll(note: EventData | NostrEvent): Promise<string> {
   let noteContent = note.content;
+
+  // For kind:1 notes, escape HTML entities first to prevent injection
+  if (note.kind == 1) {
+    noteContent = escapeHtml(noteContent);
+  }
+
   // Replace users entities with names
   noteContent = await processUsersEntities(noteContent);
   noteContent = processEventsEntities(noteContent);
@@ -388,7 +403,7 @@ export async function processAll(note: EventData | NostrEvent): Promise<string> 
 
   // Render returns in kind:1
   if (note.kind == 1) {
-    noteContent = noteContent.replace(/\n/g, '\n<br/>');
+    noteContent = noteContent.replace(/\n/g, '<br>\n');
     noteContent = processPlainUrls(noteContent);
   }
 
