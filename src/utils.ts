@@ -316,7 +316,7 @@ export function processVideoUrls(content: string) {
 
 export function processAudioUrls(content: string) {
   // Regular expression to match the audio URL
-  const audioUrlRegex = /\s*(https?:\/\/\S+\.(?:mp3))(\s*|$)/gi;
+  const audioUrlRegex = /\s*(https?:\/\/\S+\.(?:mp3|wav|ogg|aac|flac|m4a|opus))(\s*|$)/gi;
 
   // Replace the audio URL with HTML <audio> tag
   const htmlText = content.replace(audioUrlRegex, (_, group) => {
