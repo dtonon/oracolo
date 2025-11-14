@@ -1474,11 +1474,11 @@
             </p>
             <p>
               You can freely updated the config in the previous steps, the preview will updated
-              autoamtically.
+              automatically.
             </p>
             <p>
               <i
-                >PS: Please don't share this URL, it's quite ugly and dosn't support HTTPS, it is
+                >PS: Please don't share this URL, it's quite ugly and doesn't support HTTPS, it is
                 intended only to the check the configuration and for the possible DNS option (see
                 below).</i
               >
@@ -1486,7 +1486,7 @@
 
             <div class="extra-options">
               <h2>Make it visible to the world</h2>
-              <p>To deploy your Nostr blog blog you have a couple of options.</p>
+              <p>To deploy your Nostr blog, you have a couple of options.</p>
               <div class="download-option">
                 <p>
                   <!-- svelte-ignore a11y-invalid-attribute -->
