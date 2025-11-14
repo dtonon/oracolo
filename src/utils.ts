@@ -231,6 +231,7 @@ export function processPlainUrls(content: string) {
   // 3. Image or video URLs
   const plainUrlRegex =
     /(?<![(])(?![^<]*>)(https?:\/\/\S+(?:(?!\.(?:png|jpg|jpeg|gif|bmp|mp4|webm|ogg|mov))\S*))/gi;
+  /(?<![(])(?![^<]*>)(https?:\/\/[^<\s]+(?:(?!\.(?:png|jpg|jpeg|gif|bmp|mp4|webm|ogg|mov))[^<\s]*))/gi;
 
   // Replace plain URLs with HTML anchor tags
   const htmlText = content.replace(plainUrlRegex, (match) => {
@@ -403,8 +404,8 @@ export async function processAll(note: EventData | NostrEvent): Promise<string> 
 
   // Render returns in kind:1
   if (note.kind == 1) {
-    noteContent = noteContent.replace(/\n/g, '<br>\n');
     noteContent = processPlainUrls(noteContent);
+    noteContent = noteContent.replace(/\n/g, '<br>\n');
   }
 
   // Strip duplicate h1 title
