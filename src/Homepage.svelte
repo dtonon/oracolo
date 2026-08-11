@@ -404,35 +404,6 @@
             continue;
           }
 
-          // Check for direct event ID match in existing previews that might be the same event
-          // This handles the case where an naddr might point to a known event
-          let directIdMatch = false;
-          // We don't have the event ID yet, so need to do a deeper search
-          if (eventData.pubkey && eventData.kind && eventData.dTag) {
-            const existingHexEvent = Object.entries(pinnedPreviews).find(
-              ([previewKey, preview]) =>
-                // Skip tempKey entries and loading entries
-                previewKey !== `naddr:${id}` &&
-                !previewKey.startsWith('naddr:') &&
-                preview &&
-                !preview.isLoading &&
-                // Match on kind and pubkey for possible match
-                preview.kind === eventData.kind &&
-                preview.pubkey === eventData.pubkey
-            );
-
-            if (existingHexEvent) {
-              directIdMatch = true;
-              pinnedEventError = `Potential duplicate event: "${shortenEventId(id)}" might match "${shortenEventId(existingHexEvent[0])}"`;
-              newPinnedId = '';
-              continue;
-            }
-          }
-
-          if (directIdMatch) {
-            continue;
-          }
-
           // For naddr, we need to fetch the event to get its ID first
           // Then we can check for duplicates with the actual ID
           // First fetch the event to get its ID - we do this BEFORE adding anything to the UI
